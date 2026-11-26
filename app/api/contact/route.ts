@@ -169,5 +169,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: SEND_FAILED }, { status: 502 })
   }
 
+  // The ACS message id lets an admin trace delivery (Microsoft 365 message trace).
+  console.log(`[contact] Enquiry sent to ${TEAM_INBOX}, ACS id ${id}`)
   return NextResponse.json({ success: true, id }, { status: 200 })
 }
