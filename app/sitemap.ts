@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next"
 import { CASE_STUDIES } from "@/lib/site/content/case-studies"
+import { SF_GUIDE_PROBLEMS, SF_GUIDE_ROUTE } from "@/lib/site/content/salesforce-guide"
 import { ALL_ROUTES } from "@/lib/site/pages"
 
 const SITE_URL = "https://www.zoxima.com"
@@ -21,7 +22,14 @@ function weight(path: string): { priority: number; changeFrequency: Freq } {
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const lastModified = new Date()
-  const paths = ["/", "/case-studies", ...ALL_ROUTES.filter((r) => !r.startsWith("/solutions/")), ...CASE_STUDIES.map((c) => `/case-studies/${c.slug}`)]
+  const paths = [
+    "/",
+    "/case-studies",
+    ...ALL_ROUTES.filter((r) => !r.startsWith("/solutions/")),
+    ...CASE_STUDIES.map((c) => `/case-studies/${c.slug}`),
+    // The Salesforce guide's section pages (the hub is in ALL_ROUTES).
+    ...SF_GUIDE_PROBLEMS.map((p) => `${SF_GUIDE_ROUTE}/${p.id}`),
+  ]
 
   return paths.map((path) => ({
     url: `${SITE_URL}${path === "/" ? "" : path}`,

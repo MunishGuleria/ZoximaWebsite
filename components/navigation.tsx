@@ -52,6 +52,7 @@ const NAV: NavItem[] = [
       { href: "/about", label: "About" },
       { href: "/partners", label: "Partners" },
       { href: "/partners/salesforce", label: "Salesforce", sub: true },
+      { href: "/partners/salesforce/guide", label: "Salesforce guide", sub: true },
       { href: "/partners/microsoft", label: "Microsoft", sub: true },
       { href: "/security", label: "Security and trust" },
       { href: "/careers", label: "Careers" },

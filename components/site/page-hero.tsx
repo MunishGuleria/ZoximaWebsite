@@ -127,6 +127,7 @@ export function PageHero({
   visual,
   children,
   aside: asideProp,
+  eyebrow,
 }: {
   page: PageContent
   label?: string
@@ -135,6 +136,8 @@ export function PageHero({
   children?: ReactNode
   /** Right-hand column, overriding the page's visual (e.g. the contact form). */
   aside?: ReactNode
+  /** Optional small line above the H1 (only where a page asks for one). */
+  eyebrow?: string
 }) {
   const aside = asideProp ?? asideFor(visual, page)
   const back = page.crumbs?.[page.crumbs.length - 1]
@@ -148,6 +151,11 @@ export function PageHero({
             <div className="zx-rise mb-6 lg:hidden" style={rise(0)}>
               <BackButton fallback={back?.href ?? "/"} />
             </div>
+            {eyebrow && (
+              <p className="zx-rise zx-eyebrow mb-5" style={rise(0.03)}>
+                {eyebrow}
+              </p>
+            )}
             <h1
               className={`zx-rise zx-display text-[2.5rem] leading-[1.04] tracking-[-0.04em] text-ink-950 sm:text-[3.5rem] lg:text-[3.6rem] xl:text-[4rem] ${
                 aside ? "max-w-[18ch]" : "max-w-[22ch]"

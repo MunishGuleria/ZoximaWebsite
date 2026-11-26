@@ -1,4 +1,5 @@
 import type { PartnerPractice } from "@/components/site/partner-detail"
+import { SF_GUIDE_BAND, SF_GUIDE_PROBLEMS, SF_GUIDE_ROUTE } from "@/lib/site/content/salesforce-guide"
 
 
 /* Salesforce practice page (/partners/salesforce). Copy supplied by Zoxima (Nov 2026),
@@ -15,7 +16,7 @@ export const SALESFORCE_PRACTICE: PartnerPractice = {
     sub: "We design, build and fix Salesforce for mid-size and large companies, so reports can be trusted, data stays clean and reps spend their time selling.",
     heroCtas: [
       { label: "Talk to us", href: "/contact" },
-      { label: "See our work", href: "#selected-work" },
+      { label: "Read the free guide", href: SF_GUIDE_ROUTE },
     ],
     sections: [],
     closing: {
@@ -23,7 +24,7 @@ export const SALESFORCE_PRACTICE: PartnerPractice = {
       body: "Tell us what’s not working.",
       ctas: [
         { label: "Talk to us", href: "/contact" },
-        { label: "See our work", href: "#selected-work" },
+        { label: "Read the free guide", href: SF_GUIDE_ROUTE },
       ],
     },
   },
@@ -89,20 +90,24 @@ export const SALESFORCE_PRACTICE: PartnerPractice = {
       external: true,
     },
   },
+  /* "What we fix": the ten guide sections as cards (Zoxima's guide-flow
+     prototype, screen 2). Each card opens that section's page. */
   problems: {
-    title: "The problems we fix most often",
-    items: [
-      "Reports that don’t match what’s really in the pipeline",
-      "Duplicate and incomplete customer data",
-      "Reps who see Salesforce as extra work",
-      "Automations built on tools Salesforce no longer supports",
-      "Leads that go cold while they wait for action",
-      "Sales data stuck in ERP, email and chat",
-      "A mobile app field reps avoid",
-      "Calls, emails and meetings that never reach Salesforce",
-      "No single view of the customer",
-      "Data that isn’t ready for AI",
-    ],
+    title: "What we fix",
+    intro: "The 10 problems we see most in companies of 200–1,000 people.",
+    items: SF_GUIDE_PROBLEMS.map((p) => ({
+      label: `Problem ${p.n}`,
+      title: p.title,
+      body: p.short,
+      href: `${SF_GUIDE_ROUTE}/${p.id}`,
+    })),
+    guide: {
+      eyebrow: "Free guide for Salesforce users",
+      title: SF_GUIDE_BAND.title,
+      body: "How to spot each one, what it costs, and how to fix it. Read the start of any section free. Get the full guide by email.",
+      cta: { label: "Get the full guide by email", href: `${SF_GUIDE_ROUTE}/get` },
+      secondary: { label: "Browse the 10 problems", href: SF_GUIDE_ROUTE },
+    },
   },
   steps: {
     title: "How we work",

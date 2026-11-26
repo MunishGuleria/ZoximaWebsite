@@ -5,6 +5,7 @@ import { AccentTitle, CtaButton, PageHero, accentFor } from "@/components/site/p
 import { PageSections } from "@/components/site/sections"
 import { visualFor } from "@/lib/site/media"
 import { ORGANIZATION_SCHEMA, SALEZX_SCHEMA } from "@/lib/site/schema"
+import { SF_GUIDE_PAGE, SF_GUIDE_PROBLEMS, SF_GUIDE_ROUTE } from "@/lib/site/content/salesforce-guide"
 import type { Closing, PageContent } from "@/lib/site/types"
 
 /* --------------------------------------------------------------------------
@@ -75,7 +76,8 @@ export function ClosingSection({ closing }: { closing: Closing }) {
 /* --------------------------------------------------------------------------
    Structured data per page, as one @graph: the page itself (typed by what it
    is), its breadcrumb, and what the page is about — a Service for capability
-   and industry pages, an Article for case studies, Salezx for /products, and
+   and industry pages, an Article for case studies and guides (the Salesforce
+   guide also lists its ten problems as an ItemList), Salezx for /products, and
    an FAQPage wherever the page shows an FAQ. Every node points back to the
    Organization and WebSite defined on the home page (@id), so answer engines
    attribute it all to Zoxima Solutions LLC. Copy comes from the page data.
@@ -119,7 +121,11 @@ function PageJsonLd({ page, label }: { page: PageContent; label: string }) {
   const graph: Record<string, unknown>[] = [ORGANIZATION_SCHEMA, webPage, breadcrumb]
 
   const isCase = page.route.startsWith("/case-studies/")
-  const isService = /^\/(capabilities|industries|partners)\/.+/.test(page.route)
+  // The guide hub and its section pages (/partners/salesforce/guide[/<id>])
+  // are articles, not services. (The form and thank-you pages are neither.)
+  const isGuideSection = SF_GUIDE_PROBLEMS.some((p) => page.route === `${SF_GUIDE_ROUTE}/${p.id}`)
+  const isGuide = page.route === SF_GUIDE_ROUTE || isGuideSection
+  const isService = !page.route.startsWith(SF_GUIDE_ROUTE) && /^\/(capabilities|industries|partners)\/.+/.test(page.route)
   if (isService) {
     graph.push({
       "@type": "Service",
@@ -147,6 +153,38 @@ function PageJsonLd({ page, label }: { page: PageContent; label: string }) {
       inLanguage: "en-US",
       mainEntityOfPage: { "@id": `${url}#webpage` },
     })
+  }
+  if (isGuide) {
+    graph.push({
+      "@type": "Article",
+      "@id": `${url}#article`,
+      headline: page.h1,
+      description: page.seoDescription,
+      articleSection: "Guide",
+      ...(isGuideSection
+        ? { isPartOf: { "@type": "CreativeWork", name: SF_GUIDE_PAGE.h1, url: `${SITE_URL}${SF_GUIDE_ROUTE}` } }
+        : {}),
+      url,
+      image: `${SITE_URL}/og-image.png`,
+      author: ORG,
+      publisher: ORG,
+      inLanguage: "en-US",
+      mainEntityOfPage: { "@id": `${url}#webpage` },
+    })
+    if (page.route === SF_GUIDE_ROUTE) {
+      graph.push({
+        "@type": "ItemList",
+        "@id": `${url}#problems`,
+        name: page.h1,
+        numberOfItems: SF_GUIDE_PROBLEMS.length,
+        itemListElement: SF_GUIDE_PROBLEMS.map((p, i) => ({
+          "@type": "ListItem",
+          position: i + 1,
+          name: p.title,
+          url: `${url}/${p.id}`,
+        })),
+      })
+    }
   }
   if (page.route === "/products") graph.push(SALEZX_SCHEMA)
   for (const s of page.sections) {
@@ -177,6 +215,7 @@ export function SitePage({
   children,
   heroExtra,
   heroAside,
+  heroEyebrow,
   sections,
   layout,
 }: {
@@ -189,6 +228,8 @@ export function SitePage({
   heroExtra?: React.ReactNode
   /** Right-hand column of the hero (e.g. the contact form). */
   heroAside?: React.ReactNode
+  /** Small line above the hero's H1 (e.g. the guide hub). */
+  heroEyebrow?: string
   /** Page-specific section layouts, rendered instead of the generic kit. */
   sections?: React.ReactNode
   /** A page's own layout, replacing both the hero and the sections
@@ -203,7 +244,7 @@ export function SitePage({
       <main id="main" className="zx overflow-x-clip">
         {layout ?? (
           <>
-            <PageHero page={page} label={name} visual={visualFor(page)} aside={heroAside}>
+            <PageHero page={page} label={name} visual={visualFor(page)} aside={heroAside} eyebrow={heroEyebrow}>
               {heroExtra}
             </PageHero>
             {children}

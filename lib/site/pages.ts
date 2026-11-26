@@ -34,6 +34,7 @@ import { type PageContent, type Section } from "@/lib/site/types"
 import { SOLUTION_PAGES, SOLUTIONS_OVERVIEW } from "@/lib/site/content/solutions"
 import { MICROSOFT_PRACTICE } from "@/lib/site/content/partner-microsoft"
 import { SALESFORCE_PRACTICE } from "@/lib/site/content/partner-salesforce"
+import { SF_GUIDE_PAGE } from "@/lib/site/content/salesforce-guide"
 
 /* --------------------------------------------------------------------------
    Thin doc pages carry more real Zoxima content: blocks from the doc's own
@@ -96,6 +97,7 @@ const DOC_PAGES: PageContent[] = [
   PARTNERS_PAGE,
   MICROSOFT_PRACTICE.page,
   SALESFORCE_PRACTICE.page,
+  SF_GUIDE_PAGE,
   SECURITY_PAGE,
   CAREERS_PAGE,
   CONTACT_PAGE,

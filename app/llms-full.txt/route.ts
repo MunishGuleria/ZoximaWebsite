@@ -1,6 +1,7 @@
 import { CASE_STUDIES } from "@/lib/site/content/case-studies"
 import { MICROSOFT_PRACTICE } from "@/lib/site/content/partner-microsoft"
 import { SALESFORCE_PRACTICE } from "@/lib/site/content/partner-salesforce"
+import { SF_GUIDE_PAGE, SF_GUIDE_PDF, SF_GUIDE_PROBLEMS, SF_GUIDE_ROUTE } from "@/lib/site/content/salesforce-guide"
 import { ALL_ROUTES, pageFor } from "@/lib/site/pages"
 import { SITE_URL } from "@/lib/site/schema"
 import type { PartnerPractice } from "@/components/site/partner-detail"
@@ -13,6 +14,8 @@ export const dynamic = "force-static"
 
 const LEGAL = new Set(["/privacy", "/terms"])
 const PRACTICES = new Set([MICROSOFT_PRACTICE.page.route, SALESFORCE_PRACTICE.page.route])
+/** Rendered by guide() under the Salesforce practice, not as a plain page. */
+const GUIDES = new Set([SF_GUIDE_ROUTE])
 
 function section(s: Section): string {
   const head = "title" in s && s.title ? `### ${s.title}\n` : ""
@@ -57,10 +60,33 @@ function practice(d: PartnerPractice): string {
       `### ${d.work.title}`,
       d.work.items.map((w) => `- ${w.title}: ${w.body}${w.results?.length ? ` Results: ${w.results.join(" ")}` : ""}`).join("\n")
     )
-  if (d.problems) out.push("", `### ${d.problems.title}`, d.problems.items.map((p) => `- ${p}`).join("\n"))
+  if (d.problems)
+    out.push(
+      "",
+      `### ${d.problems.title}`,
+      d.problems.items
+        .map((p) => `- ${p.title}${p.body ? `: ${p.body}` : ""}${p.href ? ` (${p.href.startsWith("/") ? SITE_URL : ""}${p.href})` : ""}`)
+        .join("\n")
+    )
   if (d.apps) out.push("", `### ${d.apps.title}`, d.apps.items.map((a) => `- ${a.name}: ${a.body} (${a.href})`).join("\n"))
   if (d.steps) out.push("", `### ${d.steps.title}`, d.steps.items.map((s) => `- ${s.title}: ${s.body}`).join("\n"))
   if (d.why) out.push("", `### ${d.why.title}`, d.why.items.map((w) => `- ${w.title}: ${w.body}`).join("\n"))
+  return out.join("\n")
+}
+
+/** The Salesforce guide: hub plus each section's opening and cost. The rest
+ *  of each section (including the fixes) is only in the emailed PDF. */
+function guide(): string {
+  const out = [
+    `## ${SF_GUIDE_PAGE.h1}`,
+    `URL: ${SITE_URL}${SF_GUIDE_ROUTE}`,
+    "",
+    `${SF_GUIDE_PAGE.sub} The start of each section is on the site; the full guide (${SF_GUIDE_PDF.facts}) is sent by email: ${SITE_URL}${SF_GUIDE_ROUTE}/get`,
+    "",
+    SF_GUIDE_PDF.audience,
+  ]
+  for (const p of SF_GUIDE_PROBLEMS)
+    out.push("", `### ${p.n}. ${p.title}`, `URL: ${SITE_URL}${SF_GUIDE_ROUTE}/${p.id}`, "", p.open, "", `What it costs the business: ${p.cost}`)
   return out.join("\n")
 }
 
@@ -84,7 +110,7 @@ function caseStudy(c: (typeof CASE_STUDIES)[number]): string {
 }
 
 export function GET() {
-  const pages = ALL_ROUTES.filter((r) => !LEGAL.has(r) && !PRACTICES.has(r) && !r.startsWith("/solutions/")).map(pageFor)
+  const pages = ALL_ROUTES.filter((r) => !LEGAL.has(r) && !PRACTICES.has(r) && !GUIDES.has(r) && !r.startsWith("/solutions/")).map(pageFor)
   const text = [
     "# Zoxima: full site content",
     "",
@@ -95,6 +121,8 @@ export function GET() {
     "# Partner practices",
     "",
     practice(SALESFORCE_PRACTICE),
+    "",
+    guide(),
     "",
     practice(MICROSOFT_PRACTICE),
     "",

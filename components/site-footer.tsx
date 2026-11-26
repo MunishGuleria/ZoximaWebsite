@@ -33,6 +33,7 @@ const COMPANY = [
   { href: "/about", label: "About" },
   { href: "/case-studies", label: "Case studies" },
   { href: "/partners", label: "Partners" },
+  { href: "/partners/salesforce/guide", label: "Salesforce guide" },
   { href: "/security", label: "Security and trust" },
   { href: "/careers", label: "Careers" },
   { href: "/contact", label: "Contact" },

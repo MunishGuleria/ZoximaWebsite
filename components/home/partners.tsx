@@ -4,6 +4,7 @@ import { useState } from "react"
 import Link from "next/link"
 import { ArrowRight, ArrowUpRight, Check, ChevronDown, Handshake, Headset, Star, Store, Users } from "lucide-react"
 import { Reveal, RevealGroup, RevealItem } from "@/components/motion/reveal"
+import { GuideBand } from "@/components/site/guide-band"
 
 /* --------------------------------------------------------------------------
    Partner work: two homepage sections, Microsoft and Salesforce.
@@ -455,6 +456,12 @@ export function SalesforceWork() {
             </Reveal>
           </div>
         </div>
+
+        {/* Free guide band: phones and desktop alike (outside the sm:hidden /
+            max-sm:hidden pair above). */}
+        <Reveal className="mt-8 lg:mt-12">
+          <GuideBand />
+        </Reveal>
       </div>
     </section>
   )

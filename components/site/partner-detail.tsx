@@ -1,6 +1,7 @@
 import type { CSSProperties } from "react"
 import Link from "next/link"
 import { ArrowRight, ArrowUpRight, Check, Star } from "lucide-react"
+import { GuideBand, type GuideBandContent } from "@/components/site/guide-band"
 import { AccentTitle, CtaButton, accentFor } from "@/components/site/page-hero"
 import { Reveal } from "@/components/site/reveal"
 import type { Cta, PageContent } from "@/lib/site/types"
@@ -15,10 +16,11 @@ import { cn } from "@/lib/utils"
 
      hero        eyebrow chip, headline (serif accent), subline, buttons,
                  optional badge row, then the proof strip on ink
+     problems    what we fix: heading + intro, a card grid (each card can
+                 link, e.g. to a guide section), then an optional ink guide band
      who         split: heading left, paragraphs right
      offer       bento: the first card on ink, the rest white
      work        selected work cards, results as check rows
-     problems    a grid of problems we fix (+ an optional guide line)
      healthCheck an ink offer panel with the price and a button
      apps        ready-made apps, rows that invert to ink on hover
      steps       how we work, a numbered rail
@@ -45,7 +47,14 @@ export type PartnerPractice = {
     /** e.g. "Read what our customers say on our AppExchange listing". */
     footer?: Cta
   }
-  problems?: { title: string; items: string[]; guide?: { text: string; cta: Cta } }
+  problems?: {
+    title: string
+    intro?: string
+    /** Cards: small label (e.g. "Problem 1"), title, teaser; `href` makes the card a link. */
+    items: { label?: string; title: string; body?: string; href?: string }[]
+    /** Optional dark guide band under the cards. */
+    guide?: GuideBandContent
+  }
   healthCheck?: { title: string; body: string; points: string[]; price: string; cta?: Cta }
   apps?: { title: string; intro?: string; items: { name: string; body: string; href: string }[]; cta?: Cta }
   steps?: { title: string; items: { title: string; body: string }[] }
@@ -316,40 +325,56 @@ function Work({ work }: { work: NonNullable<PartnerPractice["work"]> }) {
 }
 
 function Problems({ problems }: { problems: NonNullable<PartnerPractice["problems"]> }) {
+  const cardCls =
+    "group flex h-full flex-col rounded-[24px] border border-line bg-white p-6 transition-[translate,box-shadow,border-color] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] sm:p-7"
+  const linkCls = "hover:-translate-y-1 hover:border-ink-950 hover:shadow-[0_28px_56px_-30px_rgba(19,23,32,0.45)]"
   return (
     <Section id="problems">
-      <div className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
-        <div>
-          <Reveal>
-            <Heading title={problems.title} />
-          </Reveal>
-          {problems.guide && (
-            <Reveal index={1} className="mt-6 rounded-2xl border border-line bg-white p-5">
-              <p className="text-[0.9875rem] leading-relaxed text-ink-700">{problems.guide.text}</p>
-              <SmartLink
-                cta={problems.guide.cta}
-                className="group mt-3 inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-navy-600"
-              >
-                {problems.guide.cta.label}
-                <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" aria-hidden />
-              </SmartLink>
+      <Reveal>
+        <Heading title={problems.title} />
+      </Reveal>
+      {problems.intro && (
+        <Reveal as="p" index={1} className="mt-4 max-w-2xl text-[1.0625rem] leading-relaxed text-ink-600 sm:text-lg">
+          {problems.intro}
+        </Reveal>
+      )}
+      <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:mt-12 lg:grid-cols-3">
+        {problems.items.map((p, i) => {
+          const body = (
+            <>
+              {p.label && (
+                <span className="flex items-center justify-between gap-3 text-xs font-semibold uppercase tracking-[0.14em] text-navy-600">
+                  {p.label}
+                  {p.href && (
+                    <ArrowRight
+                      className="h-4 w-4 shrink-0 text-ink-300 transition-[color,translate] duration-300 group-hover:translate-x-0.5 group-hover:text-ink-950"
+                      aria-hidden
+                    />
+                  )}
+                </span>
+              )}
+              <h3 className="mt-3 text-[1.125rem] font-semibold leading-snug tracking-[-0.015em] text-ink-950">{p.title}</h3>
+              {p.body && <p className="mt-2 text-[0.9375rem] leading-relaxed text-ink-600">{p.body}</p>}
+            </>
+          )
+          return (
+            <Reveal as="li" key={p.title} variant="scale" index={i % 3}>
+              {p.href ? (
+                <Link href={p.href} className={cn(cardCls, linkCls)}>
+                  {body}
+                </Link>
+              ) : (
+                <div className={cardCls}>{body}</div>
+              )}
             </Reveal>
-          )}
-        </div>
-        <ul className="grid gap-x-8 sm:grid-cols-2">
-          {problems.items.map((p, i) => (
-            <Reveal
-              as="li"
-              key={p}
-              index={i}
-              className="group flex gap-3.5 border-b border-ink-950/[0.08] py-4 text-[1.0rem] leading-relaxed text-ink-800 transition-colors duration-300 hover:text-ink-950"
-            >
-              <span className="mt-[0.6rem] h-1.5 w-1.5 shrink-0 rounded-full bg-flag transition-[width] duration-300 group-hover:w-4" aria-hidden />
-              {p}
-            </Reveal>
-          ))}
-        </ul>
-      </div>
+          )
+        })}
+      </ul>
+      {problems.guide && (
+        <Reveal className="mt-8 lg:mt-10">
+          <GuideBand band={problems.guide} />
+        </Reveal>
+      )}
     </Section>
   )
 }
@@ -497,10 +522,10 @@ export function PartnerDetail({ data }: { data: PartnerPractice }) {
   return (
     <>
       <Hero data={data} />
+      {data.problems && <Problems problems={data.problems} />}
       {data.who && <Who who={data.who} />}
       {data.offer && <Offer offer={data.offer} />}
       {data.work && <Work work={data.work} />}
-      {data.problems && <Problems problems={data.problems} />}
       {data.healthCheck && <HealthCheck hc={data.healthCheck} />}
       {data.apps && <Apps apps={data.apps} />}
       {data.steps && <Steps steps={data.steps} />}
