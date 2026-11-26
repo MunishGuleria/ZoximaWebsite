@@ -1,37 +1,26 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { EmailClient, type EmailMessage } from '@azure/communication-email'
 import { z } from 'zod'
-import { ZOXIMA_LOGO_PNG_BASE64 } from '@/lib/email/zoxima-logo'
-
 /* --------------------------------------------------------------------------
    Contact form → Azure Communication Services (ACS) Email.
 
-   Every genuine enquiry sends TWO emails:
-     1. a notification to the Zoxima inbox (replyTo = the visitor), and
-     2. an acknowledgement to the visitor (replyTo = the team).
-   The notification is the one that matters: if it fails the visitor sees an
-   error. If only the acknowledgement fails, the lead is already delivered, so
-   the visitor still sees success and the failure is logged.
+   Every genuine enquiry sends ONE email: a notification to info@zoxima.com,
+   with replyTo set to the visitor so the team can answer directly. Nothing is
+   sent to the visitor. If the notification fails, the visitor sees an error.
 
    SECURITY: no secrets live in this file. Configure them in the environment
    (.env locally, Vercel → Project → Settings → Environment Variables in
    production). See .env.example for what each variable is.
    -------------------------------------------------------------------------- */
 
-// ACS polls for the send status; allow enough time for both emails.
+// ACS polls for the send status; allow enough time for it.
 export const maxDuration = 30
 
 const NOT_CONFIGURED = 'The contact form is not configured. Please email info@zoxima.com.'
 const SEND_FAILED = 'We could not send your message. Please email info@zoxima.com.'
 
-/** Splits a comma-separated env value into trimmed, non-empty addresses. */
-function addressList(value: string | undefined, fallback: string) {
-  const list = (value ?? '')
-    .split(',')
-    .map((address) => address.trim())
-    .filter(Boolean)
-  return list.length ? list : [fallback]
-}
+/** Where every enquiry is delivered. */
+const TEAM_INBOX = 'info@zoxima.com'
 
 const ContactSchema = z.object({
   name: z.string().trim().min(1, 'Name is required').max(120),
@@ -43,7 +32,7 @@ const ContactSchema = z.object({
   topic: z.string().trim().max(80).optional().default(''),
   message: z.string().trim().max(4000).optional().default(''),
   // Honeypot: real users never fill this in.
-  company_website: z.string().max(0).optional(),
+  company_website: z.string().max(500).optional(),
 })
 
 /** Escapes user input before it is interpolated into an email. */
@@ -73,19 +62,8 @@ async function sendEmail(client: EmailClient, message: EmailMessage) {
   return result.id
 }
 
-/* Plain white/ink email shell: no brand colours, safe in any client. The
-   acknowledgement adds the Zoxima logo as an inline image (LOGO_CID). */
+/* Plain white/ink email shell: no brand colours, safe in any client. */
 const FONT = "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif"
-
-const LOGO_CID = 'zoxima-logo'
-
-/** The logo, attached inline and shown by <img src="cid:zoxima-logo">. */
-const LOGO_ATTACHMENT = {
-  name: 'zoxima-logo.png',
-  contentType: 'image/png',
-  contentInBase64: ZOXIMA_LOGO_PNG_BASE64,
-  contentId: LOGO_CID,
-}
 
 function emailShell(inner: string) {
   return `<!doctype html>
@@ -132,10 +110,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: NOT_CONFIGURED }, { status: 500 })
   }
 
-  const teamInbox = addressList(process.env.CONTACT_TO_EMAIL, 'info@zoxima.com')
-  const teamReplyTo = process.env.CONTACT_REPLY_TO?.trim() || teamInbox[0]
-  const firstName = name.split(/\s+/)[0]
-
   const rows: [string, string][] = [
     ['Name', name],
     ['Email', email],
@@ -146,10 +120,10 @@ export async function POST(request: NextRequest) {
     ['Message', message || 'No message provided'],
   ]
 
-  /* 1. Notification to the team -------------------------------------------- */
+  /* Notification to the team ------------------------------------------------ */
   const notification: EmailMessage = {
     senderAddress: from,
-    recipients: { to: teamInbox.map((address) => ({ address })) },
+    recipients: { to: [{ address: TEAM_INBOX }] },
     // Hitting "Reply" answers the visitor directly.
     replyTo: [{ address: email, displayName: name }],
     content: {
@@ -177,55 +151,6 @@ export async function POST(request: NextRequest) {
     },
   }
 
-  /* 2. Acknowledgement to the visitor --------------------------------------- */
-  const echoText = [
-    ...(topic ? [`Topic: ${topic}`] : []),
-    ...(message ? [`Your message:\n${message}`] : []),
-  ]
-  const echoHtml = [
-    ...(topic
-      ? [`<p style="margin:0 0 8px"><strong>Topic:</strong> ${escapeHtml(topic)}</p>`]
-      : []),
-    ...(message
-      ? [`<p style="margin:0"><strong>Your message:</strong><br />${escapeMultiline(message)}</p>`]
-      : []),
-  ]
-
-  const acknowledgement: EmailMessage = {
-    senderAddress: from,
-    recipients: { to: [{ address: email, displayName: name }] },
-    // Customer replies reach the team, not the no-reply sender.
-    replyTo: [{ address: teamReplyTo }],
-    content: {
-      subject: 'We’ve received your message | Zoxima',
-      plainText: [
-        `Hi ${firstName},`,
-        '',
-        'Thank you for getting in touch with Zoxima. We have received your message and someone from our team will get back to you within one business day.',
-        ...(echoText.length ? ['', 'For your reference, here is what you sent us:', '', ...echoText] : []),
-        '',
-        'If you have anything to add in the meantime, just reply to this email.',
-        '',
-        'The Zoxima team',
-        'https://www.zoxima.com',
-      ].join('\n'),
-      html: emailShell(`
-        <img src="cid:${LOGO_CID}" width="104" height="104" alt="Zoxima" style="display:block;width:104px;height:104px;margin:0 0 16px -12px;border:0" />
-        <p style="margin:0 0 16px">Hi ${escapeHtml(firstName)},</p>
-        <p style="margin:0 0 16px">Thank you for getting in touch with Zoxima. We have received your message and someone from our team will get back to you within one business day.</p>
-        ${
-          echoHtml.length
-            ? `<p style="margin:0 0 8px">For your reference, here is what you sent us:</p>
-               <div style="margin:0 0 16px;padding:12px 16px;border-left:2px solid #111111;color:#333333">${echoHtml.join('')}</div>`
-            : ''
-        }
-        <p style="margin:0 0 16px">If you have anything to add in the meantime, just reply to this email.</p>
-        <p style="margin:0">The Zoxima team<br /><a href="https://www.zoxima.com" style="color:#111111">zoxima.com</a></p>
-      `),
-    },
-    attachments: [LOGO_ATTACHMENT],
-  }
-
   let client: EmailClient
   try {
     client = new EmailClient(connectionString)
@@ -241,13 +166,6 @@ export async function POST(request: NextRequest) {
   } catch (err) {
     console.error('[contact] Notification email failed, lead NOT delivered:', err)
     return NextResponse.json({ error: SEND_FAILED }, { status: 502 })
-  }
-
-  // The lead is delivered; a failed acknowledgement must not show the visitor an error.
-  try {
-    await sendEmail(client, acknowledgement)
-  } catch (err) {
-    console.error(`[contact] Acknowledgement email failed (notification ${id} was sent):`, err)
   }
 
   return NextResponse.json({ success: true, id }, { status: 200 })
