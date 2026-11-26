@@ -193,10 +193,10 @@ export function GuideRequestForm() {
   return (
     <form onSubmit={onSubmit} noValidate className="zx-card relative grid gap-5 p-6 sm:grid-cols-2 sm:p-8 lg:p-10">
       <Field label="First name" name="firstName" error={errors.firstName}>
-        <input id="firstName" name="firstName" autoComplete="given-name" maxLength={80} value={values.firstName} onChange={set("firstName")} className={fieldCls} {...invalid("firstName")} />
+        <input id="firstName" name="firstName" autoComplete="given-name" maxLength={80} placeholder="Your first name" value={values.firstName} onChange={set("firstName")} className={fieldCls} {...invalid("firstName")} />
       </Field>
       <Field label="Last name" name="lastName" error={errors.lastName}>
-        <input id="lastName" name="lastName" autoComplete="family-name" maxLength={80} value={values.lastName} onChange={set("lastName")} className={fieldCls} {...invalid("lastName")} />
+        <input id="lastName" name="lastName" autoComplete="family-name" maxLength={80} placeholder="Your last name" value={values.lastName} onChange={set("lastName")} className={fieldCls} {...invalid("lastName")} />
       </Field>
       <div className="min-w-0 sm:col-span-2">
         <Field label="Work email" name="email" error={errors.email}>
@@ -216,10 +216,10 @@ export function GuideRequestForm() {
         </Field>
       </div>
       <Field label="Company" name="company" error={errors.company}>
-        <input id="company" name="company" autoComplete="organization" maxLength={160} value={values.company} onChange={set("company")} className={fieldCls} {...invalid("company")} />
+        <input id="company" name="company" autoComplete="organization" maxLength={160} placeholder="Your company" value={values.company} onChange={set("company")} className={fieldCls} {...invalid("company")} />
       </Field>
       <Field label="Job title" name="jobTitle" error={errors.jobTitle}>
-        <input id="jobTitle" name="jobTitle" autoComplete="organization-title" maxLength={120} value={values.jobTitle} onChange={set("jobTitle")} className={fieldCls} {...invalid("jobTitle")} />
+        <input id="jobTitle" name="jobTitle" autoComplete="organization-title" maxLength={120} placeholder="e.g. Head of Sales" value={values.jobTitle} onChange={set("jobTitle")} className={fieldCls} {...invalid("jobTitle")} />
       </Field>
       <div className="min-w-0 sm:col-span-2">
         <Field label="Which problem matters most to you right now?" name="problem" error={errors.problem}>
