@@ -1,0 +1,72 @@
+# Zoxima
+
+> Zoxima builds the applications, automations and AI agents that run sales and service for large enterprises. Large enterprises run their sales and service on systems we build.
+
+- Legal name: Zoxima Solutions LLC (affiliate: Zoxima Solutions Private Limited, Sector 142, Noida, Uttar Pradesh, India)
+- Headquarters: 44870 Osgood Road, Suite 5, Fremont, California, USA 94539
+- Business hours: Monday – Friday, 8:30 AM – 5:00 PM PST
+- Founder and CEO: Jagpreet Singh (https://www.linkedin.com/in/jagpreet-singh-931a9213/)
+- LinkedIn: https://www.linkedin.com/company/zoxima/
+- Microsoft: Solutions Partner in Business Applications, Data & AI, and Digital & App Innovation; specialization in Agentic Business Solutions; apps published on Microsoft Marketplace (AppSource)
+- Salesforce: Salesforce Partner, rated 4.97 from 41 reviews on AppExchange; 75+ Salesforce projects; 26 Salesforce certifications
+- Scale: 90+ large enterprise projects; 25+ enterprise AI projects live; 4,000+ users on a single CRM rollout; $20B+ in orders, collections and renewals managed; 50K+ AI voice calls every week; 2 million customers on one loyalty app
+- Product: Salezx (https://salezx.com), your strongest sales ops team, on the CRM, ERP reports and email you already use. Desks: Collections, Service Renewals, Ordering & Billing, Lead Actions, Pricing & Quote, Rep Desk and Review. Live in about a week
+- Contact: info@zoxima.com or https://zoxima.com/contact
+
+## What we drive
+- [Lead to quote](https://zoxima.com/solutions?s=lead-to-quote): every lead and quote followed to a decision
+- [Pricing and quotes](https://zoxima.com/solutions?s=pricing): the right price, every time
+- [Order to invoice](https://zoxima.com/solutions?s=order-to-invoice): orders delivered and billed without delays
+- [Collections and credit](https://zoxima.com/solutions?s=collections): cash collected on time
+- [Service contract renewals](https://zoxima.com/solutions?s=service-renewals): service contracts renewed before they lapse
+- [Sales productivity](https://zoxima.com/solutions?s=sales-productivity): every rep prepared for every customer
+- [Sales reviews and performance](https://zoxima.com/solutions?s=sales-reviews): reviews that end in actions
+
+## Capabilities
+- [Applications](https://zoxima.com/capabilities/applications): CRM, field sales and service, partner portals, Direct Store Delivery and loyalty
+- [Automations](https://zoxima.com/capabilities/automations): approvals, order to invoice, collections, renewals, schemes and integration
+- [AI](https://zoxima.com/capabilities/ai): agents that read, decide and act inside your processes, with your people in control
+- [How our AI works](https://zoxima.com/capabilities/ai/how-it-works): multi-agent systems, MCP connections, grounded answers, human in the loop, observable by design
+- [Platforms](https://zoxima.com/capabilities/platforms): Microsoft Dynamics 365, Power Platform, Copilot Studio, Azure AI, Salesforce
+
+## Industries
+- [Manufacturing](https://zoxima.com/industries/manufacturing)
+- [Appliances manufacturing](https://zoxima.com/industries/appliances-manufacturing)
+- [Building materials](https://zoxima.com/industries/building-materials)
+- [Consumer goods](https://zoxima.com/industries/consumer-goods)
+- [Education](https://zoxima.com/industries/education)
+- [Digital natives](https://zoxima.com/industries/digital-natives)
+
+## Case studies
+- [Building materials manufacturer](https://zoxima.com/case-studies/building-materials-partner-network): A $9B building materials manufacturer selling through a nationwide network of dealers and retailers, plus direct project and institutional sales, across four business lines. We replaced a standalone field sales app with one CRM for trade and institutional sales. We then layered AI on top: visit planning, product answers and partner intelligence. Over three years it grew into the system the sales organization runs on.
+- [Wires and cables manufacturer](https://zoxima.com/case-studies/electrical-products-leadership-ai): A $900M wires and cables maker present in 85+ countries. It runs four divisions and sells through distributors, exports, B2B accounts and government channels. Leadership had the data but not the answers. We built an AI decision layer that joins ERP, CRM and loyalty data and answers leaders’ questions in plain language. It sends each leader a morning brief and alerts on the numbers that matter.
+- [Snack foods brand](https://zoxima.com/case-studies/snack-foods-ai-agents): A snack foods brand sold in 100 countries. It has 4,500+ products, its own plants and a growing chain of retail stores. The company had invested in many systems that didn’t talk to each other. We studied its stores, plants, exports and finance teams on the ground, then built AI agents that work across retail and manufacturing.
+- [Bottled-water company](https://zoxima.com/case-studies/bottled-water-direct-store-delivery): A bottled-water company shipping about 10 million liters a day through distributors, retail and its own delivery routes. Route sales were run on paper, and the company wanted to reach consumers directly. We built a Direct Store Delivery solution for its vans and a loyalty app that now serves 2 million customers.
+- [Digital-native company](https://zoxima.com/case-studies/marketplace-sales-service-crm): A digital-native company running several consumer and business platforms, with 4,000+ sales and service users. We put sales and service for the group’s largest business on one CRM, then extended the same platform to two more businesses in the group.
+- [Fortune 500 corporate services company](https://zoxima.com/case-studies/corporate-services-finance-operations): A Fortune 500 corporate services company with $46B in revenue, running services at hundreds of client sites. Billing, capex approvals and price checks were all done by hand across spreadsheets, email and SAP. We automated each one, and finance teams now work in tools they already know.
+- [Diversified industrial conglomerate](https://zoxima.com/case-studies/conglomerate-approvals-sales-targets): A diversified industrial conglomerate with businesses across manufacturing and consumer durables. Teams across the group needed approvals and sales targets off email and spreadsheets. We delivered seven custom apps on one platform, including a sales operating system.
+- [Global technology company](https://zoxima.com/case-studies/technology-promotional-pricing): A $7B+ global technology company selling office and imaging equipment. Promotional pricing lived outside the CRM, so reps couldn’t be sure each quote carried the right promotion. We built promotional pricing into the CRM.
+- [Hospital network](https://zoxima.com/case-studies/healthcare-invoice-validation): A leading hospital network. Every vendor invoice had to be checked against six systems before it could be paid. We built AI that does the check, calculates commissions and tracks every payout.
+- [Visa and consular services company](https://zoxima.com/case-studies/visa-services-voice-ai): A global visa and consular services company. Call centers took a high volume of routine questions, and add-on services were rarely offered. We built voice AI agents that answer customers and offer the right add-on during the call.
+- [Leading business schools](https://zoxima.com/case-studies/business-schools-admissions-ai): Three leading business schools receiving thousands of applicant enquiries each admissions season. Enquiries far outnumbered counselors. We built voice, social and website agents that answer applicants around the clock, plus an admissions CRM and a counselor assistant.
+- [Postal and logistics operator](https://zoxima.com/case-studies/postal-case-tagging-ai): A national postal and logistics operator working across 6 countries, with 14 connected systems. It has run its sales and customer service on our CRM for 9 years. Every customer enquiry from the website became a case that agents had to tag by hand, choosing from 600+ categories. We built AI that reads each enquiry the moment the case is created and tags it across all four levels, so it reaches the right team without manual work.
+- [Medical imaging manufacturer](https://zoxima.com/case-studies/medical-imaging-sales-service): A medical imaging maker with 25,000+ installations in 110 countries, selling imaging systems to hospitals. The business runs on two motions: selling new systems, often replacing old ones, and running the after-sales service business. We built the sales and service systems behind both.
+- [Building materials manufacturer: sales force and dealer apps](https://zoxima.com/case-studies/building-materials-dealer-apps): A building materials manufacturer selling through a dealer network. Field sales and dealer activity weren’t reaching the CRM. We built a sales force app and a dealer management app, both connected to the CRM.
+- [Education company](https://zoxima.com/case-studies/education-crm-learning-app): An education company whose learning app is used by 1 million students. We have worked across the business: a large CRM for the sales team, business apps for internal teams, and the learning app itself on Android and iOS.
+- [Logistics companies](https://zoxima.com/case-studies/logistics-workforce-ai): US last-mile delivery companies that run large driver workforces. Last-mile delivery runs on people who must be hired fast, scheduled every day and kept compliant. We built AI for all three.
+
+## Company
+- [About](https://zoxima.com/about)
+- [Partners](https://zoxima.com/partners)
+- [Salesforce practice](https://zoxima.com/partners/salesforce): implementation, fix and optimize, integration, custom apps and mobile, AI on Salesforce, managed support
+- [Microsoft practice](https://zoxima.com/partners/microsoft): Dynamics 365, Power Platform, Azure AI and Copilot Studio; ready-made apps on Microsoft Marketplace
+- [Case studies](https://zoxima.com/case-studies)
+- [Security and trust](https://zoxima.com/security)
+- [Careers](https://zoxima.com/careers)
+- [Contact](https://zoxima.com/contact)
+- [Privacy Policy](https://zoxima.com/privacy)
+- [Terms of Service](https://zoxima.com/terms)
+
+## More
+- [Full site content for AI assistants](https://zoxima.com/llms-full.txt)
+- [Case studies feed (RSS)](https://zoxima.com/rss.xml)

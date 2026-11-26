@@ -1,0 +1,461 @@
+"use client"
+
+import { useState } from "react"
+import Link from "next/link"
+import { ArrowRight, ArrowUpRight, Check, ChevronDown, Handshake, Headset, Star, Store, Users } from "lucide-react"
+import { Reveal, RevealGroup, RevealItem } from "@/components/motion/reveal"
+
+/* --------------------------------------------------------------------------
+   Partner work: two homepage sections, Microsoft and Salesforce.
+
+   Not in Zoxima_Website_Content_v2.docx — added at Zoxima's request. Every
+   fact comes from an official listing (checked 2026-10-08):
+   - Microsoft: the partner directory profile and Zoxima's AppSource
+     listings (app names and summaries as published there).
+   - Salesforce: Zoxima's AppExchange consulting listing (rating, reviews,
+     clouds) and zoxima.com's Salesforce page (SFA / DMS work).
+   Deliberately left out until confirmed: Microsoft designation names,
+   the Salesforce tier, certified-expert counts and project counts (the
+   sources disagree). Customers are never named.
+   -------------------------------------------------------------------------- */
+
+const MS_PARTNER_URL =
+  "https://appsource.microsoft.com/en-us/marketplace/partner-dir/923bb7ae-3d80-46c7-b4b1-dd832ab44683/overview"
+const APPSOURCE = "https://appsource.microsoft.com/en-us/product"
+const SF_LISTING_URL = "https://appexchange.salesforce.com/appxConsultingListingDetail?listingId=a0N3A00000FnDXAUA3"
+
+const MS_APPS = [
+  {
+    name: "Building Material App",
+    body: "Visit planning, product catalog, offers and schemes, on-the-spot orders and an AI assistant for field teams.",
+    href: `${APPSOURCE}/web-apps/zoximasolutuionspvtltd1654840932298.building_material_app`,
+  },
+  {
+    name: "Field Sales",
+    body: "Orders, visit planning, complaints, expenses and dashboards for sales teams in manufacturing and distribution.",
+    href: `${APPSOURCE}/dynamics-365/zoximasolutuionspvtltd1654840932298.fieldsales`,
+  },
+  {
+    name: "Sales Team Application",
+    body: "One app for trade, non-trade, quality and technical-service teams: orders, complaints, events and visits.",
+    href: `${APPSOURCE}/dynamics-365/zoximasolutuionspvtltd1654840932298.sales_team_application`,
+  },
+  {
+    name: "Inspection App",
+    body: "Digital inspection forms, scheduling, templates and reports, synced in real time.",
+    href: `${APPSOURCE}/web-apps/zoximasolutuionspvtltd1654840932298.inspection_app`,
+  },
+  {
+    name: "Employee Onboarding",
+    body: "Paperwork, training and first steps for new hires in one guided flow.",
+    href: `${APPSOURCE}/dynamics-365/zoximasolutuionspvtltd1654840932298.employee_onboarding`,
+  },
+]
+
+const MS_PLATFORMS = [
+  "Dynamics 365 Sales",
+  "Dynamics 365 Customer Service",
+  "Dynamics 365 Field Service",
+  "Power Apps",
+  "Power Automate",
+  "Power BI",
+  "Copilot",
+  "Azure AI",
+  "SharePoint",
+  "Teams",
+]
+
+const MS_ACCELERATORS = [
+  "Field Sales",
+  "Field Services",
+  "Van Sales",
+  "B2B Commerce",
+  "Vendor Portal",
+  "Customer Onboarding",
+  "Employee Helpdesk",
+  "Raw Material Planning",
+]
+
+const SF_BUILT = [
+  {
+    title: "Sales force automation",
+    body: "Visit and beat planning, offline order booking, secondary sales and schemes, with KPI dashboards.",
+  },
+  {
+    title: "Dealer management",
+    body: "Stock visibility, distributor schemes and incentives, loyalty and influencer programs, order to cash.",
+  },
+  {
+    title: "Service and cases",
+    body: "Omni-channel case management and knowledge for service teams.",
+  },
+  {
+    title: "Partner and customer portals",
+    body: "Portals for dealers and customers to order, track and raise requests.",
+  },
+]
+
+const SF_CLOUDS = [
+  "Sales Cloud",
+  "Service Cloud",
+  "Experience Cloud",
+  "CPQ",
+  "Agentforce",
+  "Marketing Cloud Account Engagement",
+  "Heroku",
+  "Integration and data migration",
+]
+
+function Chip({ label }: { label: string }) {
+  return (
+    <span className="zx-glass-chip inline-flex items-center rounded-lg border border-line bg-white px-2.5 py-1 text-xs font-medium text-ink-700 transition-colors hover:border-ink-300 hover:text-ink-950">
+      {label}
+    </span>
+  )
+}
+
+
+/* --------------------------------------------------------------------------
+   Phone layouts (below 640px). Same copy, built for a small screen: bigger
+   text, a tap-to-open list for the apps, chips that glide on their own
+   instead of a wall of tags, and 2-up tiles. Desktop layouts unchanged.
+   -------------------------------------------------------------------------- */
+
+/** A row of chips that drifts sideways on its own (no swipe, pauses on touch). */
+function ChipDrift({ items, duration = 30 }: { items: string[]; duration?: number }) {
+  const loop = [...items, ...items]
+  return (
+    <div className="zx-marquee zx-fade-x -mx-5 overflow-hidden py-1">
+      <ul className="sr-only">
+        {items.map((s) => (
+          <li key={s}>{s}</li>
+        ))}
+      </ul>
+      <div aria-hidden className="zx-marquee-track gap-2 pr-2" style={{ animationDuration: `${duration}s` }}>
+        {loop.map((s, i) => (
+          <span
+            key={i}
+            className="zx-glass-chip inline-flex shrink-0 items-center whitespace-nowrap rounded-lg border border-line bg-white px-3 py-1.5 text-[0.8125rem] font-medium text-ink-700"
+          >
+            {s}
+          </span>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function MicrosoftMobile() {
+  const [open, setOpen] = useState(0)
+  return (
+    <div className="mt-8 space-y-6 sm:hidden">
+      <Reveal>
+        <p className="mb-3 text-sm font-semibold text-ink-900">Published on Microsoft AppSource</p>
+        <ul className="overflow-hidden rounded-3xl border border-white/80 bg-white/85 shadow-[0_20px_44px_-30px_rgba(15,27,45,0.4)] backdrop-blur-md">
+          {MS_APPS.map((app, i) => {
+            const on = open === i
+            return (
+              <li key={app.name} className="border-b border-line/80 last:border-b-0">
+                <button
+                  type="button"
+                  aria-expanded={on}
+                  onClick={() => setOpen(on ? -1 : i)}
+                  className="flex min-h-14 w-full items-center gap-3 px-4 text-left"
+                >
+                  <span
+                    aria-hidden
+                    className={`h-2 w-2 shrink-0 rounded-full transition-colors duration-300 ${on ? "bg-navy-600" : "bg-ink-300"}`}
+                  />
+                  <span className="flex-1 text-base font-semibold text-ink-950">{app.name}</span>
+                  <ChevronDown className={`h-4 w-4 text-ink-500 transition-transform duration-300 ${on ? "rotate-180" : ""}`} aria-hidden />
+                </button>
+                <div className={`grid transition-[grid-template-rows] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${on ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}>
+                  <div className="overflow-hidden">
+                    <div className="px-4 pb-4 pl-[3.75rem]">
+                      <p className="text-[0.9375rem] leading-relaxed text-ink-600">{app.body}</p>
+                      <a
+                        href={app.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="mt-1 inline-flex min-h-11 items-center gap-1.5 text-sm font-semibold text-ink-950 underline decoration-ink-300 underline-offset-4"
+                      >
+                        AppSource
+                        <ArrowUpRight className="h-4 w-4" aria-hidden />
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </li>
+            )
+          })}
+        </ul>
+      </Reveal>
+
+      <Reveal>
+        <p className="mb-3 text-sm font-semibold text-ink-900">What we work with</p>
+        <ChipDrift items={MS_PLATFORMS} duration={34} />
+      </Reveal>
+
+      <Reveal className="rounded-3xl border border-white/80 bg-white/80 shadow-[0_20px_44px_-30px_rgba(15,27,45,0.35)] backdrop-blur-md p-5">
+        <p className="text-sm font-semibold text-ink-900">Power Platform and Copilot accelerators</p>
+        <ul className="mt-4 grid grid-cols-2 gap-x-4 gap-y-2">
+          {MS_ACCELERATORS.map((a) => (
+            <li key={a} className="flex items-start gap-2 py-1 text-sm leading-snug text-ink-800">
+              <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-navy-600" strokeWidth={3} />
+              {a}
+            </li>
+          ))}
+        </ul>
+      </Reveal>
+    </div>
+  )
+}
+
+const SF_ICONS = [Users, Store, Headset, Handshake]
+
+function SalesforceMobile() {
+  return (
+    <div className="mt-8 space-y-5 sm:hidden">
+      <Reveal>
+        <div className="relative overflow-hidden rounded-3xl bg-ink-950 p-5 text-white shadow-[0_24px_50px_-28px_rgba(19,23,32,0.6)]">
+          <div aria-hidden className="pointer-events-none absolute -right-12 -top-12 h-44 w-44 rounded-full bg-white/10 blur-2xl" />
+          <p className="text-xs font-semibold text-white/75">On Salesforce AppExchange</p>
+          <div className="mt-2 flex items-end gap-4">
+            <p className="text-[3rem] font-bold leading-none tracking-tight">
+              4.97<span className="text-xl font-semibold text-white/60"> / 5</span>
+            </p>
+            <div className="pb-1">
+              <div className="flex gap-0.5" aria-hidden>
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <Star key={i} className="h-3.5 w-3.5 fill-white text-white" />
+                ))}
+              </div>
+              <p className="mt-1 text-xs text-white/75">from 41 customer reviews</p>
+            </div>
+          </div>
+          <a
+            href={SF_LISTING_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-5 flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-white text-sm font-semibold text-ink-950 transition-transform active:scale-[0.98]"
+          >
+            See our AppExchange listing
+            <ArrowUpRight className="h-4 w-4" aria-hidden />
+          </a>
+        </div>
+      </Reveal>
+
+      <RevealGroup className="grid grid-cols-2 gap-3" stagger={0.07}>
+        {SF_BUILT.map((b, i) => {
+          const Icon = SF_ICONS[i]
+          return (
+            <RevealItem key={b.title}>
+              <div className="h-full rounded-2xl border border-white/80 bg-white/80 p-4 shadow-[0_16px_36px_-28px_rgba(15,27,45,0.35)] backdrop-blur-md">
+                <span className="grid h-9 w-9 place-items-center rounded-xl border border-line bg-white text-ink-800">
+                  <Icon className="h-[1.125rem] w-[1.125rem]" aria-hidden />
+                </span>
+                <h3 className="mt-3 text-[0.9375rem] font-semibold leading-snug text-ink-950">{b.title}</h3>
+                <p className="mt-1 text-[0.8125rem] leading-relaxed text-ink-600">{b.body}</p>
+              </div>
+            </RevealItem>
+          )
+        })}
+      </RevealGroup>
+
+      <Reveal>
+        <p className="mb-3 text-sm font-semibold text-ink-900">What we implement</p>
+        <ChipDrift items={SF_CLOUDS} duration={30} />
+      </Reveal>
+    </div>
+  )
+}
+
+/* ----------------------------------------------------------- Microsoft */
+export function MicrosoftWork() {
+  return (
+    <section id="microsoft" className="relative isolate overflow-hidden border-t border-line py-16 lg:py-24">
+      <div className="zx-container">
+        <Reveal>
+          <div className="flex flex-col items-start justify-between gap-5 md:flex-row md:items-end">
+            <div className="max-w-2xl">
+              <span className="inline-flex items-center gap-2 rounded-full border border-line bg-white px-3 py-1 text-xs font-semibold text-ink-700">
+                <span className="h-2 w-2 rounded-full bg-navy-600" aria-hidden />
+                Microsoft Solutions Partner
+              </span>
+              <h2 className="zx-display-sm mt-4 text-[2.25rem] text-ink-950 sm:text-[2.75rem] lg:text-[3rem]">
+                What we build on <span className="zx-serif text-navy-600">Microsoft</span>
+              </h2>
+              <p className="mt-3 text-base leading-relaxed text-ink-600 sm:text-[1.0625rem]">
+                Dynamics 365, Power Platform and Copilot apps for sales, service and operations, with our own apps
+                published on Microsoft AppSource.
+              </p>
+            </div>
+            <div className="flex shrink-0 flex-col gap-2 max-sm:w-full sm:items-end">
+              <Link
+                href="/partners/microsoft"
+                className="group inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-ink-950 px-5 py-3 text-sm font-semibold text-white transition-transform duration-300 hover:scale-[1.03] max-sm:w-full"
+              >
+                Our Microsoft practice
+                <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+              </Link>
+              <a
+                href={MS_PARTNER_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group inline-flex min-h-11 items-center gap-1.5 text-sm font-semibold text-ink-700 hover:text-navy-600"
+              >
+                Microsoft partner profile
+                <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+              </a>
+            </div>
+          </div>
+        </Reveal>
+
+        <MicrosoftMobile />
+
+        <div className="mt-10 grid gap-5 max-sm:hidden lg:mt-12 lg:grid-cols-12">
+          {/* AppSource apps */}
+          <div className="lg:col-span-7">
+            <Reveal>
+              <p className="mb-3 text-sm font-semibold text-ink-900">
+                Published on Microsoft AppSource
+              </p>
+            </Reveal>
+            <RevealGroup as="ul" className="divide-y divide-line overflow-hidden rounded-3xl border border-white/80 bg-white/80 shadow-[0_20px_44px_-30px_rgba(15,27,45,0.35)] backdrop-blur-md" stagger={0.06}>
+              {MS_APPS.map((app, i) => (
+                <RevealItem as="li" key={app.name}>
+                  <a
+                    href={app.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group relative flex items-start gap-4 px-5 py-4 transition-colors hover:bg-white sm:px-6"
+                  >
+                    <span className="min-w-0 flex-1">
+                      <span className="block text-[0.9375rem] font-semibold text-ink-950 transition-colors group-hover:text-navy-600">
+                        {app.name}
+                      </span>
+                      <span className="mt-0.5 block text-sm leading-relaxed text-ink-600">{app.body}</span>
+                    </span>
+                    <ArrowUpRight className="mt-0.5 h-4 w-4 shrink-0 text-ink-400 transition-[translate,color] duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-navy-600" />
+                  </a>
+                </RevealItem>
+              ))}
+            </RevealGroup>
+          </div>
+
+          {/* Platforms + accelerators */}
+          <div className="flex flex-col gap-5 lg:col-span-5">
+            <Reveal delay={0.08} className="rounded-3xl border border-white/80 bg-white/60 p-6 shadow-[0_20px_44px_-30px_rgba(15,27,45,0.3)] backdrop-blur-md">
+              <p className="text-sm font-semibold text-ink-900">What we work with</p>
+              <div className="mt-4 flex flex-wrap gap-2">
+                {MS_PLATFORMS.map((p) => (
+                  <Chip key={p} label={p} />
+                ))}
+              </div>
+            </Reveal>
+            <Reveal delay={0.14} className="rounded-3xl border border-white/80 bg-white/60 p-6 shadow-[0_20px_44px_-30px_rgba(15,27,45,0.3)] backdrop-blur-md">
+              <p className="text-sm font-semibold text-ink-900">
+                Power Platform and Copilot accelerators
+              </p>
+              <ul className="mt-4 grid grid-cols-2 gap-x-4 gap-y-2.5">
+                {MS_ACCELERATORS.map((a) => (
+                  <li key={a} className="flex items-center gap-2 text-sm text-ink-800">
+                    <Check className="h-3.5 w-3.5 shrink-0 text-navy-600" strokeWidth={3} />
+                    {a}
+                  </li>
+                ))}
+              </ul>
+            </Reveal>
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+/* ---------------------------------------------------------- Salesforce */
+export function SalesforceWork() {
+  return (
+    <section id="salesforce" className="relative isolate overflow-hidden border-t border-line py-16 lg:py-24">
+      <div className="zx-container">
+        <Reveal>
+          <div className="max-w-2xl">
+            <span className="inline-flex items-center gap-2 rounded-full border border-line bg-white px-3 py-1 text-xs font-semibold text-ink-700">
+              <span className="h-2 w-2 rounded-full bg-navy-600" aria-hidden />
+              Salesforce Partner
+            </span>
+            <h2 className="zx-display-sm mt-4 text-[2.25rem] text-ink-950 sm:text-[2.75rem] lg:text-[3rem]">
+              What we build on <span className="zx-serif text-navy-600">Salesforce</span>
+            </h2>
+            <p className="mt-3 text-base leading-relaxed text-ink-600 sm:text-[1.0625rem]">
+              Sales, service and partner systems on Salesforce, from the first enquiry to the order and the service visit.
+            </p>
+            <p className="mt-3 text-sm font-semibold text-ink-900">
+              75+ Salesforce projects · 26 Salesforce certifications · 4.97 from 41 reviews
+            </p>
+          </div>
+          <Link
+            href="/partners/salesforce"
+            className="group mt-6 inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-ink-950 px-5 py-3 text-sm font-semibold text-white transition-transform duration-300 hover:scale-[1.03] max-sm:w-full"
+          >
+            Our Salesforce practice
+            <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+          </Link>
+        </Reveal>
+
+        <SalesforceMobile />
+
+        <div className="mt-10 grid gap-5 max-sm:hidden lg:mt-12 lg:grid-cols-12">
+          {/* Rating card */}
+          <Reveal className="lg:col-span-4">
+            <div className="relative flex h-full flex-col justify-between overflow-hidden rounded-3xl bg-ink-950 p-7 text-white shadow-[0_24px_50px_-28px_rgba(19,23,32,0.6)]">
+              <div>
+                <p className="text-sm font-semibold text-white/80">On Salesforce AppExchange</p>
+                <p className="mt-5 text-[3.5rem] font-bold leading-none tracking-tight">
+                  4.97<span className="text-2xl font-semibold text-white/60"> / 5</span>
+                </p>
+                <div className="mt-3 flex gap-1" aria-hidden>
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <Star key={i} className="h-4 w-4 fill-white text-white" />
+                  ))}
+                </div>
+                <p className="mt-3 text-sm text-white/75">from 41 customer reviews</p>
+              </div>
+              <a
+                href={SF_LISTING_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group mt-8 inline-flex h-11 items-center gap-2 self-start rounded-xl bg-white px-5 text-sm font-semibold text-ink-950 transition-[background-color,translate] duration-300 hover:-translate-y-0.5 hover:bg-ink-50"
+              >
+                See our AppExchange listing
+                <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+              </a>
+            </div>
+          </Reveal>
+
+          {/* What we've built + clouds */}
+          <div className="flex flex-col gap-5 lg:col-span-8">
+            <RevealGroup className="grid gap-4 sm:grid-cols-2" stagger={0.07}>
+              {SF_BUILT.map((b) => (
+                <RevealItem key={b.title}>
+                  <div className="h-full rounded-2xl border border-white/80 bg-white/75 p-5 shadow-[0_16px_36px_-28px_rgba(15,27,45,0.35)] backdrop-blur-md transition-[translate,border-color] duration-300 hover:-translate-y-0.5 hover:border-ink-300">
+                    <h3 className="text-base font-semibold text-ink-950">{b.title}</h3>
+                    <p className="mt-1.5 text-sm leading-relaxed text-ink-600">{b.body}</p>
+                  </div>
+                </RevealItem>
+              ))}
+            </RevealGroup>
+            <Reveal delay={0.1} className="rounded-2xl border border-white/80 bg-white/75 p-5 shadow-[0_16px_36px_-28px_rgba(15,27,45,0.35)] backdrop-blur-md">
+              <p className="text-sm font-semibold text-ink-900">What we implement</p>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {SF_CLOUDS.map((c) => (
+                  <Chip key={c} label={c} />
+                ))}
+              </div>
+            </Reveal>
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}

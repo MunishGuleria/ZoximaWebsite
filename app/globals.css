@@ -1,0 +1,1289 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* Pinned card deck (Capabilities). Layout is decided in CSS so the server
+   render already has the right page height; capabilities.tsx mirrors this
+   query in JS (DECK_QUERY) for behaviour only. Below the min-height the
+   pinned stage is too short to read, so it falls back to the stack. */
+@custom-variant deck (@media (min-width: 1024px) and (min-height: 640px) and (prefers-reduced-motion: no-preference));
+@custom-variant no-deck (@media not all and (min-width: 1024px) and (min-height: 640px) and (prefers-reduced-motion: no-preference));
+@custom-variant short (@media (max-height: 860px));
+
+/* ==========================================================================
+   ZOXIMA DESIGN SYSTEM
+   --------------------------------------------------------------------------
+   A restrained, editorial palette: deep ink, warm paper, one confident accent.
+   The `--zx-*` tokens are the new system used by the redesigned surfaces.
+   The shadcn `--background/--primary/...` tokens are kept in sync so existing
+   pages and all `components/ui/*` primitives keep working unchanged.
+   ========================================================================== */
+
+:root {
+  /* --- Brand scale: ink (near-black, faint blue cast) --- */
+  --zx-ink-950: oklch(0.205 0.020 268);
+  --zx-ink-900: oklch(0.262 0.019 268);
+  --zx-ink-800: oklch(0.330 0.017 268);
+  --zx-ink-700: oklch(0.372 0.013 265);
+  --zx-ink-600: oklch(0.478 0.012 265);
+  --zx-ink-500: oklch(0.572 0.011 265);
+  --zx-ink-400: oklch(0.688 0.010 265);
+  --zx-ink-300: oklch(0.812 0.008 265);
+  --zx-ink-200: oklch(0.895 0.006 265);
+  --zx-ink-100: oklch(0.943 0.004 265);
+  --zx-ink-50:  oklch(0.975 0.003 265);
+
+  /* --- Paper: warm off-white, keeps the page from feeling clinical --- */
+  --zx-paper: oklch(0.988 0.003 95);
+  --zx-paper-raised: oklch(1 0 0);
+  --zx-paper-sunken: oklch(0.966 0.004 95);
+
+  /* --- Brand palette, sampled directly from the Zoxima trefoil mark ------
+     navy  #1c1c70  PRIMARY  actions, links, emphasis, the serif accent
+     green #00701c  OUTCOME  metrics, results, confirmation, checkmarks
+     red   #e0001c  SIGNAL   one high-emphasis note per section, never more
+
+     Three colours with fixed jobs is a system. Three colours used freely is
+     the rainbow that made the previous site look generic. Keep the jobs. */
+  --zx-navy-900: oklch(0.295 0.139 274);
+  /* Large dark surfaces use this, never near-black: it carries the brand hue
+     at low chroma so a full-bleed band reads as navy, not as a void. */
+  --zx-surface-dark: oklch(0.243 0.048 272);
+  --zx-surface-dark-2: oklch(0.295 0.045 272);
+  --zx-navy-700: oklch(0.340 0.150 274);
+  --zx-navy-600: oklch(0.425 0.180 274);
+  --zx-navy-500: oklch(0.505 0.196 274);
+  --zx-navy-soft: oklch(0.957 0.022 274);
+  --zx-navy-border: oklch(0.872 0.068 274);
+
+  --zx-green-700: oklch(0.372 0.115 145);
+  --zx-green-600: oklch(0.455 0.135 145);
+  --zx-green-500: oklch(0.545 0.145 145);
+  --zx-green-soft: oklch(0.960 0.028 145);
+  --zx-green-border: oklch(0.878 0.062 145);
+
+  --zx-red-600: oklch(0.522 0.215 27);
+  --zx-red-500: oklch(0.571 0.232 27);
+  --zx-red-soft: oklch(0.962 0.024 27);
+  --zx-red-border: oklch(0.885 0.070 27);
+
+  /* Accent aliases — navy is the primary brand colour */
+  --zx-accent: var(--zx-navy-600);
+  --zx-accent-hover: var(--zx-navy-700);
+  --zx-accent-soft: var(--zx-navy-soft);
+  --zx-accent-border: var(--zx-navy-border);
+  --zx-accent-fg: oklch(1 0 0);
+
+  /* Aliases retained for the aurora and chart tokens */
+  --zx-teal: var(--zx-green-500);
+  --zx-amber: oklch(0.746 0.142 78);
+  --zx-success: var(--zx-green-600);
+
+  /* --- Semantic --- */
+  --zx-bg: var(--zx-paper);
+  --zx-surface: var(--zx-paper-raised);
+  --zx-text: var(--zx-ink-950);
+  --zx-text-muted: var(--zx-ink-600);
+  --zx-text-subtle: var(--zx-ink-500);
+  --zx-line: oklch(0.912 0.005 265);
+  --zx-line-strong: oklch(0.855 0.007 265);
+
+  /* --- Type --- */
+  --zx-font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --zx-font-serif: var(--font-instrument-serif), ui-serif, Georgia, serif;
+  --zx-font-mono: var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, monospace;
+
+  /* Fixed-header height. The pinned architecture stage subtracts this so its
+     hero zone is not hidden underneath the nav. Keep in sync with navigation.tsx. */
+  --zx-nav-h: 5rem;
+
+  /* --- Motion --- */
+  --zx-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --zx-ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* ---------- shadcn compatibility layer ---------- */
+  --background: var(--zx-paper);
+  --foreground: var(--zx-ink-950);
+  --card: var(--zx-paper-raised);
+  --card-foreground: var(--zx-ink-950);
+  --popover: var(--zx-paper-raised);
+  --popover-foreground: var(--zx-ink-950);
+  --primary: var(--zx-accent);
+  --primary-foreground: var(--zx-accent-fg);
+  --secondary: var(--zx-ink-100);
+  --secondary-foreground: var(--zx-ink-900);
+  --muted: var(--zx-ink-100);
+  --muted-foreground: var(--zx-ink-600);
+  --accent: var(--zx-accent-soft);
+  --accent-foreground: var(--zx-accent-hover);
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(1 0 0);
+  --border: var(--zx-line);
+  --input: var(--zx-line-strong);
+  --ring: var(--zx-accent);
+  --chart-1: var(--zx-accent);
+  --chart-2: var(--zx-teal);
+  --chart-3: var(--zx-ink-700);
+  --chart-4: var(--zx-amber);
+  --chart-5: var(--zx-success);
+  --radius: 0.625rem;
+  --sidebar: var(--zx-ink-50);
+  --sidebar-foreground: var(--zx-ink-950);
+  --sidebar-primary: var(--zx-accent);
+  --sidebar-primary-foreground: var(--zx-accent-fg);
+  --sidebar-accent: var(--zx-ink-100);
+  --sidebar-accent-foreground: var(--zx-ink-900);
+  --sidebar-border: var(--zx-line);
+  --sidebar-ring: var(--zx-accent);
+}
+
+.dark {
+  --zx-bg: var(--zx-ink-950);
+  --zx-surface: var(--zx-ink-900);
+  --zx-text: oklch(0.985 0 0);
+  --zx-text-muted: var(--zx-ink-400);
+  --zx-text-subtle: var(--zx-ink-500);
+  --zx-line: oklch(0.288 0.010 265);
+  --zx-line-strong: oklch(0.365 0.012 265);
+  --zx-accent: oklch(0.672 0.178 264);
+  --zx-accent-hover: oklch(0.742 0.158 264);
+  --zx-accent-soft: oklch(0.268 0.062 264);
+  --zx-accent-border: oklch(0.352 0.092 264);
+
+  --background: var(--zx-ink-950);
+  --foreground: oklch(0.985 0 0);
+  --card: var(--zx-ink-900);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: var(--zx-ink-900);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: var(--zx-accent);
+  --primary-foreground: oklch(0.145 0 0);
+  --secondary: var(--zx-ink-800);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: var(--zx-ink-800);
+  --muted-foreground: var(--zx-ink-400);
+  --accent: var(--zx-accent-soft);
+  --accent-foreground: oklch(0.985 0 0);
+  --border: var(--zx-line);
+  --input: var(--zx-line-strong);
+  --ring: var(--zx-accent);
+  --sidebar: var(--zx-ink-900);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-accent: var(--zx-ink-800);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: var(--zx-line);
+}
+
+@media (min-width: 1024px) {
+  :root { --zx-nav-h: 6.5rem; }
+}
+
+@theme inline {
+  --font-sans: var(--zx-font-sans);
+  --font-serif: var(--zx-font-serif);
+  --font-mono: var(--zx-font-mono);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  /* Brand tokens exposed as Tailwind colours: bg-ink-900, text-accent, … */
+  --color-ink-950: var(--zx-ink-950);
+  --color-ink-900: var(--zx-ink-900);
+  --color-ink-800: var(--zx-ink-800);
+  --color-ink-700: var(--zx-ink-700);
+  --color-ink-600: var(--zx-ink-600);
+  --color-ink-500: var(--zx-ink-500);
+  --color-ink-400: var(--zx-ink-400);
+  --color-ink-300: var(--zx-ink-300);
+  --color-ink-200: var(--zx-ink-200);
+  --color-ink-100: var(--zx-ink-100);
+  --color-ink-50: var(--zx-ink-50);
+  --color-paper: var(--zx-paper);
+  --color-paper-raised: var(--zx-paper-raised);
+  --color-paper-sunken: var(--zx-paper-sunken);
+  --color-brand: var(--zx-accent);
+  --color-brand-hover: var(--zx-accent-hover);
+  --color-brand-soft: var(--zx-accent-soft);
+  --color-brand-border: var(--zx-accent-border);
+  --color-navy-900: var(--zx-navy-900);
+  --color-surface-dark: var(--zx-surface-dark);
+  --color-surface-dark-2: var(--zx-surface-dark-2);
+  --color-navy-700: var(--zx-navy-700);
+  --color-navy-600: var(--zx-navy-600);
+  --color-navy-500: var(--zx-navy-500);
+  --color-navy-soft: var(--zx-navy-soft);
+  --color-navy-border: var(--zx-navy-border);
+  --color-signal: var(--zx-green-600);
+  --color-signal-strong: var(--zx-green-700);
+  --color-signal-soft: var(--zx-green-soft);
+  --color-signal-border: var(--zx-green-border);
+  --color-flag: var(--zx-red-600);
+  --color-flag-soft: var(--zx-red-soft);
+  --color-flag-border: var(--zx-red-border);
+  /* Content-page pastels: one family, one pair or bento per page. */
+  --color-tint-blue: #e8eefb;
+  --color-tint-mint: #e5f2ec;
+  --color-tint-peach: #fbede3;
+  --color-tint-stone: #ece6da;
+  --color-tint-sand: #f3eee3;
+  --color-line: var(--zx-line);
+  --color-line-strong: var(--zx-line-strong);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    /* Offset anchor targets so the fixed header never covers them */
+    scroll-padding-top: 6rem;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--zx-font-sans);
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    line-height: 1.6;
+    /* NO overflow-x here. Both `hidden` and `clip` on body change how the
+       sticky containing block resolves and stop the pinned architecture stage
+       from sticking at all. Sections that can overflow clip themselves:
+       the hero is `overflow-hidden`, and .zx-aurora / .zx-marquee both set
+       `overflow: hidden` on their own boxes. */
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Legacy global heading sizes retained for pages not yet migrated.
+     Redesigned surfaces opt out via `.zx` (see below). */
+  h1 { @apply text-4xl md:text-5xl lg:text-6xl font-bold leading-tight; }
+  h2 { @apply text-3xl md:text-4xl lg:text-5xl font-bold leading-tight; }
+  h3 { @apply text-2xl md:text-3xl font-semibold leading-tight; }
+  h4 { @apply text-xl md:text-2xl font-semibold leading-tight; }
+  h5 { @apply text-lg md:text-xl font-medium leading-tight; }
+  h6 { @apply text-base md:text-lg font-medium leading-tight; }
+  p  { @apply text-base leading-relaxed; }
+
+  ::selection {
+    background: var(--zx-accent);
+    color: var(--zx-accent-fg);
+  }
+
+  /* Decorative images (empty alt, or inside an aria-hidden layer) are never
+     part of a text selection — otherwise a stray double/triple-click paints
+     a whole section's background in the selection colour. */
+  img[alt=""],
+  [aria-hidden="true"] img {
+    user-select: none;
+    -webkit-user-drag: none;
+  }
+}
+
+/* ==========================================================================
+   `.zx` — the redesigned typographic scope.
+   Opts out of the legacy global heading sizes so each surface controls its
+   own scale with utilities, and enables tighter editorial tracking.
+   ========================================================================== */
+@layer base {
+  .zx h1,
+  .zx h2,
+  .zx h3,
+  .zx h4,
+  .zx h5,
+  .zx h6 {
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+    letter-spacing: inherit;
+    margin: 0;
+  }
+
+  .zx p {
+    font-size: inherit;
+    line-height: inherit;
+  }
+}
+
+@layer components {
+  /* Display type — tight, confident, optically balanced at large sizes. */
+  .zx-display {
+    font-family: var(--zx-font-sans);
+    font-weight: 600;
+    letter-spacing: -0.035em;
+    line-height: 1.03;
+    text-wrap: balance;
+  }
+
+  .zx-display-sm {
+    font-family: var(--zx-font-sans);
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    line-height: 1.12;
+    text-wrap: balance;
+  }
+
+  /* The editorial serif accent. Used on one or two words per headline —
+     this is the signature of the brand voice, so never over-apply it. */
+  .zx-serif {
+    font-family: var(--zx-font-serif);
+    font-weight: 400;
+    font-style: italic;
+    letter-spacing: -0.01em;
+  }
+
+  /* Small caps label above a section heading. */
+  .zx-eyebrow {
+    font-family: var(--zx-font-mono);
+    font-size: 0.6875rem;
+    font-weight: 400;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--zx-text-subtle);
+  }
+
+  .zx-lead {
+    font-size: 1.0625rem;
+    line-height: 1.65;
+    color: var(--zx-text-muted);
+    text-wrap: pretty;
+  }
+
+  @media (min-width: 1024px) {
+    .zx-lead {
+      font-size: 1.1875rem;
+      line-height: 1.6;
+    }
+  }
+
+  /* Numeric figures: tabular so columns of stats align exactly. */
+  .zx-figure {
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.04em;
+    font-weight: 600;
+  }
+
+  /* A hairline rule that fades out — used to separate editorial blocks. */
+  .zx-rule {
+    height: 1px;
+    background: linear-gradient(
+      to right,
+      var(--zx-line-strong),
+      var(--zx-line) 45%,
+      transparent
+    );
+  }
+
+  /* Underline that draws in on hover, for text links. */
+  .zx-link {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    color: var(--zx-text);
+    text-decoration: none;
+  }
+
+  .zx-link::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -2px;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.45s var(--zx-ease);
+  }
+
+  .zx-link:hover::after,
+  .zx-link:focus-visible::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+}
+
+@layer utilities {
+  .text-balance { text-wrap: balance; }
+  .text-pretty { text-wrap: pretty; }
+
+  /* Editorial container: a touch narrower than Tailwind's default. */
+  .zx-container {
+    width: 100%;
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+    max-width: 80rem;
+  }
+
+  @media (min-width: 768px) {
+    .zx-container { padding-inline: 2rem; }
+  }
+
+  @media (min-width: 1280px) {
+    .zx-container { padding-inline: 2.5rem; }
+  }
+
+  /* Very fine dot grid — reads as texture, not decoration. */
+  .zx-dot-grid {
+    background-image: radial-gradient(
+      circle at 1px 1px,
+      color-mix(in oklch, var(--zx-ink-950) 12%, transparent) 1px,
+      transparent 0
+    );
+    background-size: 28px 28px;
+  }
+
+  .zx-line-grid {
+    background-image:
+      linear-gradient(to right, var(--zx-line) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--zx-line) 1px, transparent 1px);
+    background-size: 72px 72px;
+  }
+
+  /* Soft radial wash behind the hero. Single hue — no rainbow gradients. */
+  .zx-hero-wash {
+    background:
+      radial-gradient(
+        60rem 40rem at 78% 8%,
+        color-mix(in oklch, var(--zx-navy-500) 16%, transparent),
+        transparent 62%
+      ),
+      radial-gradient(
+        44rem 34rem at 6% 92%,
+        color-mix(in oklch, var(--zx-green-500) 13%, transparent),
+        transparent 60%
+      );
+  }
+
+  .zx-fade-edges {
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      black 8%,
+      black 92%,
+      transparent
+    );
+  }
+
+  /* Retained: still referenced by pages not yet redesigned. */
+  .bg-grid-pattern {
+    background-image:
+      linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+}
+
+/* --- Marquee for the client proof strip -------------------------------- */
+@keyframes zx-marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+.zx-marquee-track {
+  display: flex;
+  width: max-content;
+  animation: zx-marquee 42s linear infinite;
+}
+
+.zx-marquee:hover .zx-marquee-track {
+  animation-play-state: paused;
+}
+
+@keyframes zx-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.animate-fade-in { animation: zx-fade-in 0.8s ease-in-out; }
+
+/* --- Scrollbar: neutral, matches the paper ground ---------------------- */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: var(--zx-paper-sunken); }
+::-webkit-scrollbar-thumb {
+  background: var(--zx-ink-300);
+  border-radius: 999px;
+  border: 2px solid var(--zx-paper-sunken);
+}
+::-webkit-scrollbar-thumb:hover { background: var(--zx-ink-400); }
+
+/* --- Focus: visible, on-brand, never removed -------------------------- */
+:focus-visible {
+  outline: 2px solid var(--zx-accent);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* --- Entrance rise (hero) ---------------------------------------------- */
+/* Fade-up as a CSS animation: it starts with the first paint (no wait for
+   hydration) and runs on the compositor. Per-element timing via
+   --zx-rise-y / --zx-rise-dur / --zx-rise-delay. The reduced-motion block
+   below collapses it to an instant change. */
+@keyframes zx-rise {
+  from {
+    opacity: 0;
+    transform: translateY(var(--zx-rise-y, 14px));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.zx-rise {
+  animation: zx-rise var(--zx-rise-dur, 0.65s) cubic-bezier(0.22, 1, 0.36, 1)
+    var(--zx-rise-delay, 0s) both;
+}
+
+/* --- Feathered illustration ------------------------------------------- */
+/* Fades an image's four edges to transparent, so an illustration painted on
+   its own pale background melts into whatever card it sits on instead of
+   showing as a box. Put it on the <img> itself (with any blend mode) and size
+   the img to the picture's own aspect ratio, so the fade lands on the
+   picture's edges rather than on empty letterbox space. */
+.zx-feather {
+  -webkit-mask-image:
+    linear-gradient(to right, transparent, #000 14%, #000 86%, transparent),
+    linear-gradient(to bottom, transparent, #000 14%, #000 86%, transparent);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to right, transparent, #000 14%, #000 86%, transparent),
+    linear-gradient(to bottom, transparent, #000 14%, #000 86%, transparent);
+  mask-composite: intersect;
+}
+
+/* --- Respect the user's motion preference ----------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .zx-marquee-track { animation: none; }
+}
+
+/* ==========================================================================
+   Hero atmosphere
+   --------------------------------------------------------------------------
+   A slow aurora mesh plus film grain. Deliberately abstract: no neural-network
+   nodes, no glowing brains, no circuit boards — the visual language that makes
+   an AI company's site look like every other AI company's site.
+   Pure CSS, no asset, no JS, GPU-composited, and fully disabled under
+   prefers-reduced-motion by the global rule below.
+   ========================================================================== */
+
+.zx-aurora {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.zx-aurora-blob {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(66px);
+  will-change: transform;
+  opacity: 0.95;
+}
+
+.zx-aurora-blob--one {
+  width: 46rem;
+  height: 34rem;
+  top: -14rem;
+  right: -10rem;
+  background: radial-gradient(
+    circle at 50% 50%,
+    color-mix(in oklch, var(--zx-navy-500) 46%, transparent),
+    transparent 68%
+  );
+  animation: zx-drift-a 26s var(--zx-ease-in-out) infinite alternate;
+}
+
+.zx-aurora-blob--two {
+  width: 38rem;
+  height: 30rem;
+  top: 4rem;
+  right: 18%;
+  background: radial-gradient(
+    circle at 50% 50%,
+    color-mix(in oklch, var(--zx-green-500) 40%, transparent),
+    transparent 68%
+  );
+  animation: zx-drift-b 32s var(--zx-ease-in-out) infinite alternate;
+}
+
+.zx-aurora-blob--three {
+  width: 40rem;
+  height: 26rem;
+  bottom: -12rem;
+  left: -12rem;
+  background: radial-gradient(
+    circle at 50% 50%,
+    color-mix(in oklch, var(--zx-red-500) 24%, transparent),
+    transparent 70%
+  );
+  animation: zx-drift-c 38s var(--zx-ease-in-out) infinite alternate;
+}
+
+@keyframes zx-drift-a {
+  from { transform: translate3d(0, 0, 0) scale(1); }
+  to   { transform: translate3d(-6rem, 4rem, 0) scale(1.14); }
+}
+
+@keyframes zx-drift-b {
+  from { transform: translate3d(0, 0, 0) scale(1.06); }
+  to   { transform: translate3d(5rem, -3rem, 0) scale(0.92); }
+}
+
+@keyframes zx-drift-c {
+  from { transform: translate3d(0, 0, 0) scale(1); }
+  to   { transform: translate3d(7rem, -4rem, 0) scale(1.18); }
+}
+
+/* Phone: freeze the aurora and lighten the blur. Animating a blurred surface
+   this large re-rasterises it every frame, which is the single most expensive
+   thing in the hero on a mid-range device. Held still it rasterises once. */
+@media (max-width: 1023px) {
+  .zx-aurora-blob {
+    animation: none;
+    filter: blur(48px);
+  }
+
+  .zx-sweep {
+    display: none;
+  }
+}
+
+/* Film grain — stops the large gradients from banding and adds a printed,
+   tactile quality that flat gradients lack. */
+.zx-grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.35;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.42'/%3E%3C/svg%3E");
+}
+
+/* A single hairline that sweeps the hero — reads as a scan across a system,
+   not as decoration. */
+@keyframes zx-sweep {
+  0%   { transform: translateX(-100%); opacity: 0; }
+  12%  { opacity: 1; }
+  88%  { opacity: 1; }
+  100% { transform: translateX(100%); opacity: 0; }
+}
+
+.zx-sweep {
+  position: absolute;
+  inset-block: 0;
+  width: 14rem;
+  background: linear-gradient(
+    to right,
+    transparent,
+    color-mix(in oklch, var(--zx-accent) 12%, transparent),
+    transparent
+  );
+  animation: zx-sweep 11s linear infinite;
+  pointer-events: none;
+}
+
+
+/* --- Flow line: dashes travelling left→right. Reads as data moving between
+   systems. Pure CSS; stops under prefers-reduced-motion via the global rule. */
+@keyframes zx-flow {
+  to { background-position-x: 12px; }
+}
+
+.zx-flow {
+  display: block;
+  height: 2px;
+  background-image: repeating-linear-gradient(
+    90deg,
+    var(--zx-navy-600) 0 5px,
+    transparent 5px 12px
+  );
+  background-size: 12px 2px;
+  background-repeat: repeat-x;
+  opacity: 0.55;
+  animation: zx-flow 0.8s linear infinite;
+}
+
+
+/* --- Flow-field canvas: clears behind the headline, fades into the panel -- */
+.zx-flowfield {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0.55;
+  -webkit-mask-image:
+    radial-gradient(58% 52% at 50% 40%, transparent 18%, black 68%),
+    linear-gradient(to bottom, black 70%, transparent 100%);
+  mask-image:
+    radial-gradient(58% 52% at 50% 40%, transparent 18%, black 68%),
+    linear-gradient(to bottom, black 70%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
+}
+
+
+/* ==========================================================================
+   Hero orb — a large, soft, pastel gradient sphere behind the headline.
+   Pastel on purpose: ink text stays legible over it. Slow drift + a rotating
+   sheen give it life without motion the eye has to track.
+   ========================================================================== */
+/* Host for the brand shape. Deliberately static: no autonomous animation and
+   no cursor parallax — the mark holds its position. Cursor interaction on the
+   hero lives in the spotlight and the flow field instead. */
+.zx-orb-wrap {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* Soft light that follows the cursor across the hero. */
+.zx-spotlight {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.6s var(--zx-ease);
+  background: radial-gradient(
+    22rem 22rem at var(--zx-px, 50%) var(--zx-py, 40%),
+    color-mix(in oklch, var(--zx-navy-500) 14%, transparent),
+    transparent 68%
+  );
+}
+
+[data-pointer="true"] .zx-spotlight { opacity: 1; }
+
+/* ==========================================================================
+   Hero shape — the Zoxima mark itself, not a circle.
+
+   zoxima-mark.png is the trefoil alone — generated by cropping the wordmark
+   band out of the full logo, so the background shape is the symbol only and
+   never renders "zoxima" as giant text behind the headline. Its alpha channel
+   masks the pastel gradient, so the gradient takes the exact shape of the mark.
+
+   `drop-shadow` rather than `box-shadow`: box-shadow follows the element box
+   and would draw a rectangular halo around a masked shape.
+   ========================================================================== */
+.zx-orb {
+  position: absolute;
+  left: 50%;
+  /* Anchored in rem, not %, so the mark stays centred on the headline block
+     rather than on the full section height (which includes the flow panel). */
+  top: 24rem;
+  width: min(44vw, 540px);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  opacity: 0.72;
+
+  background:
+    radial-gradient(circle at 30% 22%, oklch(0.955 0.07 80) 0%, transparent 48%),
+    radial-gradient(circle at 78% 78%, oklch(0.83 0.115 145) 0%, transparent 58%),
+    radial-gradient(
+      circle at 50% 48%,
+      oklch(0.82 0.135 274) 0%,
+      oklch(0.885 0.095 274) 56%,
+      oklch(0.935 0.055 274) 100%
+    );
+
+  -webkit-mask-image: url("/zoxima-mark.png");
+  mask-image: url("/zoxima-mark.png");
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+
+  filter: blur(1.5px)
+    drop-shadow(0 0 90px color-mix(in oklch, var(--zx-navy-500) 34%, transparent));
+}
+
+@media (max-width: 1023px) {
+  .zx-orb { width: min(66vw, 330px); top: 17rem; }
+}
+
+
+/* ==========================================================================
+   Reference-architecture motion
+   --------------------------------------------------------------------------
+   One highlight sweeps left to right through every chip, column by column,
+   then rests — a request moving through the stack. The pulse is an overlay
+   pseudo-element rather than a background/border animation, so each chip
+   keeps its own tone (brand / muted / plain) underneath.
+   ========================================================================== */
+.zx-chip {
+  position: relative;
+  isolation: isolate;
+}
+
+.zx-chip::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  z-index: -1;
+  border-radius: inherit;
+  background: color-mix(in oklch, var(--zx-navy-500) 22%, transparent);
+  box-shadow: 0 0 0 1px color-mix(in oklch, var(--zx-navy-500) 45%, transparent);
+  opacity: 0;
+  animation: zx-chip-pulse 7s var(--zx-ease-in-out) infinite;
+  animation-delay: var(--zx-chip-delay, 0s);
+}
+
+@keyframes zx-chip-pulse {
+  0%,
+  62%,
+  100% { opacity: 0; }
+  4%   { opacity: 1; }
+  14%  { opacity: 0; }
+}
+
+/* Connector between columns: dashes travelling in the direction of flow. */
+.zx-connector {
+  position: relative;
+  display: block;
+  height: 2px;
+  width: 2.25rem;
+  overflow: hidden;
+  background-image: repeating-linear-gradient(
+    90deg,
+    color-mix(in oklch, var(--zx-navy-500) 55%, transparent) 0 4px,
+    transparent 4px 10px
+  );
+  background-size: 10px 2px;
+  animation: zx-flow 0.9s linear infinite;
+}
+
+
+/* Horizontal snap strip used where a wide layout must stay wide on a phone
+   (the hero platform panel). Scrollbar hidden — the peeking next card is the
+   affordance, and a visible bar under a card reads as a bug at this size. */
+.zx-swipe {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  overscroll-behavior-x: contain;
+}
+
+.zx-swipe::-webkit-scrollbar {
+  display: none;
+}
+
+/* ==========================================================================
+   Content pages (components/site/*)
+   ========================================================================== */
+
+/* Statement words light up as the reader scrolls: --p (0–1) is written by
+   one scroll listener on the paragraph block, --i is the word's index and
+   --n the word count. Pure CSS per word; nothing re-renders. */
+.zx-word {
+  opacity: clamp(0.16, calc(var(--p, 1) * (var(--n, 1) + 4) - var(--i, 0)), 1);
+  transition: opacity 0.18s linear;
+}
+
+/* Slow vertical float for hero cards and desk illustrations. */
+@keyframes zx-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-9px); }
+}
+.zx-float {
+  animation: zx-float var(--zx-float-dur, 7s) ease-in-out var(--zx-float-delay, 0s) infinite;
+}
+
+/* Soft edge fade for horizontal strips (marquees). */
+.zx-fade-x {
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .zx-word { opacity: 1; }
+  .zx-float { animation: none; }
+}
+
+/* Segment bar that fills until the product showcase moves on. */
+@keyframes zx-progress {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+.zx-progress { animation: zx-progress linear both; }
+
+/* A light pulse travelling down a connector (hero "chain" visual). */
+@keyframes zx-drip {
+  from { transform: translateY(-100%); }
+  to { transform: translateY(260%); }
+}
+.zx-drip { animation: zx-drip 1.8s cubic-bezier(0.45, 0, 0.55, 1) infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .zx-drip { animation: none; opacity: 0; }
+}
+
+/* ==========================================================================
+   Content-page template (components/site/*), after the Salezx inner pages:
+   soft washes drawn with gradients only, one pastel family, a tight section
+   rhythm, and reveals that replay from the side you scroll in from.
+   ========================================================================== */
+
+.zx-section {
+  padding-block: 3.5rem;
+}
+@media (min-width: 640px) {
+  .zx-section { padding-block: 4rem; }
+}
+@media (min-width: 1024px) {
+  .zx-section { padding-block: 5rem; }
+}
+
+/* Hero ground: plain paper (site rule: no colour washes). */
+.zx-backdrop-ribbon {
+  background: var(--zx-paper);
+}
+
+/* Closing band: plain paper. */
+.zx-backdrop-close {
+  background: var(--zx-paper);
+}
+
+/* The one dark band a page may have. */
+.zx-backdrop-navy {
+  background: var(--zx-ink-950);
+}
+
+/* Frosted card, only where it sits on a wash. */
+.zx-glass {
+  border-radius: 28px;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.6);
+  box-shadow: 0 30px 60px -30px rgba(31, 42, 97, 0.28), 0 1px 0 rgba(255, 255, 255, 0.8) inset;
+  -webkit-backdrop-filter: blur(18px) saturate(1.4);
+  backdrop-filter: blur(18px) saturate(1.4);
+}
+
+/* Large white card: hairline border, long soft shadow. */
+.zx-card {
+  border-radius: 28px;
+  border: 1px solid var(--zx-line);
+  background: #fff;
+  box-shadow: 0 24px 48px -32px rgba(31, 42, 97, 0.22), 0 2px 6px -2px rgba(31, 42, 97, 0.05);
+}
+
+/* Scroll reveal. Hidden only once JS is known to run (html.zx-js); it resets
+   when fully off screen and comes back from the side it left by. */
+.zx-js [data-zx-reveal] {
+  opacity: 0;
+  transform: translate3d(0, 32px, 0) scale(0.985);
+  transition:
+    opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 1s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--zx-reveal-delay, 0ms);
+}
+.zx-js [data-zx-reveal="fade"] { transform: none; }
+.zx-js [data-zx-reveal="scale"] { transform: translate3d(0, 48px, 0) scale(0.94); }
+.zx-js [data-zx-reveal=""][data-from="above"] { transform: translate3d(0, -32px, 0) scale(0.985); }
+.zx-js [data-zx-reveal="scale"][data-from="above"] { transform: translate3d(0, -48px, 0) scale(0.94); }
+.zx-js [data-zx-reveal][data-in] { opacity: 1; transform: none; }
+
+.zx-js [data-zx-reveal="line-y"] {
+  opacity: 1;
+  transform: scaleY(0);
+  transform-origin: center top;
+  transition: transform 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--zx-reveal-delay, 0ms);
+}
+.zx-js [data-zx-reveal="line-y"][data-in] { transform: scaleY(1); }
+
+/* Reduced motion: everything at rest. !important so no variant rule
+   (e.g. scale + data-from="above", which is more specific) can leave an
+   element shrunk or hidden. */
+@media (prefers-reduced-motion: reduce) {
+  .zx-js [data-zx-reveal] { opacity: 1 !important; transform: none !important; transition: none !important; }
+}
+
+/* Hero entrance for content pages (first paint, no hydration wait). */
+@keyframes zx-settle {
+  from { opacity: 0; transform: translate3d(0, 24px, 0) scale(0.97); }
+  to { opacity: 1; transform: none; }
+}
+.zx-settle { animation: zx-settle 1s cubic-bezier(0.22, 1, 0.36, 1) var(--zx-rise-delay, 0s) both; }
+
+/* A rail that draws itself top to bottom on first paint (hero diagrams). */
+@keyframes zx-draw-y {
+  from { transform: scaleY(0); }
+  to { transform: scaleY(1); }
+}
+.zx-draw-y { transform-origin: center top; animation: zx-draw-y 1.4s cubic-bezier(0.22, 1, 0.36, 1) var(--zx-rise-delay, 0s) both; }
+
+/* Two plain paper sections in a row share one gap, not two. */
+.zx-plain + .zx-plain { padding-top: 0; }
+
+/* Home hero: the outcome's tick pops in, then the three pillars light up. */
+@keyframes zx-tick {
+  0% { transform: scale(0.4); opacity: 0; }
+  60% { transform: scale(1.12); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+.zx-tick { animation: zx-tick 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.35s both; }
+@keyframes zx-pillar {
+  from { background: #fff; border-color: var(--zx-line); color: var(--zx-ink-700); }
+  to { background: var(--zx-navy-soft); border-color: var(--zx-navy-border); color: var(--zx-ink-950); }
+}
+.zx-pillar { animation: zx-pillar 0.5s ease-out var(--zx-pillar-delay, 0s) both; }
+@media (prefers-reduced-motion: reduce) {
+  .zx-tick, .zx-pillar { animation-duration: 0.01ms; animation-delay: 0s; }
+}
+
+/* ==========================================================================
+   Liquid glass for buttons, chips and hover rows (site-wide), in the iOS
+   "water droplet" style: clear glass that barely tints what is behind it,
+   a bright specular rim on the top edge, a soft inner glow, a darker lower
+   lip (the lens), and a highlight that follows the pointer (--mx / --my,
+   set by components/site/liquid-pointer.tsx). Unlayered on purpose: added to
+   an element, these win over its Tailwind colour/hover utilities.
+   ========================================================================== */
+.zx-glass-btn,
+.zx-glass-chip,
+.zx-glass-btn-dark {
+  --mx: 30%;
+  --my: 0%;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  -webkit-backdrop-filter: blur(10px) saturate(1.9) brightness(1.06);
+  backdrop-filter: blur(10px) saturate(1.9) brightness(1.06);
+  transition:
+    background-color 0.35s ease, box-shadow 0.35s ease, color 0.3s ease,
+    translate 0.45s cubic-bezier(0.34, 1.56, 0.64, 1), scale 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.zx-glass-btn,
+.zx-glass-chip {
+  background-color: rgba(255, 255, 255, 0.28);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  box-shadow:
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.95),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.45),
+    inset 0 10px 18px -10px rgba(255, 255, 255, 0.85),
+    inset 0 -10px 16px -12px rgba(31, 42, 97, 0.22),
+    0 0 0 1px rgba(15, 27, 45, 0.06),
+    0 10px 26px -14px rgba(31, 42, 97, 0.4);
+}
+.zx-glass-btn-dark {
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  box-shadow:
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.55),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.18),
+    inset 0 10px 18px -10px rgba(255, 255, 255, 0.35),
+    inset 0 -10px 16px -12px rgba(0, 0, 0, 0.35),
+    0 10px 26px -14px rgba(0, 0, 0, 0.55);
+}
+
+/* The droplet's specular highlight: a soft bright spot that sits up-left at
+   rest and follows the pointer, plus a thin bright arc along the top edge. */
+.zx-glass-btn::before,
+.zx-glass-chip::before,
+.zx-glass-btn-dark::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+  background:
+    radial-gradient(120px 60px at var(--mx) var(--my), rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0) 70%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.55) 0%, rgba(255, 255, 255, 0) 45%);
+  opacity: 0.7;
+  transition: opacity 0.35s ease;
+}
+.zx-glass-btn-dark::before {
+  background:
+    radial-gradient(120px 60px at var(--mx) var(--my), rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0) 70%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0) 45%);
+}
+
+/* Hover: the droplet swells (a little spring), clears and brightens. */
+.zx-glass-btn:hover,
+:is(a, button).zx-glass-chip:hover {
+  background-color: rgba(255, 255, 255, 0.42);
+  scale: 1.05;
+  box-shadow:
+    inset 0 1.5px 0 rgba(255, 255, 255, 1),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.6),
+    inset 0 12px 20px -10px rgba(255, 255, 255, 0.95),
+    inset 0 -12px 18px -12px rgba(31, 42, 97, 0.26),
+    0 0 0 1px rgba(15, 27, 45, 0.08),
+    0 18px 34px -16px rgba(31, 42, 97, 0.5);
+}
+.zx-glass-btn-dark:hover {
+  background-color: rgba(255, 255, 255, 0.18);
+  scale: 1.05;
+}
+.zx-glass-btn:hover::before,
+:is(a, button).zx-glass-chip:hover::before,
+.zx-glass-btn-dark:hover::before { opacity: 1; }
+.zx-glass-btn:active,
+:is(a, button).zx-glass-chip:active,
+.zx-glass-btn-dark:active { scale: 0.97; }
+
+/* Rows and menu items: clear at rest, a liquid glass pane on hover. */
+.zx-glass-row {
+  --mx: 30%;
+  --my: 0%;
+  border: 1px solid transparent;
+  transition: background-color 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease, color 0.3s ease;
+}
+.zx-glass-row:hover {
+  background:
+    radial-gradient(160px 70px at var(--mx) var(--my), rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0) 70%),
+    rgba(255, 255, 255, 0.32);
+  border-color: rgba(255, 255, 255, 0.75);
+  box-shadow:
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.95),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.4),
+    inset 0 -10px 16px -12px rgba(31, 42, 97, 0.18),
+    0 0 0 1px rgba(15, 27, 45, 0.05),
+    0 12px 28px -18px rgba(31, 42, 97, 0.45);
+  -webkit-backdrop-filter: blur(10px) saturate(1.8);
+  backdrop-filter: blur(10px) saturate(1.8);
+}
+
+/* Black buttons: a thin glass highlight on the top edge and a soft shine
+   that sweeps across on hover. */
+.zx-sheen {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18), 0 10px 24px -14px rgba(15, 27, 45, 0.6);
+}
+.zx-sheen::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, 0.22) 48%, transparent 66%);
+  transform: translateX(-120%);
+  transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+}
+.zx-sheen:hover::after { transform: translateX(120%); }
+
+@media (prefers-reduced-motion: reduce) {
+  .zx-glass-btn:hover, .zx-glass-chip:hover, .zx-glass-btn-dark:hover { scale: 1; }
+  .zx-glass-btn, .zx-glass-chip, .zx-glass-btn-dark { transition: none; }
+  .zx-sheen::after { display: none; }
+}
+
+/* --------------------------------------------------------------------------
+   Salezx "A week with Salezx" deck on /products (components/site/hero-desks.tsx),
+   ported from salezx.com. sx- prefixed so nothing collides with Zoxima's CSS.
+   -------------------------------------------------------------------------- */
+@keyframes sx-pane-in {
+  from { opacity: 0; transform: translate3d(0, 10px, 0) scale(0.985); }
+  to { opacity: 1; transform: none; }
+}
+.sx-pane-in { animation: sx-pane-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+@keyframes sx-desk-in {
+  from { opacity: 0.4; transform: translate3d(var(--dx, 30px), var(--dy, -28px), 0) scale(0.96); }
+  to { opacity: 1; transform: none; }
+}
+.sx-desk-in { animation: sx-desk-in 0.8s cubic-bezier(0.22, 1, 0.36, 1) both; transform-origin: right center; }
+
+@keyframes sx-scene-fill {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+.sx-scene-fill { transform-origin: left center; animation: sx-scene-fill linear both; }
+
+@keyframes sx-hand-idle {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(2px, -3px, 0); }
+}
+.sx-hand-idle { animation: sx-hand-idle 1.6s ease-in-out infinite; }
+
+@keyframes sx-hand-press {
+  0%, 100% { transform: translate(-9px, -2px) scale(1); }
+  35% { transform: translate(-9px, -2px) scale(0.82); }
+}
+.sx-hand-press { animation: sx-hand-press 0.45s cubic-bezier(0.22, 1, 0.36, 1); }
+
+@keyframes sx-click-ripple {
+  from { opacity: 0.9; transform: scale(0.3); }
+  to { opacity: 0; transform: scale(1.6); }
+}
+.sx-click-ripple { animation: sx-click-ripple 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+
+@keyframes sx-working-dot {
+  0%, 80%, 100% { opacity: 0.25; transform: translate3d(0, 0, 0); }
+  40% { opacity: 1; transform: translate3d(0, -2px, 0); }
+}
+.sx-working-dots span {
+  width: 4px;
+  height: 4px;
+  border-radius: 9999px;
+  background: var(--zx-navy-600);
+  animation: sx-working-dot 1.1s ease-in-out infinite;
+}
+.sx-working-dots span:nth-child(2) { animation-delay: 0.15s; }
+.sx-working-dots span:nth-child(3) { animation-delay: 0.3s; }
+
+/* Extras that drop out on short laptop screens so the hero fits the fold. */
+@media (min-width: 1024px) and (max-height: 780px) {
+  .sx-short-hide { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sx-pane-in, .sx-desk-in, .sx-scene-fill, .sx-hand-idle, .sx-working-dots span { animation: none; }
+}

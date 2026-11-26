@@ -1,0 +1,482 @@
+// Library copy from Zoxima_Website_Content_v2.docx; the case studies themselves are Zoxima's
+// updated write-ups (Oct 2026), transcribed verbatim.
+import { type CaseStudy, type PageContent, STANDARD_CLOSING } from "@/lib/site/types"
+
+export const CASE_STUDY_FILTERS = {
+  capabilities: ["Applications", "Automations", "AI"],
+  results: [
+    "Lead to quote",
+    "Pricing",
+    "Order to invoice",
+    "Collections",
+    "Renewals",
+    "Sales productivity",
+    "Reviews",
+    "Service",
+    "Channel",
+    "Finance operations",
+  ],
+  industries: [
+    "Manufacturing",
+    "Appliances",
+    "Building materials",
+    "Consumer goods",
+    "Education",
+    "Digital natives",
+  ],
+} as const
+
+export const CASE_STUDIES_PAGE: PageContent = {
+  route: "/case-studies",
+  seoTitle: "Case studies: sales and service systems at work | Zoxima",
+  seoDescription: "Applications, automations and AI running every day at large enterprises.",
+  h1: "Work that runs every day",
+  h1Accent: "every day",
+  sub: "Applications, automations and AI in production at large enterprises.",
+  sections: [],
+  closing: STANDARD_CLOSING,
+}
+
+export const CASE_STUDIES: CaseStudy[] = [
+  {
+    slug: "building-materials-partner-network",
+    name: "Building materials manufacturer",
+    seoTitle: "Building materials manufacturer | Zoxima case study",
+    seoDescription:
+      "One CRM for trade and institutional sales at a $9B building materials manufacturer, with AI for visit planning, product answers and partner intelligence.",
+    who: "A $9B building materials manufacturer selling through a nationwide network of dealers and retailers, plus direct project and institutional sales, across four business lines.",
+    summary:
+      "We replaced a standalone field sales app with one CRM for trade and institutional sales. We then layered AI on top: visit planning, product answers and partner intelligence. Over three years it grew into the system the sales organization runs on.",
+    challenge: [
+      "The same dealer appeared several times across business lines, so no one had one true view of a partner.",
+      "Field sales ran on a separate app with no link to orders, schemes, credit or dealer history.",
+      "Institutional and project sales had never used a CRM. Leads, product approvals and site supplies were tracked by hand.",
+      "Opening a new store took a long chain of approvals and paperwork.",
+      "Complaints and enquiries came in by website, email and toll-free line, with no single owner or SLA.",
+    ],
+    built: [
+      "Trade CRM: visit planning and execution, site visits, and a full 360 view of every dealer and retailer, built from the data warehouse and SAP.",
+      "Institutional CRM: lead to opportunity, product approvals, site onboarding, purchase order and supplies, with workflow nudges and Power BI dashboards.",
+      "Dealer record consolidation: duplicate dealer records merged across business lines into one partner record.",
+      "Store onboarding app: document upload and a six-level approval chain, from territory head to function head.",
+      "Offline mobile app for field teams who work where there is no network.",
+      "One-Click Visit Plan: an AI agent on Copilot Studio that builds a rep’s visit plan in one click.",
+      "Product-document AI assistant: answers product and technical questions from company documents. It is live.",
+      "Customer service module: complaints and enquiries from website, email and toll-free in one place, with auto-routing, SLA tracking and escalation.",
+      "Role-based security across a very large user base with many roles, so each person sees only what they should.",
+    ],
+    results: [
+      "90%+ adoption across the trade sales team",
+      "Core system live in about 8 months, then rolled out across four business lines",
+    ],
+    platform: "Dynamics 365, Power Platform, Copilot Studio, Power BI",
+    capabilities: ["Applications", "Automations", "AI"],
+    industry: "Building materials",
+    results_tags: ["Channel", "Sales productivity", "Service", "Reviews"],
+    related: "building-materials-dealer-apps",
+  },
+  {
+    slug: "electrical-products-leadership-ai",
+    name: "Wires and cables manufacturer",
+    seoTitle: "Wires and cables manufacturer | Zoxima case study",
+    seoDescription:
+      "An AI decision layer over ERP, CRM and loyalty data for a $900M wires and cables maker, with morning briefs and KPI alerts for leaders.",
+    who: "A $900M wires and cables maker present in 85+ countries. It runs four divisions and sells through distributors, exports, B2B accounts and government channels.",
+    summary:
+      "Leadership had the data but not the answers. We built an AI decision layer that joins ERP, CRM and loyalty data and answers leaders’ questions in plain language. It sends each leader a morning brief and alerts on the numbers that matter.",
+    challenge: [
+      "Sales, finance, operations and loyalty data sat in separate systems.",
+      "Leaders waited for MIS reports to answer basic questions on sales, receivables, stock and open orders.",
+      "Each division had its own head and its own numbers, with no quick way to compare them.",
+      "Problems showed up after the month closed, when it was too late to act.",
+    ],
+    built: [
+      "An AI layer connected to ERP, CRM and the loyalty database through MCP connectors, with access scoped by role.",
+      "Multi-agent workflows that answer complex, multi-step questions (for example, “sales, receivables, stock and open orders in one view”) using retrieval over company data.",
+      "Morning briefs for leaders: yesterday’s sales, collections and dispatches, in one card.",
+      "Alerts when a critical KPI moves, so leaders act during the month instead of after it.",
+      "Answers delivered inside Microsoft Teams, where leaders already work.",
+    ],
+    results: [],
+    platform: "LangGraph, Python, RAG, MCP, Azure OpenAI, Microsoft Teams",
+    capabilities: ["AI"],
+    industry: "Manufacturing",
+    results_tags: ["Reviews", "Sales productivity"],
+    related: "snack-foods-ai-agents",
+  },
+  {
+    slug: "snack-foods-ai-agents",
+    name: "Snack foods brand",
+    seoTitle: "Snack foods brand | Zoxima case study",
+    seoDescription:
+      "AI agents across retail and manufacturing for a snack foods brand sold in 100 countries, with 4,500+ products, its own plants and retail stores.",
+    who: "A snack foods brand sold in 100 countries. It has 4,500+ products, its own plants and a growing chain of retail stores.",
+    summary:
+      "The company had invested in many systems that didn’t talk to each other. We studied its stores, plants, exports and finance teams on the ground, then built AI agents that work across retail and manufacturing.",
+    challenge: [
+      "Systems were disconnected: ERP, retail point of sale, distributor management, transport and quality apps each held part of the picture.",
+      "Stores swung between stockouts and overstock, worst at festival peaks.",
+      "Production planning and dispatch weren’t linked to what stores and distributors actually needed.",
+      "Approvals for spend and purchases got stuck between departments.",
+      "Managers relied on manual reports to see store and plant performance.",
+    ],
+    built: [
+      "AI agents for retail: live inventory intelligence and store performance.",
+      "AI agents for manufacturing: production planning, raw material planning and plant alerts.",
+      "Agents that flag exceptions to managers and assign follow-up tasks.",
+      "Multi-agent orchestration, with each agent handling one job and passing work to the next.",
+    ],
+    results: [],
+    platform: "LangGraph, Claude",
+    capabilities: ["AI"],
+    industry: "Consumer goods",
+    results_tags: ["Order to invoice", "Reviews"],
+    related: "electrical-products-leadership-ai",
+  },
+  {
+    slug: "bottled-water-direct-store-delivery",
+    name: "Bottled-water company",
+    seoTitle: "Bottled-water company | Zoxima case study",
+    seoDescription:
+      "Direct Store Delivery for route sales and a loyalty app for 2 million customers, for a bottled-water company shipping about 10 million liters a day.",
+    who: "A bottled-water company shipping about 10 million liters a day through distributors, retail and its own delivery routes.",
+    summary:
+      "Route sales were run on paper, and the company wanted to reach consumers directly. We built a Direct Store Delivery solution for its vans and a loyalty app that now serves 2 million customers.",
+    challenge: [
+      "Route sales, deliveries, returns and cash were tracked on paper and in spreadsheets.",
+      "Cash collected on routes was hard to reconcile against what was delivered.",
+      "The company had no direct relationship with the end consumer.",
+      "Any consumer app had to work reliably for millions of people.",
+    ],
+    built: [
+      "A Direct Store Delivery solution for route sales: routes, loads, deliveries, returns and cash in one flow.",
+      "A loyalty app for consumers on Android and iOS, built to run at consumer scale.",
+      "A back end that handles customer identity, rewards and engagement.",
+    ],
+    results: ["2 million customers on the loyalty app"],
+    platform: "Power Platform, React Native, Node.js",
+    capabilities: ["Applications", "Automations"],
+    industry: "Consumer goods",
+    results_tags: ["Order to invoice", "Channel"],
+    related: "snack-foods-ai-agents",
+  },
+  {
+    slug: "marketplace-sales-service-crm",
+    name: "Digital-native company",
+    seoTitle: "Digital-native company | Zoxima case study",
+    seoDescription:
+      "Sales and service on one CRM for a digital-native group with 4,000+ sales and service users, extended across three businesses.",
+    who: "A digital-native company running several consumer and business platforms, with 4,000+ sales and service users.",
+    summary:
+      "We put sales and service for the group’s largest business on one CRM, then extended the same platform to two more businesses in the group.",
+    challenge: [
+      "Sales and service teams in each business used their own tools.",
+      "Managers had no shared view of leads, accounts and service cases.",
+      "The system had to scale to thousands of users without slowing them down.",
+      "Teams on the move needed access outside the office.",
+    ],
+    built: [
+      "A sales and service CRM, first rolled out to 2,000+ users.",
+      "The same platform extended to two more businesses in the group.",
+      "Mobile app support for field teams.",
+    ],
+    results: ["4,000+ users on one CRM", "Three businesses on one platform"],
+    platform: "Dynamics 365 Sales and Customer Service, React Native",
+    capabilities: ["Applications"],
+    industry: "Digital natives",
+    results_tags: ["Sales productivity", "Service"],
+    related: "visa-services-voice-ai",
+  },
+  {
+    slug: "corporate-services-finance-operations",
+    name: "Fortune 500 corporate services company",
+    seoTitle: "Fortune 500 corporate services company | Zoxima case study",
+    seoDescription:
+      "Proforma billing, capex approvals, menu approvals and market price checks automated for a Fortune 500 corporate services company.",
+    who: "A Fortune 500 corporate services company with $46B in revenue, running services at hundreds of client sites.",
+    summary:
+      "Billing, capex approvals and price checks were all done by hand across spreadsheets, email and SAP. We automated each one, and finance teams now work in tools they already know.",
+    challenge: [
+      "Monthly billing for every client site was built in spreadsheets, then keyed into SAP.",
+      "Proforma invoices went back and forth with clients by email, with no version history and a risk of duplicates.",
+      "Capex requests waited in inboxes, with no clear view of who held them.",
+      "Menu changes needed approvals that were hard to track.",
+      "Food purchase prices were checked against the market by hand.",
+    ],
+    built: [
+      "Proforma invoice automation: site managers fill monthly billing in Excel Online, inside SharePoint. The app sends the proforma to SAP and gets the number back. Clients approve or reject by email, and a rejection creates a new version until it is approved. Each completed step locks, and past months stay view-only.",
+      "Capex approval workflow: requests are routed by the company’s approval limits, from draft to final approval. A weekly status report shows every request, who holds it and why.",
+      "Menu approvals, routed and tracked to a decision.",
+      "Market price intelligence: market prices collected automatically for purchase checks.",
+    ],
+    results: [],
+    platform: "Power Platform, SharePoint, SAP integration, Azure AI",
+    capabilities: ["Automations", "AI"],
+    results_tags: ["Finance operations"],
+    related: "healthcare-invoice-validation",
+  },
+  {
+    slug: "conglomerate-approvals-sales-targets",
+    name: "Diversified industrial conglomerate",
+    seoTitle: "Diversified industrial conglomerate | Zoxima case study",
+    seoDescription:
+      "Seven custom apps on one platform, including smart approvals, sales target automation and a sales operating system, for a diversified industrial conglomerate.",
+    who: "A diversified industrial conglomerate with businesses across manufacturing and consumer durables.",
+    summary:
+      "Teams across the group needed approvals and sales targets off email and spreadsheets. We delivered seven custom apps on one platform, including a sales operating system.",
+    challenge: [
+      "Approvals across departments ran on email and paper.",
+      "Sales targets were set and tracked in spreadsheets.",
+      "Each team wanted its own tool, with no shared platform.",
+    ],
+    built: [
+      "Seven custom business apps on one platform.",
+      "Smart approvals with routing and tracking to a decision.",
+      "Sales target automation, from setting targets to tracking progress.",
+      "A sales operating system that runs the group’s sales routines in one place.",
+    ],
+    results: ["Seven apps in production on one platform"],
+    platform: "Power Platform, Dynamics 365",
+    capabilities: ["Applications", "Automations"],
+    industry: "Manufacturing",
+    results_tags: ["Sales productivity"],
+    related: "building-materials-partner-network",
+  },
+  {
+    slug: "technology-promotional-pricing",
+    name: "Global technology company",
+    seoTitle: "Global technology company | Zoxima case study",
+    seoDescription:
+      "Promotional pricing built into the CRM for a $7B+ global technology company, so every quote carries the right promotion.",
+    who: "A $7B+ global technology company selling office and imaging equipment.",
+    summary:
+      "Promotional pricing lived outside the CRM, so reps couldn’t be sure each quote carried the right promotion. We built promotional pricing into the CRM.",
+    challenge: [
+      "Promotional prices were managed outside the CRM.",
+      "Reps couldn’t be sure every quote carried the right promotion.",
+      "Managers had no clear view of which promotions were used.",
+    ],
+    built: [
+      "Promotional pricing inside the CRM, applied to quotes.",
+      "Delivered with a full project plan, delivery schedule and solution design.",
+    ],
+    results: [],
+    platform: "Dynamics 365 Sales",
+    capabilities: ["Applications"],
+    industry: "Manufacturing",
+    results_tags: ["Pricing"],
+    related: "marketplace-sales-service-crm",
+  },
+  {
+    slug: "healthcare-invoice-validation",
+    name: "Hospital network",
+    seoTitle: "Hospital network | Zoxima case study",
+    seoDescription:
+      "AI that validates vendor invoices across six systems, calculates commissions and tracks every payout, for a leading hospital network.",
+    who: "A leading hospital network.",
+    summary:
+      "Every vendor invoice had to be checked against six systems before it could be paid. We built AI that does the check, calculates commissions and tracks every payout.",
+    challenge: [
+      "Vendor and partner invoices had to be matched across six systems: CRM, hospital systems, ERP, document libraries, OneDrive and email.",
+      "Checks were done by hand, so payments were slow and errors slipped through.",
+      "Commissions were calculated in spreadsheets.",
+      "There was no single view of where each payout stood.",
+    ],
+    built: [
+      "AI invoice validation that reads each invoice and reconciles it across all six systems.",
+      "Automatic commission calculation once an invoice is validated.",
+      "Payout tracking from approval to payment.",
+      "A base now being extended to clinical benchmarking.",
+    ],
+    results: [],
+    platform: "LangGraph, AWS",
+    capabilities: ["AI", "Automations"],
+    results_tags: ["Finance operations"],
+    related: "corporate-services-finance-operations",
+  },
+  {
+    slug: "visa-services-voice-ai",
+    name: "Visa and consular services company",
+    seoTitle: "Visa and consular services company | Zoxima case study",
+    seoDescription:
+      "Voice AI agents that answer customer queries end to end and offer add-on services during the call, for a global visa and consular services company.",
+    who: "A global visa and consular services company.",
+    summary:
+      "Call centers took a high volume of routine questions, and add-on services were rarely offered. We built voice AI agents that answer customers and offer the right add-on during the call.",
+    challenge: [
+      "A high volume of routine calls about application status, documents and appointments.",
+      "Customers waited on hold at peak times.",
+      "Add-on services were rarely offered on calls.",
+    ],
+    built: [
+      "Voice AI agents that answer customer queries end to end, in natural conversation.",
+      "Agents that offer add-on services during the call when they fit.",
+    ],
+    results: [],
+    platform: "Voice AI (ElevenLabs), LangChain",
+    capabilities: ["AI"],
+    industry: "Digital natives",
+    results_tags: ["Service"],
+    related: "business-schools-admissions-ai",
+  },
+  {
+    slug: "business-schools-admissions-ai",
+    name: "Leading business schools",
+    seoTitle: "Leading business schools | Zoxima case study",
+    seoDescription:
+      "Voice, social and website agents that answer applicants around the clock, plus an admissions CRM and a counselor assistant, for three leading business schools.",
+    who: "Three leading business schools receiving thousands of applicant enquiries each admissions season.",
+    summary:
+      "Enquiries far outnumbered counselors. We built voice, social and website agents that answer applicants around the clock, plus an admissions CRM and a counselor assistant.",
+    challenge: [
+      "Enquiries from websites, social media, fairs and calls far outnumbered counselors.",
+      "Many enquiries never got a call back.",
+      "Counselors spent their day answering the same questions.",
+      "Applicants dropped off between enquiry and admission.",
+    ],
+    built: [
+      "Voice agents that call and answer applicants at admissions scale.",
+      "Social media and website agents that answer applicants 24/7 and capture leads.",
+      "An admissions CRM to follow every enquiry to a decision.",
+      "An assistant that briefs counselors on each applicant.",
+    ],
+    results: [],
+    platform: "Voice AI (ElevenLabs), social and web agents, admissions CRM",
+    capabilities: ["AI", "Applications"],
+    industry: "Education",
+    results_tags: ["Lead to quote"],
+    related: "visa-services-voice-ai",
+  },
+  {
+    slug: "postal-case-tagging-ai",
+    name: "Postal and logistics operator",
+    seoTitle: "Postal and logistics operator | Zoxima case study",
+    seoDescription:
+      "AI that reads every website enquiry the moment the case is created and tags it across four levels, for a national postal and logistics operator.",
+    who: "A national postal and logistics operator working across 6 countries, with 14 connected systems. It has run its sales and customer service on our CRM for 9 years.",
+    summary:
+      "Every customer enquiry from the website became a case that agents had to tag by hand, choosing from 600+ categories. We built AI that reads each enquiry the moment the case is created and tags it across all four levels, so it reaches the right team without manual work.",
+    challenge: [
+      "Each website enquiry fires an email, and the CRM turns it into a case. Agents then filled the case details by hand.",
+      "Every case needed four tags: business unit, category, sub-category and sub-sub-category.",
+      "The tag list had 618 entries and nearly 300 options at the lowest level, so tags were often inconsistent.",
+      "Wrong or late tags sent cases to the wrong team and slowed replies.",
+    ],
+    built: [
+      "A trigger that starts the moment a case is created, so tagging happens in real time, not on a schedule.",
+      "AI that reads the enquiry and the form details and picks the right tag at all four levels from the company’s own tag list.",
+      "A validation step that checks the AI’s answer against the allowed tag combinations before anything is saved.",
+      "Tags written back to the case, which then routes automatically to the right team.",
+      "The existing website form and case creation left untouched. The AI sits on top of what already worked.",
+    ],
+    results: [],
+    platform: "Dynamics 365 Customer Service, Power Automate, AI Builder (GPT-4o), Dataverse",
+    capabilities: ["AI", "Automations"],
+    results_tags: ["Service"],
+    related: "visa-services-voice-ai",
+  },
+  {
+    slug: "medical-imaging-sales-service",
+    name: "Medical imaging manufacturer",
+    seoTitle: "Medical imaging manufacturer | Zoxima case study",
+    seoDescription:
+      "Sales and service systems on one record of every hospital and installed system, for a medical imaging maker with 25,000+ installations in 110 countries.",
+    who: "A medical imaging maker with 25,000+ installations in 110 countries, selling imaging systems to hospitals.",
+    summary:
+      "The business runs on two motions: selling new systems, often replacing old ones, and running the after-sales service business. We built the sales and service systems behind both.",
+    challenge: [
+      "Sales teams had to track hospitals, replacement opportunities and new deals in one place.",
+      "Service teams needed the full history of every installed system.",
+      "Sales and service worked from separate records.",
+    ],
+    built: [
+      "Sales systems for field teams selling to hospitals, including replacing old systems with new ones.",
+      "Service systems for the after-sales business, built on the installed base.",
+      "One record of each hospital, its installed systems and its service history.",
+    ],
+    results: [],
+    platform: "Dynamics 365",
+    capabilities: ["Applications"],
+    industry: "Manufacturing",
+    results_tags: ["Service", "Sales productivity"],
+    related: "electrical-products-leadership-ai",
+  },
+  {
+    slug: "building-materials-dealer-apps",
+    name: "Building materials manufacturer: sales force and dealer apps",
+    seoTitle: "Building materials dealer apps | Zoxima case study",
+    seoDescription:
+      "A sales force app and a dealer management app, both connected to the CRM, for a building materials manufacturer selling through dealers.",
+    who: "A building materials manufacturer selling through a dealer network.",
+    summary:
+      "Field sales and dealer activity weren’t reaching the CRM. We built a sales force app and a dealer management app, both connected to the CRM.",
+    challenge: [
+      "Field visits and orders were reported by phone and on paper.",
+      "Dealer orders and stock were not visible to sales managers.",
+      "Field data didn’t reach the CRM.",
+    ],
+    built: [
+      "A sales force app for field teams.",
+      "A dealer management app for dealer orders and activity.",
+      "Both apps connected to the CRM.",
+    ],
+    results: [],
+    platform: "Salesforce, Flutter, Node.js",
+    capabilities: ["Applications"],
+    industry: "Building materials",
+    results_tags: ["Channel", "Sales productivity"],
+    related: "building-materials-partner-network",
+  },
+  {
+    slug: "education-crm-learning-app",
+    name: "Education company",
+    seoTitle: "Education company | Zoxima case study",
+    seoDescription:
+      "A large CRM, business apps and a learning app used by 1 million students, rated 4.6 stars, for an education company.",
+    who: "An education company whose learning app is used by 1 million students.",
+    summary:
+      "We have worked across the business: a large CRM for the sales team, business apps for internal teams, and the learning app itself on Android and iOS.",
+    challenge: [
+      "A large sales team needed one CRM for leads, demos and renewals.",
+      "Internal teams needed modern business apps connected to the same data.",
+      "The learning app had to perform at consumer scale.",
+    ],
+    built: [
+      "A large CRM rollout, with ongoing support.",
+      "App support on React and Node.js.",
+      "A business application built on Next.js.",
+      "The learning app on Android and iOS, built in Flutter.",
+    ],
+    results: ["1 million users on the learning app", "4.6-star rating"],
+    platform: "Salesforce, React, Next.js, Node.js, Flutter",
+    capabilities: ["Applications"],
+    industry: "Education",
+    results_tags: ["Sales productivity"],
+    related: "business-schools-admissions-ai",
+  },
+  {
+    slug: "logistics-workforce-ai",
+    name: "Logistics companies",
+    seoTitle: "Logistics companies | Zoxima case study",
+    seoDescription:
+      "AI for driver recruitment, daily roster scheduling and compliance monitoring, for US last-mile delivery companies.",
+    who: "US last-mile delivery companies that run large driver workforces.",
+    summary:
+      "Last-mile delivery runs on people who must be hired fast, scheduled every day and kept compliant. We built AI for all three.",
+    challenge: [
+      "Recruiters screened a high volume of driver applicants by hand.",
+      "Daily rosters were built in spreadsheets and broke when someone dropped out.",
+      "Licenses, certifications and documents were tracked manually.",
+      "A missed document meant a compliance risk and a fine.",
+    ],
+    built: [
+      "Recruitment AI that screens and ranks applicants and keeps the hiring pipeline moving.",
+      "Roster scheduling that builds shifts around availability and rules, and fills gaps when plans change.",
+      "Compliance monitoring that tracks documents and deadlines and flags lapses before they happen.",
+    ],
+    results: [],
+    platform: "",
+    capabilities: ["AI"],
+    results_tags: [],
+  },
+]
