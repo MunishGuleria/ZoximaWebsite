@@ -34,7 +34,10 @@ const SF_STATS = [
 
 /* Real AppExchange reviews ONLY, copied word for word from the listing (with
    permission where needed). Nothing renders until at least one is added. */
-const SF_REVIEWS: { quote: string; by: string }[] = []
+const SF_REVIEWS: { quote: string; by: string }[] = [
+  // AppExchange, Project Review, 5 stars, 02/13/2026.
+  { quote: "Excellent service provided.", by: "Verified Customer · Feb 13, 2026" },
+]
 
 const MS_APPS = [
   {
