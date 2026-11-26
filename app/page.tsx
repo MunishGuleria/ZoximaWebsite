@@ -131,12 +131,12 @@ export default function HomePage() {
       <main id="main" className="zx">
         <Hero />
         <ProofBar />
+        <EngineeringScale />
+        <SalesforceWork />
         <WhatWeDrive />
         <Coverage />
-        <SalesforceWork />
         <MicrosoftWork />
         <McpAdvantage />
-        <EngineeringScale />
         <CapabilitiesStack />
         <Work />
         <Products />

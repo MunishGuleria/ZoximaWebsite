@@ -49,8 +49,8 @@ export function GuideSection({ problem }: { problem: GuideProblem }) {
   return (
     <>
       <section className="zx-backdrop-ribbon relative isolate overflow-hidden">
-        <div className="zx-container relative pb-7 pt-[7.5rem] sm:pb-8 sm:pt-32 lg:pt-[10.5rem]">
-          <div className="mx-auto max-w-3xl">
+        <div className="zx-container relative pb-7 pt-28 sm:pb-8 sm:pt-32 lg:pt-[8.5rem]">
+          <div className="mx-auto max-w-[60rem]">
             <Link
               href={`${SF_GUIDE_ROUTE}#problems`}
               className="zx-rise inline-flex items-center gap-2 text-[0.9375rem] font-semibold text-ink-700 transition-colors hover:text-ink-950"
@@ -74,7 +74,7 @@ export function GuideSection({ problem }: { problem: GuideProblem }) {
 
       <section className="zx-section !pt-0">
         <div className="zx-container">
-          <div className="mx-auto max-w-3xl">
+          <div className="mx-auto max-w-[60rem]">
             <Reveal as="p" className="text-[1.1875rem] leading-relaxed text-ink-800 sm:text-[1.3125rem]">
               {problem.open}
             </Reveal>

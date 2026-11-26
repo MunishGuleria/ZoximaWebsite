@@ -39,20 +39,21 @@ export function GuideHub() {
           ))}
         </Reveal>
 
-        <ol className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {/* Compact cards, the whole card is the link: five across on wide
+            screens (two even rows of five), two on tablets, one on phones. */}
+        <ol className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
           {SF_GUIDE_PROBLEMS.map((p) => (
-            <Reveal as="li" key={p.id} index={(p.n - 1) % 3} className="min-w-0">
+            <Reveal as="li" key={p.id} index={(p.n - 1) % 5} className="min-w-0">
               <Link
                 href={`${SF_GUIDE_ROUTE}/${p.id}`}
-                className="group flex h-full flex-col rounded-2xl border border-line bg-white p-6 transition-[border-color,translate,box-shadow] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1 hover:border-ink-950 hover:shadow-[0_24px_50px_-36px_rgba(31,42,97,0.45)] sm:p-7"
+                className="group flex h-full flex-col rounded-2xl border border-line bg-white p-5 transition-[border-color,translate,box-shadow] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-ink-950 hover:shadow-[0_20px_40px_-32px_rgba(31,42,97,0.45)]"
               >
-                <span className="text-xs font-semibold uppercase tracking-[0.14em] text-navy-600">Problem {p.n}</span>
-                <span className="mt-3 text-[1.1875rem] font-semibold leading-snug tracking-[-0.015em] text-ink-950">{p.title}</span>
-                <span className="mt-2 text-[0.9375rem] leading-relaxed text-ink-600">{p.short}</span>
-                <span className="mt-auto inline-flex items-center gap-1.5 pt-5 text-sm font-semibold text-navy-600">
-                  Read the section
-                  <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" aria-hidden />
+                <span className="flex items-center justify-between gap-2">
+                  <span className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-navy-600">Problem {p.n}</span>
+                  <ArrowRight className="h-4 w-4 shrink-0 text-ink-300 transition-[color,translate] duration-300 group-hover:translate-x-0.5 group-hover:text-ink-950" aria-hidden />
                 </span>
+                <span className="mt-2.5 text-[1rem] font-semibold leading-snug tracking-[-0.01em] text-ink-950">{p.title}</span>
+                <span className="mt-1.5 text-sm leading-relaxed text-ink-600">{p.short}</span>
               </Link>
             </Reveal>
           ))}

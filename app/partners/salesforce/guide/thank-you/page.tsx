@@ -24,7 +24,7 @@ export default function Page() {
     <>
       <main id="main" className="zx overflow-x-clip">
         <section className="bg-paper">
-          <div className="zx-container pb-16 pt-[7.5rem] sm:pb-20 sm:pt-32 lg:pb-24 lg:pt-40">
+          <div className="zx-container pb-16 pt-28 sm:pb-20 sm:pt-32 lg:pb-24 lg:pt-[8.5rem]">
             <div className="max-w-2xl">
               <span className="grid h-14 w-14 place-items-center rounded-full border border-line bg-white text-navy-600">
                 <Mail className="h-6 w-6" aria-hidden />

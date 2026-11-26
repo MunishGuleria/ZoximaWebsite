@@ -32,13 +32,9 @@ export function ProofBar() {
     <section aria-label="Proof strip" className="border-y border-line bg-white">
       <div className="zx-container">
         <Reveal>
-          <div className="grid divide-y divide-line sm:grid-cols-3 sm:divide-x sm:divide-y-0">
-            <div className="flex flex-col justify-center py-6 sm:py-8 sm:pr-8">
-              <p className="text-[2.25rem] font-semibold leading-none tracking-[-0.04em] text-ink-950 sm:text-[2.75rem]">90+</p>
-              <p className="mt-2 text-[0.9375rem] text-ink-600">large enterprise projects</p>
-            </div>
+          <div className="grid divide-y divide-line sm:grid-cols-2 sm:divide-x sm:divide-y-0">
             {PARTNERS.map((p) => (
-              <Link key={p.slug} href={p.href} className="group flex flex-col justify-center py-6 sm:px-8 sm:py-8">
+              <Link key={p.slug} href={p.href} className="group flex flex-col justify-center py-6 sm:px-8 sm:py-8 sm:first:pl-0">
                 <span className="flex items-center gap-3">
                   <BrandMark
                     slug={p.slug}

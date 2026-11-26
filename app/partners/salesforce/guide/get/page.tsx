@@ -34,7 +34,7 @@ export default function Page() {
     <>
       <main id="main" className="zx overflow-x-clip">
         <section className="bg-paper">
-          <div className="zx-container pb-16 pt-[6.5rem] sm:pb-20 sm:pt-28 lg:pb-24 lg:pt-36">
+          <div className="zx-container pb-16 pt-28 sm:pb-20 sm:pt-32 lg:pb-24 lg:pt-[8.5rem]">
             <GuideBackLink />
             <div className="mt-6 grid gap-10 lg:mt-8 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-16">
               <div className="min-w-0">

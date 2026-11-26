@@ -106,7 +106,6 @@ export const SALESFORCE_PRACTICE: PartnerPractice = {
       title: SF_GUIDE_BAND.title,
       body: "How to spot each one, what it costs, and how to fix it. Read the start of any section free. Get the full guide by email.",
       cta: { label: "Get the full guide by email", href: `${SF_GUIDE_ROUTE}/get` },
-      secondary: { label: "Browse the 10 problems", href: SF_GUIDE_ROUTE },
     },
   },
   steps: {
