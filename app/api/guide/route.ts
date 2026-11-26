@@ -11,6 +11,7 @@ import {
   teamInbox,
 } from '@/lib/email/acs'
 import { SF_GUIDE_PROBLEMS, SF_GUIDE_ROUTE } from '@/lib/site/content/salesforce-guide'
+import { ZOXIMA_LOGO_PNG_BASE64 } from '@/lib/email/zoxima-logo'
 import {
   SF_GUIDE_PDF_URL,
   SF_GUIDE_TITLE,
@@ -207,7 +208,7 @@ export async function POST(request: NextRequest) {
         'Salesforce is a trademark of Salesforce, Inc. This guide is independent and is not endorsed by Salesforce.',
       ].join('\n'),
       html: emailShell(`
-        <p style="margin:0 0 28px;font-size:20px;font-weight:700;letter-spacing:-0.01em">Zoxima</p>
+        <img src="cid:zoxima-logo" width="72" height="72" alt="Zoxima" style="display:block;width:72px;height:72px;margin:0 0 20px -8px;border:0" />
         <p style="margin:0 0 16px">Hi ${escapeHtml(firstName)},</p>
         <p style="margin:0 0 24px">Thanks for your interest. Here is your copy of <strong>${SF_GUIDE_TITLE}</strong>.</p>
         <p style="margin:0 0 28px">
@@ -222,6 +223,10 @@ export async function POST(request: NextRequest) {
         </div>
       `),
     },
+    // The logo, shown by <img src="cid:zoxima-logo"> without loading anything from the web.
+    attachments: [
+      { name: 'zoxima-logo.png', contentType: 'image/png', contentInBase64: ZOXIMA_LOGO_PNG_BASE64, contentId: 'zoxima-logo' },
+    ],
   }
 
   let guideId: string
