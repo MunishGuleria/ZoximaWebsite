@@ -35,7 +35,8 @@ const SF_STATS = [
 /* Real AppExchange reviews ONLY, copied word for word from the listing (with
    permission where needed). Nothing renders until at least one is added. */
 const SF_REVIEWS: { quote: string; by: string }[] = [
-  // AppExchange, Project Review, 5 stars, 02/13/2026.
+  // AppExchange, Project Review, 5 stars, 02/13/2026 (two reviews, same text).
+  { quote: "Excellent service provided.", by: "Verified Customer · Feb 13, 2026" },
   { quote: "Excellent service provided.", by: "Verified Customer · Feb 13, 2026" },
 ]
 
@@ -307,11 +308,11 @@ export function SalesforceWork() {
   return (
     <section id="salesforce" className="relative isolate overflow-hidden border-t border-line py-16 lg:py-24">
       <div className="zx-container">
-        <Reveal className="rounded-[28px] border border-line bg-white p-6 shadow-[0_24px_60px_-44px_rgba(19,23,32,0.35)] sm:p-10">
+        <Reveal className="rounded-[28px] border border-[#DCE3EA] bg-white p-6 shadow-[0_24px_60px_-44px_rgba(31,58,95,0.35)] sm:p-10">
           <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center lg:gap-12">
             <div className="max-w-3xl">
-              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-navy-600">Salesforce services</p>
-              <h2 className="mt-3 text-[1.875rem] font-bold leading-[1.15] tracking-[-0.025em] text-ink-950 sm:text-[2.25rem] lg:text-[2.5rem]">
+              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#2E7D9A]">Salesforce services</p>
+              <h2 className="mt-3 text-[1.875rem] font-bold leading-[1.15] tracking-[-0.025em] text-[#1F3A5F] sm:text-[2.25rem] lg:text-[2.5rem]">
                 Salesforce work our customers rate 4.97 out of 5
               </h2>
               <p className="mt-3 max-w-2xl text-base leading-relaxed text-ink-600 sm:text-[1.0625rem]">
@@ -320,7 +321,7 @@ export function SalesforceWork() {
             </div>
             <Link
               href="/partners/salesforce"
-              className="group inline-flex min-h-12 items-center justify-center gap-2 self-start rounded-xl bg-ink-950 px-6 py-3 text-[0.9375rem] font-semibold text-white transition-transform duration-300 hover:scale-[1.03] max-sm:w-full lg:self-center"
+              className="group inline-flex min-h-12 items-center justify-center gap-2 self-start rounded-xl bg-[#1F3A5F] px-6 py-3 text-[0.9375rem] font-semibold text-white transition-[background-color,transform] duration-300 hover:scale-[1.03] hover:bg-[#163050] max-sm:w-full lg:self-center"
             >
               See Salesforce services
               <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
@@ -330,8 +331,8 @@ export function SalesforceWork() {
           <dl className="mt-8 grid gap-6 sm:grid-cols-3 lg:max-w-4xl">
             {SF_STATS.map((st) => (
               <div key={st.label}>
-                <dt className="text-[2rem] font-bold leading-none tracking-tight text-ink-950 sm:text-[2.5rem]">{st.value}</dt>
-                <dd className="mt-2 text-sm leading-snug text-ink-600">
+                <dt className="text-[2rem] font-bold leading-none tracking-tight text-[#1F3A5F] sm:text-[2.5rem]">{st.value}</dt>
+                <dd className="mt-2 text-sm leading-snug text-[#4A5868]">
                   {st.href ? (
                     <a href={st.href} target="_blank" rel="noopener noreferrer" className="underline decoration-ink-300 underline-offset-4 transition-colors hover:text-ink-950 hover:decoration-ink-950">
                       {st.label}
@@ -346,8 +347,8 @@ export function SalesforceWork() {
 
           {SF_REVIEWS.length > 0 && (
             <div className={`mt-8 grid gap-4 ${SF_REVIEWS.length > 2 ? "md:grid-cols-3" : "md:grid-cols-2"}`}>
-              {SF_REVIEWS.map((r) => (
-                <figure key={r.quote} className="flex h-full flex-col justify-between rounded-2xl border border-line bg-paper-sunken/60 p-6">
+              {SF_REVIEWS.map((r, i) => (
+                <figure key={i} className="flex h-full flex-col justify-between rounded-2xl border border-[#DCE3EA] bg-[#F6F8FA] p-6">
                   <div>
                     <div className="flex gap-0.5" aria-label="5 out of 5 stars">
                       {Array.from({ length: 5 }).map((_, i) => (

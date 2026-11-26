@@ -13,8 +13,8 @@ import { cn } from "@/lib/utils"
 
    Used on the home page's Salesforce section and in the problems section of
    /partners/salesforce. Content defaults to SF_GUIDE_BAND.
-   Colours: the site's dark ink surface (same as the AppExchange rating card),
-   white text, white button with ink text. No navy fill, tints or gradients.
+   Colours: Zoxima's guide-flow prototype (navy #1F3A5F band, light teal
+   eyebrow, white text, orange #F2A541 button with ink text).
    -------------------------------------------------------------------------- */
 
 export type GuideBandContent = {
@@ -39,14 +39,14 @@ export function GuideBand({
   return (
     <div
       className={cn(
-        "rounded-[28px] bg-ink-950 text-white shadow-[0_24px_50px_-28px_rgba(19,23,32,0.6)]",
+        "rounded-[28px] bg-[#1F3A5F] text-white shadow-[0_24px_50px_-28px_rgba(31,58,95,0.6)]",
         compact ? "p-6 sm:p-8" : "p-6 sm:px-9 sm:py-8 lg:px-11 lg:py-9",
         className
       )}
     >
       <div className={cn("flex flex-col gap-6", !compact && "lg:flex-row lg:items-center lg:justify-between lg:gap-10")}>
         <div className={cn(!compact && "max-w-[56rem]")}>
-          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-white/60">{band.eyebrow}</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#9CCBDD]">{band.eyebrow}</p>
           <h3
             className={cn(
               "mt-3 font-semibold tracking-[-0.025em] text-white",
@@ -58,7 +58,7 @@ export function GuideBand({
           >
             {band.title}
           </h3>
-          <p className="mt-2.5 text-[1rem] leading-relaxed text-white/75 sm:text-[1.0625rem]">{band.body}</p>
+          <p className="mt-2.5 text-[1rem] leading-relaxed text-white/85 sm:text-[1.0625rem]">{band.body}</p>
         </div>
         <div
           className={cn(
@@ -68,7 +68,7 @@ export function GuideBand({
         >
           <Link
             href={band.cta.href}
-            className="group inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-white px-6 text-[0.9375rem] font-semibold text-ink-950 transition-[background-color,translate] duration-300 hover:-translate-y-0.5 hover:bg-ink-50"
+            className="group inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-[#F2A541] px-6 text-[0.9375rem] font-semibold text-[#17212B] transition-[background-color,translate] duration-300 hover:-translate-y-0.5 hover:bg-[#E8962A]"
           >
             {band.cta.label}
             <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" aria-hidden />
