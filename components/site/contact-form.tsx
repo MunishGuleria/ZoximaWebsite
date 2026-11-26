@@ -9,7 +9,9 @@ import { useReducedMotionSafe } from "@/components/motion/use-reduced-motion-saf
 /* --------------------------------------------------------------------------
    Contact form: the doc's fields (Name · Work email · Company · Role · What
    would you like to improve? · Message), posted to /api/contact. The hidden
-   `company_website` field is the API's honeypot.
+   `zx_check` field is the API's honeypot. Its name and label are chosen so
+   browsers never autofill it (Chrome ignores autoComplete="off" and filled the
+   old "Website"/company_website field, which silently dropped real enquiries).
    -------------------------------------------------------------------------- */
 type Status = "idle" | "sending" | "sent" | "error"
 
@@ -82,7 +84,7 @@ export function ContactForm() {
           role: data.role,
           topic: data.topic,
           message: data.message,
-          company_website: data.company_website,
+          zx_check: data.zx_check,
         }),
       })
       const json = await res.json().catch(() => ({}))
@@ -196,8 +198,8 @@ export function ContactForm() {
 
             {/* Honeypot: hidden from people and assistive tech. */}
             <div aria-hidden className="absolute -left-[9999px] h-px w-px overflow-hidden">
-              <label htmlFor="company_website">Website</label>
-              <input id="company_website" name="company_website" tabIndex={-1} autoComplete="off" />
+              <label htmlFor="zx_check">Leave this field empty</label>
+              <input id="zx_check" name="zx_check" type="text" tabIndex={-1} autoComplete="off" defaultValue="" />
             </div>
 
             <div className="flex flex-col gap-4 sm:col-span-2 sm:flex-row sm:items-center sm:justify-between">

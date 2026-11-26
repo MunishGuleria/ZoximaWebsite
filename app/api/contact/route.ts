@@ -31,8 +31,8 @@ const ContactSchema = z.object({
   // "What would you like to improve?" on the contact page.
   topic: z.string().trim().max(80).optional().default(''),
   message: z.string().trim().max(4000).optional().default(''),
-  // Honeypot: real users never fill this in.
-  company_website: z.string().max(500).optional(),
+  // Honeypot: real users never fill this in (browsers do not autofill it).
+  zx_check: z.string().max(500).optional(),
 })
 
 /** Escapes user input before it is interpolated into an email. */
@@ -95,10 +95,11 @@ export async function POST(request: NextRequest) {
     )
   }
 
-  const { name, email, phone, business, role, topic, message, company_website } = parsed.data
+  const { name, email, phone, business, role, topic, message, zx_check } = parsed.data
 
   // Silently accept honeypot hits so bots do not learn they were caught.
-  if (company_website) {
+  if (zx_check) {
+    console.warn('[contact] Honeypot filled; enquiry dropped (not sent).')
     return NextResponse.json({ success: true }, { status: 200 })
   }
 
