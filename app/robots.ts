@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next"
 
-const SITE_URL = "https://zoxima.com"
+const SITE_URL = "https://www.zoxima.com"
 
 /**
  * Replaces the old public/robots.txt, which was written for "Persimium" and

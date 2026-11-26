@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next"
 import { CASE_STUDIES } from "@/lib/site/content/case-studies"
 import { ALL_ROUTES } from "@/lib/site/pages"
 
-const SITE_URL = "https://zoxima.com"
+const SITE_URL = "https://www.zoxima.com"
 
 /**
  * Generated at build time from the page data (Zoxima_Website_Content_v2.docx),

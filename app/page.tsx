@@ -15,7 +15,7 @@ import { ClosingCta } from "@/components/home/closing-cta"
 import { SiteFooter } from "@/components/site-footer"
 import { ORGANIZATION_SCHEMA, SALEZX_SCHEMA } from "@/lib/site/schema"
 
-const SITE_URL = "https://zoxima.com"
+const SITE_URL = "https://www.zoxima.com"
 
 export const metadata: Metadata = {
   // The root page shares a segment with the root layout, so `title.template`

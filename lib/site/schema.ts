@@ -9,7 +9,7 @@
    Typed as Organization + ProfessionalService so the entity is eligible for
    local and map results as well as acting as the publisher node.
    -------------------------------------------------------------------------- */
-export const SITE_URL = "https://zoxima.com"
+export const SITE_URL = "https://www.zoxima.com"
 
 export const ORGANIZATION_SCHEMA = {
   "@type": ["Organization", "ProfessionalService"],

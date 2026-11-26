@@ -207,7 +207,7 @@ export async function POST(request: NextRequest) {
         'If you have anything to add in the meantime, just reply to this email.',
         '',
         'The Zoxima team',
-        'https://zoxima.com',
+        'https://www.zoxima.com',
       ].join('\n'),
       html: emailShell(`
         <img src="cid:${LOGO_CID}" width="104" height="104" alt="Zoxima" style="display:block;width:104px;height:104px;margin:0 0 16px -12px;border:0" />
@@ -220,7 +220,7 @@ export async function POST(request: NextRequest) {
             : ''
         }
         <p style="margin:0 0 16px">If you have anything to add in the meantime, just reply to this email.</p>
-        <p style="margin:0">The Zoxima team<br /><a href="https://zoxima.com" style="color:#111111">zoxima.com</a></p>
+        <p style="margin:0">The Zoxima team<br /><a href="https://www.zoxima.com" style="color:#111111">zoxima.com</a></p>
       `),
     },
     attachments: [LOGO_ATTACHMENT],

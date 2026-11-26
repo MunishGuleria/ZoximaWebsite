@@ -36,7 +36,7 @@ const jetbrainsMono = JetBrains_Mono({
   display: "swap",
 })
 
-const SITE_URL = "https://zoxima.com"
+const SITE_URL = "https://www.zoxima.com"
 
 const SITE_DESCRIPTION =
   "Zoxima builds the applications, automations and AI agents that run sales and service for large enterprises."

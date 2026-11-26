@@ -13,7 +13,7 @@ import type { Closing, PageContent } from "@/lib/site/types"
    SEO title/description via pageMetadata().
    -------------------------------------------------------------------------- */
 
-const SITE_URL = "https://zoxima.com"
+const SITE_URL = "https://www.zoxima.com"
 const CLOSING_LINE = "Week after week, the small things get done, and the big numbers follow."
 
 export function pageMetadata(page: Pick<PageContent, "route" | "seoTitle" | "seoDescription">): Metadata {
