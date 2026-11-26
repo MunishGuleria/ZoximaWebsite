@@ -1,0 +1,14 @@
+# Files `vercel deploy` must not upload. Secrets come from the Vercel
+# project's Environment Variables, never from a local .env.
+.env
+.env.*
+!.env.example
+_archive
+.next
+.next-build
+out
+node_modules
+*.tsbuildinfo
+Zoxima_*.docx
+Zoxima_*.pdf
+Zoxima_*.xlsx
