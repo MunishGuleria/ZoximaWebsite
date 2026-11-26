@@ -4,8 +4,8 @@ import { z } from 'zod'
 /* --------------------------------------------------------------------------
    Contact form → Azure Communication Services (ACS) Email.
 
-   Every genuine enquiry sends ONE email: a notification to info@zoxima.com,
-   with replyTo set to the visitor so the team can answer directly. Nothing is
+   Every genuine enquiry sends ONE email: a notification to CONTACT_TO_EMAIL
+   (comma-separated list allowed; info@zoxima.com when unset), with replyTo set to the visitor so the team can answer directly. Nothing is
    sent to the visitor. If the notification fails, the visitor sees an error.
 
    SECURITY: no secrets live in this file. Configure them in the environment
@@ -19,8 +19,14 @@ export const maxDuration = 30
 const NOT_CONFIGURED = 'The contact form is not configured. Please email info@zoxima.com.'
 const SEND_FAILED = 'We could not send your message. Please email info@zoxima.com.'
 
-/** Where every enquiry is delivered. */
-const TEAM_INBOX = 'info@zoxima.com'
+/** Where enquiries go: CONTACT_TO_EMAIL (comma-separated), else info@zoxima.com. */
+function teamInbox() {
+  const list = (process.env.CONTACT_TO_EMAIL ?? '')
+    .split(',')
+    .map((address) => address.trim())
+    .filter(Boolean)
+  return list.length ? list : ['info@zoxima.com']
+}
 
 const ContactSchema = z.object({
   name: z.string().trim().min(1, 'Name is required').max(120),
@@ -111,6 +117,8 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: NOT_CONFIGURED }, { status: 500 })
   }
 
+  const inbox = teamInbox()
+
   const rows: [string, string][] = [
     ['Name', name],
     ['Email', email],
@@ -124,7 +132,7 @@ export async function POST(request: NextRequest) {
   /* Notification to the team ------------------------------------------------ */
   const notification: EmailMessage = {
     senderAddress: from,
-    recipients: { to: [{ address: TEAM_INBOX }] },
+    recipients: { to: inbox.map((address) => ({ address })) },
     // Hitting "Reply" answers the visitor directly.
     replyTo: [{ address: email, displayName: name }],
     content: {
@@ -170,6 +178,6 @@ export async function POST(request: NextRequest) {
   }
 
   // The ACS message id lets an admin trace delivery (Microsoft 365 message trace).
-  console.log(`[contact] Enquiry sent to ${TEAM_INBOX}, ACS id ${id}`)
+  console.log(`[contact] Enquiry sent to ${inbox.join(', ')}, ACS id ${id}`)
   return NextResponse.json({ success: true, id }, { status: 200 })
 }
