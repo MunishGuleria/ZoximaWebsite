@@ -1,6 +1,6 @@
 import Link from "next/link"
 import Image from "next/image"
-import { ArrowUpRight, Mail } from "lucide-react"
+import { ArrowUpRight, Linkedin, Mail } from "lucide-react"
 import { Reveal, RevealGroup, RevealItem } from "@/components/motion/reveal"
 
 const CAPABILITIES = [
@@ -32,13 +32,14 @@ const INDUSTRIES = [
 const COMPANY = [
   { href: "/about", label: "About" },
   { href: "/case-studies", label: "Case studies" },
+  { href: "/partners", label: "Partners" },
   { href: "/security", label: "Security and trust" },
   { href: "/careers", label: "Careers" },
   { href: "/contact", label: "Contact" },
 ]
 
 const PRODUCTS = [
-  { href: "https://salezx.com", label: "Salezx → (salezx.com)", external: true },
+  { href: "https://salezx.com", label: "Salezx", external: true },
 ]
 
 export function SiteFooter() {
@@ -51,29 +52,51 @@ export function SiteFooter() {
             them, so the brand column stays short). */}
         <div className="grid gap-x-10 gap-y-8 py-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,3.2fr)] lg:py-10">
           <Reveal>
-            <div className="flex items-center gap-3">
+            <Link href="/" aria-label="Zoxima home" className="inline-block">
               <Image
                 src="/zoxima-logo.png"
                 alt="Zoxima"
                 width={200}
                 height={200}
-                sizes="40px"
-                className="h-10 w-auto"
+                sizes="96px"
+                className="h-20 w-auto sm:h-24"
               />
-            </div>
+            </Link>
+
+            <p className="mt-4 max-w-[17rem] text-[0.9375rem] leading-relaxed text-ink-700">
+              Applications, automations and AI agents that run sales and service for large enterprises.
+            </p>
 
             <a
               href="mailto:info@zoxima.com"
-              className="group mt-3 inline-flex items-center gap-2 text-[0.9375rem] font-medium text-navy-600 transition-colors hover:text-navy-700"
+              className="group mt-5 inline-flex items-center gap-2 text-[0.9375rem] font-medium text-navy-600 transition-colors hover:text-navy-700"
             >
               <Mail className="h-4 w-4" aria-hidden="true" />
               info@zoxima.com
+            </a>
+
+            <a
+              href="https://www.linkedin.com/company/zoxima/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group mt-2.5 flex w-fit items-center gap-2 text-[0.9375rem] font-medium text-ink-700 transition-colors hover:text-navy-600"
+            >
+              <Linkedin className="h-4 w-4" aria-hidden="true" />
+              Follow us on LinkedIn
               <ArrowUpRight
                 className="h-3.5 w-3.5 opacity-60 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
                 aria-hidden="true"
               />
             </a>
 
+            <ul className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 text-[0.875rem] text-ink-600">
+              <li>
+                <Link href="/privacy" className="transition-colors hover:text-navy-600">Privacy Policy</Link>
+              </li>
+              <li>
+                <Link href="/terms" className="transition-colors hover:text-navy-600">Terms of Service</Link>
+              </li>
+            </ul>
           </Reveal>
 
           <RevealGroup
@@ -89,31 +112,9 @@ export function SiteFooter() {
           </RevealGroup>
         </div>
 
-        {/* Bottom: legal */}
-        <Reveal delay={0.1} className="flex flex-col gap-3 border-t border-line py-4 text-[0.8125rem] text-ink-500 md:flex-row md:items-center md:justify-between">
+        {/* Bottom: legal line */}
+        <Reveal delay={0.1} className="border-t border-line py-4 text-[0.8125rem] text-ink-500">
           <p>© {year} Zoxima Solutions LLC · Fremont, California · Microsoft Solutions Partner · Salesforce Partner</p>
-          <ul className="flex flex-wrap items-center gap-x-6 gap-y-2">
-            <li>
-              <Link href="/privacy" className="transition-colors hover:text-navy-600">
-                Privacy
-              </Link>
-            </li>
-            <li>
-              <Link href="/terms" className="transition-colors hover:text-navy-600">
-                Terms
-              </Link>
-            </li>
-            <li>
-              <a
-                href="https://www.linkedin.com/company/zoxima/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="transition-colors hover:text-navy-600"
-              >
-                LinkedIn
-              </a>
-            </li>
-          </ul>
         </Reveal>
       </div>
     </footer>
