@@ -15,7 +15,6 @@ import {
   SF_GUIDE_PDF_URL,
   SF_GUIDE_TITLE,
   WORK_EMAIL_MESSAGE,
-  isWebmail,
 } from '@/lib/site/content/salesforce-guide-email'
 
 /* --------------------------------------------------------------------------
@@ -52,17 +51,17 @@ const line = (max: number, required?: string) => {
 
 const GuideSchema = z.object({
   firstName: line(80, 'Please enter your first name.'),
-  lastName: line(80, 'Please enter your last name.'),
+  lastName: line(80).optional().default(''),
   email: z
-    .string({ required_error: 'Please enter your work email.' })
+    .string({ required_error: 'Please enter your email.' })
     .trim()
-    .min(1, 'Please enter your work email.')
+    .min(1, 'Please enter your email.')
     .max(200)
-    .email(WORK_EMAIL_MESSAGE)
-    .refine((e) => !isWebmail(e), WORK_EMAIL_MESSAGE),
-  company: line(160, 'Please enter your company.'),
-  jobTitle: line(120, 'Please enter your job title.'),
-  problem: z.enum(PROBLEM_IDS, { errorMap: () => ({ message: 'Please choose the problem that matters most.' }) }),
+    .email(WORK_EMAIL_MESSAGE),
+  company: line(160).optional().default(''),
+  jobTitle: line(120).optional().default(''),
+  // Optional: the problem that matters most (a section id), or empty.
+  problem: z.union([z.enum(PROBLEM_IDS), z.literal('')]).optional().default(''),
   consent: z.literal(true, { errorMap: () => ({ message: 'Please tick the box to receive the guide.' }) }),
   // Section page the visitor came from (?from=<id>) and channel (?source=).
   from: z.string().trim().max(80).optional().default(''),
@@ -169,15 +168,18 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: NOT_CONFIGURED }, { status: 500 })
   }
 
-  const problem = SF_GUIDE_PROBLEMS.find((p) => p.id === problemId)!
+  const problem = SF_GUIDE_PROBLEMS.find((p) => p.id === problemId)
   const fromProblem = SF_GUIDE_PROBLEMS.find((p) => p.id === parsed.data.from)
   const fromPage = fromProblem ? `${SF_GUIDE_ROUTE}/${fromProblem.id}` : ''
   const channel = source.replace(/[^\w .:/@+-]/g, '').slice(0, 100)
-  const name = `${firstName} ${lastName}`
+  const name = `${firstName} ${lastName}`.trim()
   const inbox = teamInbox()
   const pdf = SF_GUIDE_PDF_URL
   const date = new Date(now).toISOString()
-  const sectionLine = `That's section ${problem.n}${problem.page ? `, starting on page ${problem.page}` : ''}.`
+  // Only when they picked a problem: point them at its section in the PDF.
+  const sectionLine = problem
+    ? `That's section ${problem.n}${problem.page ? `, starting on page ${problem.page}` : ''}.`
+    : ''
 
   /* 1. The guide, to the visitor -------------------------------------------- */
   const guideEmail: EmailMessage = {
@@ -194,8 +196,7 @@ export async function POST(request: NextRequest) {
         '',
         `Download the full guide (PDF): ${pdf}`,
         '',
-        `You told us ${problem.title} matters most right now. ${sectionLine}`,
-        '',
+        ...(problem ? [`You told us ${problem.title} matters most right now. ${sectionLine}`, ''] : []),
         `Want to talk about where your Salesforce stands? Reply to this email or contact us at ${CONTACT_URL}`,
         '',
         'Best regards,',
@@ -212,7 +213,7 @@ export async function POST(request: NextRequest) {
         <p style="margin:0 0 28px">
           <a href="${escapeHtml(pdf)}" style="display:inline-block;background:#111111;color:#ffffff;text-decoration:none;font-weight:600;padding:13px 22px;border-radius:8px;font-family:${EMAIL_FONT}">Download the full guide (PDF)</a>
         </p>
-        <p style="margin:0 0 16px">You told us <strong>${escapeHtml(problem.title)}</strong> matters most right now. ${sectionLine}</p>
+        ${problem ? `<p style="margin:0 0 16px">You told us <strong>${escapeHtml(problem.title)}</strong> matters most right now. ${sectionLine}</p>` : ''}
         <p style="margin:0 0 24px">Want to talk about where your Salesforce stands? Reply to this email or contact us at <a href="${CONTACT_URL}" style="color:#111111">${CONTACT_URL}</a></p>
         <p style="margin:0 0 32px">Best regards,<br />The Zoxima Salesforce Team</p>
         <div style="border-top:1px solid #e5e5e5;padding-top:16px;font-size:12px;line-height:1.5;color:#555555">
@@ -238,9 +239,9 @@ export async function POST(request: NextRequest) {
   const rows: [string, string][] = [
     ['Name', name],
     ['Email', email],
-    ['Company', company],
-    ['Job title', jobTitle],
-    ['Problem that matters most', `${problem.n}. ${problem.title}`],
+    ['Company', company || 'Not given'],
+    ['Job title', jobTitle || 'Not given'],
+    ['Problem that matters most', problem ? `${problem.n}. ${problem.title}` : 'Not chosen'],
     ['Came from', fromPage ? `${SITE_URL}${fromPage}` : 'Not from a section page'],
     ['Channel', channel || 'Not set (no ?source= on the link)'],
     ['Consent to emails', consent ? 'Yes' : 'No'],
@@ -253,7 +254,7 @@ export async function POST(request: NextRequest) {
     // Hitting "Reply" answers the visitor directly.
     replyTo: [{ address: email, displayName: name }],
     content: {
-      subject: `New guide request: ${name}, ${company}`,
+      subject: company ? `New guide request: ${name}, ${company}` : `New guide request: ${name}`,
       plainText: [
         'New Salesforce guide request from the Zoxima website',
         '',

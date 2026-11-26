@@ -5,7 +5,7 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { ArrowLeft, ArrowRight, ChevronDown, Loader2 } from "lucide-react"
 import { SF_GUIDE_PROBLEMS, SF_GUIDE_ROUTE } from "@/lib/site/content/salesforce-guide"
-import { SF_GUIDE_EMAIL_KEY, WORK_EMAIL_MESSAGE, isWebmail } from "@/lib/site/content/salesforce-guide-email"
+import { SF_GUIDE_EMAIL_KEY, WORK_EMAIL_MESSAGE } from "@/lib/site/content/salesforce-guide-email"
 
 /* --------------------------------------------------------------------------
    The Salesforce guide request (/partners/salesforce/guide/get, prototype
@@ -45,13 +45,9 @@ function fromParam() {
 function validate(v: Values) {
   const e: Record<string, string> = {}
   if (!v.firstName.trim()) e.firstName = "Please enter your first name."
-  if (!v.lastName.trim()) e.lastName = "Please enter your last name."
   const email = v.email.trim()
-  if (!email) e.email = "Please enter your work email."
-  else if (!EMAIL_SHAPE.test(email) || isWebmail(email)) e.email = WORK_EMAIL_MESSAGE
-  if (!v.company.trim()) e.company = "Please enter your company."
-  if (!v.jobTitle.trim()) e.jobTitle = "Please enter your job title."
-  if (!v.problem) e.problem = "Please choose the problem that matters most."
+  if (!email) e.email = "Please enter your email."
+  else if (!EMAIL_SHAPE.test(email)) e.email = WORK_EMAIL_MESSAGE
   if (!v.consent) e.consent = "Please tick the box to receive the guide."
   return e
 }
@@ -60,20 +56,25 @@ function Field({
   label,
   name,
   error,
+  required,
   children,
 }: {
   label: string
   name: string
   error?: string
+  /** Shows the red * (only first name, email and consent are required). */
+  required?: boolean
   children: React.ReactNode
 }) {
   return (
     <div className="min-w-0">
       <label htmlFor={name} className="text-sm font-medium text-ink-800">
         {label}
-        <span className="ml-0.5 text-flag" aria-hidden>
-          *
-        </span>
+        {required && (
+          <span className="ml-0.5 text-flag" aria-hidden>
+            *
+          </span>
+        )}
       </label>
       {children}
       {error && (
@@ -192,14 +193,14 @@ export function GuideRequestForm() {
 
   return (
     <form onSubmit={onSubmit} noValidate className="zx-card relative grid gap-5 p-6 sm:grid-cols-2 sm:p-8 lg:p-10">
-      <Field label="First name" name="firstName" error={errors.firstName}>
+      <Field label="First name" name="firstName" required error={errors.firstName}>
         <input id="firstName" name="firstName" autoComplete="given-name" maxLength={80} placeholder="Your first name" value={values.firstName} onChange={set("firstName")} className={fieldCls} {...invalid("firstName")} />
       </Field>
       <Field label="Last name" name="lastName" error={errors.lastName}>
         <input id="lastName" name="lastName" autoComplete="family-name" maxLength={80} placeholder="Your last name" value={values.lastName} onChange={set("lastName")} className={fieldCls} {...invalid("lastName")} />
       </Field>
       <div className="min-w-0 sm:col-span-2">
-        <Field label="Work email" name="email" error={errors.email}>
+        <Field label="Email" name="email" required error={errors.email}>
           <input
             id="email"
             name="email"
@@ -225,8 +226,8 @@ export function GuideRequestForm() {
         <Field label="Which problem matters most to you right now?" name="problem" error={errors.problem}>
           <div className="relative">
             <select id="problem" name="problem" value={values.problem} onChange={set("problem")} className={`${fieldCls} appearance-none truncate pr-11`} {...invalid("problem")}>
-              <option value="" disabled>
-                Choose one
+              <option value="">
+                Choose one (optional)
               </option>
               {SF_GUIDE_PROBLEMS.map((p) => (
                 <option key={p.id} value={p.id}>
