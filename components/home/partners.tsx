@@ -35,9 +35,10 @@ const SF_STATS = [
 /* Real AppExchange reviews ONLY, copied word for word from the listing (with
    permission where needed). Nothing renders until at least one is added. */
 const SF_REVIEWS: { quote: string; by: string }[] = [
-  // AppExchange, Project Review, 5 stars, 02/13/2026 (two reviews, same text).
+  // AppExchange, Project Review, 5 stars, 02/13/2026.
   { quote: "Excellent service provided.", by: "Verified Customer · Feb 13, 2026" },
-  { quote: "Excellent service provided.", by: "Verified Customer · Feb 13, 2026" },
+  // AppExchange, Project Review, 5 stars, 07/13/2021.
+  { quote: "working with zoxima is really a great experience", by: "Verified Customer · Jul 13, 2021" },
 ]
 
 const MS_APPS = [
