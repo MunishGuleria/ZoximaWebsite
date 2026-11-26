@@ -25,6 +25,17 @@ const MS_PARTNER_URL =
 const APPSOURCE = "https://appsource.microsoft.com/en-us/product"
 const SF_LISTING_URL = "https://appexchange.salesforce.com/appxConsultingListingDetail?listingId=a0N3A00000FnDXAUA3"
 
+/* Salesforce band (Zoxima's guide-flow prototype, screen 1). */
+const SF_STATS = [
+  { value: "4.97 / 5", label: "AppExchange rating, 41 ratings", href: SF_LISTING_URL },
+  { value: "26", label: "Salesforce certifications held by the team" },
+  { value: "90+", label: "Enterprise projects across CRM, automation and AI" },
+]
+
+/* Real AppExchange reviews ONLY, copied word for word from the listing (with
+   permission where needed). Nothing renders until at least one is added. */
+const SF_REVIEWS: { quote: string; by: string }[] = []
+
 const MS_APPS = [
   {
     name: "Building Material App",
@@ -380,28 +391,62 @@ export function SalesforceWork() {
     <section id="salesforce" className="relative isolate overflow-hidden border-t border-line py-16 lg:py-24">
       <div className="zx-container">
         <Reveal>
-          <div className="max-w-2xl">
-            <span className="inline-flex items-center gap-2 rounded-full border border-line bg-white px-3 py-1 text-xs font-semibold text-ink-700">
-              <span className="h-2 w-2 rounded-full bg-navy-600" aria-hidden />
-              Salesforce Partner
-            </span>
-            <h2 className="zx-display-sm mt-4 text-[2.25rem] text-ink-950 sm:text-[2.75rem] lg:text-[3rem]">
-              What we build on <span className="zx-serif text-navy-600">Salesforce</span>
-            </h2>
-            <p className="mt-3 text-base leading-relaxed text-ink-600 sm:text-[1.0625rem]">
-              Sales, service and partner systems on Salesforce, from the first enquiry to the order and the service visit.
-            </p>
-            <p className="mt-3 text-sm font-semibold text-ink-900">
-              75+ Salesforce projects · 26 Salesforce certifications · 4.97 from 41 reviews
-            </p>
+          <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end lg:gap-12">
+            <div className="max-w-3xl">
+              <span className="inline-flex items-center gap-2 rounded-full border border-line bg-white px-3 py-1 text-xs font-semibold text-ink-700">
+                <span className="h-2 w-2 rounded-full bg-navy-600" aria-hidden />
+                Salesforce services
+              </span>
+              <h2 className="zx-display-sm mt-4 text-[2.25rem] text-ink-950 sm:text-[2.75rem] lg:text-[3rem]">
+                Salesforce work our customers rate <span className="zx-serif text-navy-600">4.97 out of 5</span>
+              </h2>
+              <p className="mt-3 max-w-2xl text-base leading-relaxed text-ink-600 sm:text-[1.0625rem]">
+                A Salesforce-certified team that fixes reports, data, automation, integrations and adoption for mid-size companies, at fixed prices.
+              </p>
+            </div>
+            <Link
+              href="/partners/salesforce"
+              className="group inline-flex min-h-12 items-center justify-center gap-2 self-start rounded-xl bg-ink-950 px-5 py-3 text-sm font-semibold text-white transition-transform duration-300 hover:scale-[1.03] max-sm:w-full lg:self-end"
+            >
+              See Salesforce services
+              <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+            </Link>
           </div>
-          <Link
-            href="/partners/salesforce"
-            className="group mt-6 inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-ink-950 px-5 py-3 text-sm font-semibold text-white transition-transform duration-300 hover:scale-[1.03] max-sm:w-full"
-          >
-            Our Salesforce practice
-            <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-          </Link>
+
+          <dl className="mt-8 grid gap-6 border-t border-line pt-6 sm:grid-cols-3 lg:mt-10">
+            {SF_STATS.map((st) => (
+              <div key={st.label}>
+                <dt className="text-[2.25rem] font-bold leading-none tracking-tight text-ink-950 sm:text-[2.5rem]">{st.value}</dt>
+                <dd className="mt-2 text-sm leading-snug text-ink-600">
+                  {st.href ? (
+                    <a href={st.href} target="_blank" rel="noopener noreferrer" className="underline decoration-ink-300 underline-offset-4 transition-colors hover:text-ink-950 hover:decoration-ink-950">
+                      {st.label}
+                    </a>
+                  ) : (
+                    st.label
+                  )}
+                </dd>
+              </div>
+            ))}
+          </dl>
+
+          {SF_REVIEWS.length > 0 && (
+            <div className={`mt-8 grid gap-4 ${SF_REVIEWS.length > 2 ? "md:grid-cols-3" : "md:grid-cols-2"}`}>
+              {SF_REVIEWS.map((r) => (
+                <figure key={r.quote} className="flex h-full flex-col justify-between rounded-2xl border border-line bg-white p-6">
+                  <div>
+                    <div className="flex gap-0.5" aria-label="5 out of 5 stars">
+                      {Array.from({ length: 5 }).map((_, i) => (
+                        <Star key={i} className="h-3.5 w-3.5 fill-ink-950 text-ink-950" aria-hidden />
+                      ))}
+                    </div>
+                    <blockquote className="mt-3 text-[0.9875rem] leading-relaxed text-ink-800">“{r.quote}”</blockquote>
+                  </div>
+                  <figcaption className="mt-4 text-sm text-ink-500">{r.by} · on AppExchange</figcaption>
+                </figure>
+              ))}
+            </div>
+          )}
         </Reveal>
 
         <SalesforceMobile />

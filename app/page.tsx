@@ -133,11 +133,11 @@ export default function HomePage() {
         <ProofBar />
         <WhatWeDrive />
         <Coverage />
+        <SalesforceWork />
+        <MicrosoftWork />
         <McpAdvantage />
         <EngineeringScale />
         <CapabilitiesStack />
-        <SalesforceWork />
-        <MicrosoftWork />
         <Work />
         <Products />
         <ClosingCta />
