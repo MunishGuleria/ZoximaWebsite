@@ -8,8 +8,8 @@
 /** The guide's full title, as used in the visitor email. */
 export const SF_GUIDE_TITLE = "10 Salesforce Problems That Quietly Cost Mid-Size Companies"
 
-/** Used when GUIDE_PDF_URL is not set: the file at public/guides/zoxima-salesforce-guide.pdf. */
-export const SF_GUIDE_PDF_FALLBACK_URL = "https://www.zoxima.com/guides/zoxima-salesforce-guide.pdf"
+/** The guide PDF: the file at public/guides/zoxima-salesforce-guide.pdf. */
+export const SF_GUIDE_PDF_URL = "https://www.zoxima.com/guides/zoxima-salesforce-guide.pdf"
 
 /** Remembers, in this browser, that the guide was sent (section pages read it). */
 export const SF_GUIDE_EMAIL_KEY = "zx-guide-email"

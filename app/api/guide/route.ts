@@ -12,7 +12,7 @@ import {
 } from '@/lib/email/acs'
 import { SF_GUIDE_PROBLEMS, SF_GUIDE_ROUTE } from '@/lib/site/content/salesforce-guide'
 import {
-  SF_GUIDE_PDF_FALLBACK_URL,
+  SF_GUIDE_PDF_URL,
   SF_GUIDE_TITLE,
   WORK_EMAIL_MESSAGE,
   isWebmail,
@@ -26,17 +26,13 @@ import {
       attachment). If this fails the visitor sees an error (502).
    2. The team (CONTACT_TO_EMAIL) gets a new-lead alert, replyTo the visitor.
       A failure here is logged; the visitor still sees success.
-   3. When GUIDE_LEADS_WEBHOOK_URL is set, the lead is POSTed as JSON to it
-      (a Power Automate "When an HTTP request is received" flow that adds a
-      row to the leads Excel sheet). A failure is logged, never shown.
 
-   Config: AZURE_COMMUNICATION_CONNECTION_STRING, CONTACT_FROM_EMAIL,
-   CONTACT_TO_EMAIL (as the contact form), plus optional GUIDE_FROM_EMAIL
-   (sender of the visitor email; else CONTACT_FROM_EMAIL), GUIDE_PDF_URL and
-   GUIDE_LEADS_WEBHOOK_URL. See .env.example. No secrets in this file.
+   Config: the same as the contact form (AZURE_COMMUNICATION_CONNECTION_STRING,
+   CONTACT_FROM_EMAIL, CONTACT_TO_EMAIL). The PDF is the file at
+   public/guides/zoxima-salesforce-guide.pdf. No secrets in this file.
    -------------------------------------------------------------------------- */
 
-// ACS polls for the send status (two sends) plus the webhook; allow for it.
+// ACS polls for the send status of two sends; allow for it.
 export const maxDuration = 30
 
 const NOT_CONFIGURED = 'The guide form is not configured. Please email info@zoxima.com and we will send you the guide.'
@@ -96,19 +92,6 @@ function clientIp(request: NextRequest) {
   return request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || request.headers.get('x-real-ip') || 'unknown'
 }
 
-/** The PDF link: GUIDE_PDF_URL when it is an absolute http(s) URL, else the default. */
-function pdfUrl() {
-  const configured = process.env.GUIDE_PDF_URL?.trim()
-  if (configured) {
-    try {
-      const url = new URL(configured)
-      if (url.protocol === 'https:' || url.protocol === 'http:') return url.toString()
-    } catch {}
-    console.error('[guide] GUIDE_PDF_URL is not an absolute URL; using the default PDF link')
-  }
-  return SF_GUIDE_PDF_FALLBACK_URL
-}
-
 /** Queues the email; if ACS rejects the custom headers, sends once more without them. */
 async function sendWithHeaders(client: EmailClient, message: EmailMessage) {
   try {
@@ -118,23 +101,6 @@ async function sendWithHeaders(client: EmailClient, message: EmailMessage) {
     if (!message.headers || status !== 400) throw err
     console.warn('[guide] ACS rejected the custom headers; resending without List-Unsubscribe:', err)
     return sendEmail(client, { ...message, headers: undefined })
-  }
-}
-
-/** POSTs the lead to the Power Automate flow. Never throws. */
-async function postLead(url: string, lead: Record<string, unknown>) {
-  try {
-    const res = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(lead),
-      signal: AbortSignal.timeout(10_000),
-    })
-    if (!res.ok) throw new Error(`HTTP ${res.status} ${await res.text().catch(() => '')}`.trim())
-    return true
-  } catch (err) {
-    console.error('[guide] Leads webhook failed; lead row NOT added (the emails were still sent):', err)
-    return false
   }
 }
 
@@ -189,10 +155,7 @@ export async function POST(request: NextRequest) {
 
   const connectionString = process.env.AZURE_COMMUNICATION_CONNECTION_STRING?.trim()
   const from = process.env.CONTACT_FROM_EMAIL?.trim()
-  // The guide can come from its own MailFrom address (its display name, e.g.
-  // "Zoxima Salesforce Team", is set on that address in Azure).
-  const guideFrom = process.env.GUIDE_FROM_EMAIL?.trim() || from
-  if (!connectionString || !from || !guideFrom) {
+  if (!connectionString || !from) {
     console.error('[guide] AZURE_COMMUNICATION_CONNECTION_STRING or CONTACT_FROM_EMAIL is not set')
     return NextResponse.json({ error: NOT_CONFIGURED }, { status: 500 })
   }
@@ -212,13 +175,13 @@ export async function POST(request: NextRequest) {
   const channel = source.replace(/[^\w .:/@+-]/g, '').slice(0, 100)
   const name = `${firstName} ${lastName}`
   const inbox = teamInbox()
-  const pdf = pdfUrl()
+  const pdf = SF_GUIDE_PDF_URL
   const date = new Date(now).toISOString()
   const sectionLine = `That's section ${problem.n}${problem.page ? `, starting on page ${problem.page}` : ''}.`
 
   /* 1. The guide, to the visitor -------------------------------------------- */
   const guideEmail: EmailMessage = {
-    senderAddress: guideFrom,
+    senderAddress: from,
     recipients: { to: [{ address: email, displayName: name }] },
     replyTo: [{ address: inbox[0], displayName: 'Zoxima Salesforce Team' }],
     headers: { 'List-Unsubscribe': `<${UNSUBSCRIBE_MAILTO}>` },
@@ -271,7 +234,7 @@ export async function POST(request: NextRequest) {
   // The ACS message id lets an admin trace delivery (Microsoft 365 message trace).
   console.log(`[guide] Guide sent to ${email}, ACS id ${guideId}`)
 
-  /* 2. Lead alert to the team, and 3. the leads sheet row, in parallel ------- */
+  /* 2. Lead alert to the team ----------------------------------------------- */
   const rows: [string, string][] = [
     ['Name', name],
     ['Email', email],
@@ -304,24 +267,7 @@ export async function POST(request: NextRequest) {
     },
   }
 
-  const webhook = process.env.GUIDE_LEADS_WEBHOOK_URL?.trim()
-  const [alertResult] = await Promise.allSettled([
-    sendEmail(client, alert),
-    webhook
-      ? postLead(webhook, {
-          date,
-          firstName,
-          lastName,
-          email,
-          company,
-          jobTitle,
-          problem: problem.title,
-          fromPage,
-          channel,
-          consent,
-        })
-      : Promise.resolve(false),
-  ])
+  const [alertResult] = await Promise.allSettled([sendEmail(client, alert)])
   if (alertResult.status === 'fulfilled') {
     console.log(`[guide] Lead alert sent to ${inbox.join(', ')}, ACS id ${alertResult.value}`)
   } else {
