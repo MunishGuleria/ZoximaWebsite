@@ -331,6 +331,7 @@ export const PRIVACY_SECTIONS: LegalSection[] = [
         "Your name and contact details (email, phone number)",
         "Your company name and job title",
         "Messages and enquiries you send through our forms",
+        "If you request one of our guides: your first and last name, work email, company, job title, the problem you picked on the form, the Website page you came from and the campaign that brought you there (for example, an email or ad link)",
       ],
       "**Information collected automatically**",
       [
@@ -350,7 +351,7 @@ export const PRIVACY_SECTIONS: LegalSection[] = [
       [
         "respond to your enquiries",
         "arrange and hold consultations you ask for",
-        "send you the information you request",
+        "send you the information and guides you request, and follow up with you about them",
         "send you updates about our services, only if you agree",
         "understand how the Website is used and improve it",
         "keep the Website secure and meet our legal duties",
@@ -366,7 +367,8 @@ export const PRIVACY_SECTIONS: LegalSection[] = [
       "We share limited information only with service providers who help us host the Website, send emails and manage enquiries, such as:",
       [
         "**Vercel**, for website hosting and usage analytics",
-        "**Microsoft Azure Communication Services**, for sending emails from form submissions",
+        "**Microsoft Azure Communication Services**, for sending emails from form submissions, including the guides you request",
+        "**Microsoft 365**, where we keep a record of guide requests and enquiries",
       ],
       "These providers may only use your information to provide their service to us, and must keep it secure.",
       "We may also share information if the law, a court or a government authority requires it, or if Zoxima’s business is merged or sold. In that case, your information stays protected under this policy.",
@@ -412,7 +414,7 @@ export const PRIVACY_SECTIONS: LegalSection[] = [
         "**Access.** Get a copy of the personal information we hold about you.",
         "**Correction.** Correct inaccurate or incomplete information.",
         "**Deletion.** Delete your personal information.",
-        "**Opt out.** Stop sending you marketing emails, at any time, by emailing us.",
+        "**Opt out.** Stop sending you marketing emails, at any time, by using the unsubscribe link in any of our emails or by emailing info@zoxima.com.",
       ],
       "To make a request, email info@zoxima.com with the subject “Privacy request.” We may ask you to confirm your identity first. We respond within 30 days.",
     ],
@@ -458,7 +460,7 @@ export const PRIVACY_SECTIONS: LegalSection[] = [
     blocks: [
       "This section applies if you use the Website from India. It is written in line with the Digital Personal Data Protection Act, 2023 and the Digital Personal Data Protection Rules, 2025. If it conflicts with any other part of this policy, this section applies for users in India.",
       "**Data Fiduciary.** For users in India, Zoxima Solutions Private Limited, Sector 142, Noida, Uttar Pradesh, India, is the “Data Fiduciary” for your personal data. You are the “Data Principal.”",
-      "**Consent.** When you submit a form on the Website, you consent to us using your data for the purposes shown on that form and in this policy. You can withdraw your consent at any time by emailing info@zoxima.com. Withdrawing consent is as easy as giving it. Once you withdraw, we’ll stop using your data for that purpose. This doesn’t affect anything we did lawfully before you withdrew.",
+      "**Consent.** When you submit a form on the Website, you consent to us using your data for the purposes shown on that form and in this policy. You can withdraw your consent at any time by using the unsubscribe link in any of our emails or by emailing info@zoxima.com. Withdrawing consent is as easy as giving it. Once you withdraw, we’ll stop using your data for that purpose. This doesn’t affect anything we did lawfully before you withdrew.",
       "**Your rights in India.** In addition to the rights in section 7, you have the right to:",
       [
         "get a summary of the personal data we hold about you and how we use it",
@@ -526,13 +528,13 @@ export const TERMS_SECTIONS: LegalSection[] = [
     id: "forms",
     heading: "4. Forms",
     blocks: [
-      "When you fill in a form, you agree to:",
+      "When you fill in a form, including a form to receive one of our guides, you agree to:",
       [
         "give accurate, current information",
         "use only your own business contact details, or details you’re authorized to share",
         "not submit anything unlawful, harmful or misleading",
       ],
-      "We may contact you about your request and about related Zoxima services. You can opt out of marketing messages at any time by contacting us.",
+      "We may contact you about your request and about related Zoxima services. Guides are sent by email and are for your own internal business use (see section 6). You can opt out of marketing messages at any time by using the unsubscribe link in any of our emails or by contacting us.",
     ],
   },
   {
