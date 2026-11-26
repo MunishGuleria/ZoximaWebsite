@@ -254,7 +254,7 @@ export async function POST(request: NextRequest) {
     // Hitting "Reply" answers the visitor directly.
     replyTo: [{ address: email, displayName: name }],
     content: {
-      subject: company ? `New guide request: ${name}, ${company}` : `New guide request: ${name}`,
+      subject: `New Salesforce guide request from Zoxima website: ${company ? `${name}, ${company}` : name}`,
       plainText: [
         'New Salesforce guide request from the Zoxima website',
         '',
