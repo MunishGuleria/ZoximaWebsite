@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { ArrowRight, ArrowUpRight, Check, ChevronDown, Handshake, Headset, Star, Store, Users } from "lucide-react"
+import { ArrowRight, ArrowUpRight, Check, ChevronDown, Star } from "lucide-react"
 import { Reveal, RevealGroup, RevealItem } from "@/components/motion/reveal"
 import { GuideBand } from "@/components/site/guide-band"
 
@@ -91,35 +91,7 @@ const MS_ACCELERATORS = [
   "Raw Material Planning",
 ]
 
-const SF_BUILT = [
-  {
-    title: "Sales force automation",
-    body: "Visit and beat planning, offline order booking, secondary sales and schemes, with KPI dashboards.",
-  },
-  {
-    title: "Dealer management",
-    body: "Stock visibility, distributor schemes and incentives, loyalty and influencer programs, order to cash.",
-  },
-  {
-    title: "Service and cases",
-    body: "Omni-channel case management and knowledge for service teams.",
-  },
-  {
-    title: "Partner and customer portals",
-    body: "Portals for dealers and customers to order, track and raise requests.",
-  },
-]
 
-const SF_CLOUDS = [
-  "Sales Cloud",
-  "Service Cloud",
-  "Experience Cloud",
-  "CPQ",
-  "Agentforce",
-  "Marketing Cloud Account Engagement",
-  "Heroku",
-  "Integration and data migration",
-]
 
 function Chip({ label }: { label: string }) {
   return (
@@ -226,64 +198,6 @@ function MicrosoftMobile() {
   )
 }
 
-const SF_ICONS = [Users, Store, Headset, Handshake]
-
-function SalesforceMobile() {
-  return (
-    <div className="mt-8 space-y-5 sm:hidden">
-      <Reveal>
-        <div className="relative overflow-hidden rounded-3xl bg-ink-950 p-5 text-white shadow-[0_24px_50px_-28px_rgba(19,23,32,0.6)]">
-          <div aria-hidden className="pointer-events-none absolute -right-12 -top-12 h-44 w-44 rounded-full bg-white/10 blur-2xl" />
-          <p className="text-xs font-semibold text-white/75">On Salesforce AppExchange</p>
-          <div className="mt-2 flex items-end gap-4">
-            <p className="text-[3rem] font-bold leading-none tracking-tight">
-              4.97<span className="text-xl font-semibold text-white/60"> / 5</span>
-            </p>
-            <div className="pb-1">
-              <div className="flex gap-0.5" aria-hidden>
-                {Array.from({ length: 5 }).map((_, i) => (
-                  <Star key={i} className="h-3.5 w-3.5 fill-white text-white" />
-                ))}
-              </div>
-              <p className="mt-1 text-xs text-white/75">from 41 customer reviews</p>
-            </div>
-          </div>
-          <a
-            href={SF_LISTING_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-5 flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-white text-sm font-semibold text-ink-950 transition-transform active:scale-[0.98]"
-          >
-            See our AppExchange listing
-            <ArrowUpRight className="h-4 w-4" aria-hidden />
-          </a>
-        </div>
-      </Reveal>
-
-      <RevealGroup className="grid grid-cols-2 gap-3" stagger={0.07}>
-        {SF_BUILT.map((b, i) => {
-          const Icon = SF_ICONS[i]
-          return (
-            <RevealItem key={b.title}>
-              <div className="h-full rounded-2xl border border-white/80 bg-white/80 p-4 shadow-[0_16px_36px_-28px_rgba(15,27,45,0.35)] backdrop-blur-md">
-                <span className="grid h-9 w-9 place-items-center rounded-xl border border-line bg-white text-ink-800">
-                  <Icon className="h-[1.125rem] w-[1.125rem]" aria-hidden />
-                </span>
-                <h3 className="mt-3 text-[0.9375rem] font-semibold leading-snug text-ink-950">{b.title}</h3>
-                <p className="mt-1 text-[0.8125rem] leading-relaxed text-ink-600">{b.body}</p>
-              </div>
-            </RevealItem>
-          )
-        })}
-      </RevealGroup>
-
-      <Reveal>
-        <p className="mb-3 text-sm font-semibold text-ink-900">What we implement</p>
-        <ChipDrift items={SF_CLOUDS} duration={30} />
-      </Reveal>
-    </div>
-  )
-}
 
 /* ----------------------------------------------------------- Microsoft */
 export function MicrosoftWork() {
@@ -449,62 +363,8 @@ export function SalesforceWork() {
           )}
         </Reveal>
 
-        <SalesforceMobile />
-
-        <div className="mt-10 grid gap-5 max-sm:hidden lg:mt-12 lg:grid-cols-12">
-          {/* Rating card */}
-          <Reveal className="lg:col-span-4">
-            <div className="relative flex h-full flex-col justify-between overflow-hidden rounded-3xl bg-ink-950 p-7 text-white shadow-[0_24px_50px_-28px_rgba(19,23,32,0.6)]">
-              <div>
-                <p className="text-sm font-semibold text-white/80">On Salesforce AppExchange</p>
-                <p className="mt-5 text-[3.5rem] font-bold leading-none tracking-tight">
-                  4.97<span className="text-2xl font-semibold text-white/60"> / 5</span>
-                </p>
-                <div className="mt-3 flex gap-1" aria-hidden>
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <Star key={i} className="h-4 w-4 fill-white text-white" />
-                  ))}
-                </div>
-                <p className="mt-3 text-sm text-white/75">from 41 customer reviews</p>
-              </div>
-              <a
-                href={SF_LISTING_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group mt-8 inline-flex h-11 items-center gap-2 self-start rounded-xl bg-white px-5 text-sm font-semibold text-ink-950 transition-[background-color,translate] duration-300 hover:-translate-y-0.5 hover:bg-ink-50"
-              >
-                See our AppExchange listing
-                <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-              </a>
-            </div>
-          </Reveal>
-
-          {/* What we've built + clouds */}
-          <div className="flex flex-col gap-5 lg:col-span-8">
-            <RevealGroup className="grid gap-4 sm:grid-cols-2" stagger={0.07}>
-              {SF_BUILT.map((b) => (
-                <RevealItem key={b.title}>
-                  <div className="h-full rounded-2xl border border-white/80 bg-white/75 p-5 shadow-[0_16px_36px_-28px_rgba(15,27,45,0.35)] backdrop-blur-md transition-[translate,border-color] duration-300 hover:-translate-y-0.5 hover:border-ink-300">
-                    <h3 className="text-base font-semibold text-ink-950">{b.title}</h3>
-                    <p className="mt-1.5 text-sm leading-relaxed text-ink-600">{b.body}</p>
-                  </div>
-                </RevealItem>
-              ))}
-            </RevealGroup>
-            <Reveal delay={0.1} className="rounded-2xl border border-white/80 bg-white/75 p-5 shadow-[0_16px_36px_-28px_rgba(15,27,45,0.35)] backdrop-blur-md">
-              <p className="text-sm font-semibold text-ink-900">What we implement</p>
-              <div className="mt-3 flex flex-wrap gap-2">
-                {SF_CLOUDS.map((c) => (
-                  <Chip key={c} label={c} />
-                ))}
-              </div>
-            </Reveal>
-          </div>
-        </div>
-
-        {/* Free guide band: phones and desktop alike (outside the sm:hidden /
-            max-sm:hidden pair above). */}
-        <Reveal className="mt-8 lg:mt-12">
+        {/* Free guide band, straight under the card (prototype screen 1). */}
+        <Reveal className="mt-6 lg:mt-8">
           <GuideBand />
         </Reveal>
       </div>
