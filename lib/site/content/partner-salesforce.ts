@@ -4,8 +4,10 @@ import type { Cta, PageContent } from "@/lib/site/types"
 /* --------------------------------------------------------------------------
    Salesforce practice page (/partners/salesforce): the health check offer.
 
-   Copy and order follow Zoxima's clickable prototype (screen 2, "Salesforce
-   page = the carousel ad, in more detail"): hook, ten areas, how it works,
+   The page opens with the partner-page hero (as on /partners/microsoft:
+   eyebrow chip, headline, subline, buttons, proof strip on ink), with the
+   Salesforce partner copy supplied by Zoxima (Nov 2026). Below it, in the
+   order of Zoxima's clickable prototype (screen 2): ten areas, how it works,
    quick wins and roadmap, the offer, customer reviews, the guide band.
    Rendered by components/site/salesforce-page.tsx.
    -------------------------------------------------------------------------- */
@@ -14,9 +16,11 @@ import type { Cta, PageContent } from "@/lib/site/types"
 export type AreaStatus = "r" | "a" | "g"
 
 export type SalesforcePageContent = {
-  /** Route and SEO (title, description). h1/sub feed structured data. */
+  /** Route, SEO, crumbs and the hero's H1 (+ h1Accent), sub and buttons. */
   page: PageContent
-  hero: { eyebrow: string; h1: string; accent: string; sub: string; cta: Cta }
+  /** The hero's chip and proof strip. `sub` is an extra line for
+   *  /llms-full.txt only (the hero shows page.sub); empty when none. */
+  hero: { eyebrow: string; sub: string; proof: { text: string; stars?: boolean }[] }
   rating: { value: string; label: [string, string] }
   areas: {
     eyebrow: string
@@ -45,7 +49,7 @@ export type SalesforcePageContent = {
   guide: { eyebrow: string; title: string; cta: Cta }
 }
 
-/** The health check booking link (hero CTA scrolls to the offer, which ends here). */
+/** The health check booking link (the offer section ends with it). */
 const BOOK: Cta = { label: "Book your health check", href: "/contact?topic=Salesforce&msg=health-check" }
 
 /** Problem n's page in the guide. */
@@ -54,26 +58,30 @@ const problemHref = (n: number) => {
   return p ? `${SF_GUIDE_ROUTE}/${p.id}` : SF_GUIDE_ROUTE
 }
 
-const H1 = "Is your Salesforce helping you sell, or just keeping records?"
-
 export const SALESFORCE_PAGE: SalesforcePageContent = {
   page: {
     route: "/partners/salesforce",
     seoTitle: "Salesforce consulting partner | Zoxima",
     seoDescription:
       "We design, build and fix Salesforce for mid-size and large companies, so reports can be trusted, data stays clean and reps spend their time selling.",
-    h1: H1,
-    h1Accent: "helping you sell,",
-    // Not shown on the page: the Service description in structured data and /llms-full.txt.
+    h1: "Salesforce that your sales team actually uses.",
+    h1Accent: "actually uses.",
     sub: "We design, build and fix Salesforce for mid-size and large companies, so reports can be trusted, data stays clean and reps spend their time selling.",
+    heroCtas: [
+      { label: "Talk to us", href: "/contact" },
+      // Scrolls to the offer below.
+      { label: BOOK.label, href: "#sf-offer" },
+    ],
     sections: [],
   },
   hero: {
-    eyebrow: "Salesforce health check with fixes",
-    h1: H1,
-    accent: "helping you sell,",
-    sub: "The fix is simpler than you think.",
-    cta: { label: BOOK.label, href: "#sf-offer" },
+    eyebrow: "Salesforce Partner",
+    sub: "",
+    proof: [
+      { text: "4.97 rating from 41 reviews", stars: true },
+      { text: "75+ Salesforce projects" },
+      { text: "26 Salesforce certifications" },
+    ],
   },
   rating: { value: "4.97", label: ["Salesforce partner rating", "on AppExchange"] },
   areas: {

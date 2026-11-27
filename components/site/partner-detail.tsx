@@ -88,7 +88,7 @@ function Section({ id, children, className }: { id: string; children: React.Reac
 
 /* -------------------------------------------------------------------- hero */
 
-function Hero({ data }: { data: PartnerPractice }) {
+export function Hero({ data }: { data: PartnerPractice }) {
   const { page } = data
   return (
     <section className="relative isolate overflow-hidden">

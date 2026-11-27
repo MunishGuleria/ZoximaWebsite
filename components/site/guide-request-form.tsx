@@ -43,8 +43,7 @@ function fromParam() {
   return SF_GUIDE_PROBLEMS.some((p) => p.id === from) ? from : null
 }
 
-/** Client checks, the same rules as /api/guide (also used by the inline form
- *  on each problem page, guide-inline-form.tsx). */
+/** Client checks, the same rules as /api/guide. */
 export function validate(v: Values) {
   const e: Record<string, string> = {}
   if (!v.firstName.trim()) e.firstName = "Please enter your first name."

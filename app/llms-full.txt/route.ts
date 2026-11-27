@@ -73,7 +73,7 @@ function salesforce(d: SalesforcePageContent): string {
     `## ${d.page.h1}`,
     `URL: ${SITE_URL}${d.page.route}`,
     "",
-    `${d.hero.eyebrow}. ${d.hero.sub} ${d.page.sub}`,
+    [`${d.hero.eyebrow}.`, d.hero.sub, d.page.sub].filter(Boolean).join(" "),
     "",
     `- ${d.rating.value} ${d.rating.label.join(" ")}`,
     "",

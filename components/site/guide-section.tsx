@@ -1,20 +1,24 @@
 import Image from "next/image"
 import Link from "next/link"
-import { GuideInlineForm } from "@/components/site/guide-inline-form"
+import { ArrowLeft, ArrowRight, Check, CircleAlert } from "lucide-react"
+import { AccentTitle, CtaButton } from "@/components/site/page-hero"
+import { GuideGate } from "@/components/site/guide-gate"
 import { SF_GUIDE_PAGE, SF_GUIDE_PROBLEMS, SF_GUIDE_ROUTE, type GuideProblem } from "@/lib/site/content/salesforce-guide"
 import type { PageContent } from "@/lib/site/types"
 
 /* --------------------------------------------------------------------------
-   One problem of the Salesforce guide (/partners/salesforce/guide/<id>), as
-   in the guide prototype's problem page: the same message as the problem's
-   ad (tagline, headline, first line, picture), then a short story, one
-   sourced fact and "Sound familiar?". The answers are only in the PDF: the
-   navy block lists what the guide covers for this problem beside an inline
-   form that emails it (guide-inline-form.tsx). Then the health-check strip
+   One problem of the Salesforce guide (/partners/salesforce/guide/<id>): the
+   same message as the problem's ad (tagline, headline, first line, picture),
+   then a short story, one sourced fact and "Sound familiar?". The answers
+   are only in the emailed PDF: the locked card (guide-gate.tsx) lists what
+   the guide covers for this problem and links to the request form, or says
+   the guide is already in this browser's inbox. Then the health-check strip
    and previous / next problem. One reading column, about 860px.
+   Site theme: white, ink and the one navy accent; no tints.
    -------------------------------------------------------------------------- */
 
 export const guideSectionRoute = (id: string) => `${SF_GUIDE_ROUTE}/${id}`
+export const guideGetHref = (id: string) => `${SF_GUIDE_ROUTE}/get?from=${id}`
 
 /** The page data for a problem: drives metadata, breadcrumbs and JSON-LD. */
 export function guideSectionPage(p: GuideProblem): PageContent {
@@ -43,37 +47,47 @@ function withPart(text: string, part: string | undefined, wrap: (s: string) => R
   )
 }
 
-const eyebrow = "text-xs font-bold uppercase tracking-[0.08em]"
-const navLink = "text-[#1F5E7A] underline decoration-[#1F5E7A]/30 underline-offset-4 hover:text-[#123F54] hover:decoration-[#123F54]"
+/** The site's serif accent on the H1's accent words. AccentTitle handles an
+ *  accent that closes the heading; one mid-heading gets the same span. */
+function H1Text({ text, accent }: { text: string; accent?: string }) {
+  if (!accent || text.endsWith(accent)) return <AccentTitle text={text} accent={accent} />
+  return withPart(text, accent, (s) => <span className="zx-serif text-navy-600">{s}</span>)
+}
+
+const navLink =
+  "group inline-flex items-center gap-1.5 text-[0.9375rem] font-semibold text-navy-600 transition-colors hover:text-ink-950"
 
 export function GuideSection({ problem: p }: { problem: GuideProblem }) {
   const i = SF_GUIDE_PROBLEMS.indexOf(p)
   const prev = SF_GUIDE_PROBLEMS[i - 1]
   const next = SF_GUIDE_PROBLEMS[i + 1]
+  const getHref = guideGetHref(p.id)
 
   return (
-    <article className="zx-container pb-5 pt-24 text-[#17212B] sm:pt-28 lg:pt-32">
+    <article className="zx-container pb-5 pt-24 text-ink-800 sm:pt-28 lg:pt-32">
       <div className="mx-auto max-w-[812px]">
-        <Link href={`${SF_GUIDE_ROUTE}#problems`} className={`mb-2 mt-6 inline-block text-sm ${navLink}`}>
-          &larr; All {SF_GUIDE_PROBLEMS.length} problems
+        <Link
+          href={`${SF_GUIDE_ROUTE}#problems`}
+          className="mb-4 mt-6 inline-flex items-center gap-2 text-[0.9375rem] font-semibold text-ink-700 transition-colors hover:text-ink-950"
+        >
+          <ArrowLeft className="h-4 w-4" aria-hidden />
+          All {SF_GUIDE_PROBLEMS.length} problems
         </Link>
 
         <div className="flex flex-wrap items-baseline justify-between gap-3">
-          <p className={`${eyebrow} text-[#2E7D9A]`}>
+          <p className="zx-eyebrow">
             Problem {p.n} of {SF_GUIDE_PROBLEMS.length}
           </p>
-          <p className={`${eyebrow} text-[#4A5868]`}>{p.tag}</p>
+          <p className="zx-eyebrow">{p.tag}</p>
         </div>
 
-        <h1 className="mb-4 mt-2.5 text-[32px] font-bold leading-[1.1] tracking-[-0.02em] text-[#1F3A5F] min-[721px]:text-[46px]">
-          {withPart(p.h1, p.h1Accent, (s) => (
-            <span className="text-[#C8452B]">{s}</span>
-          ))}
+        <h1 className="zx-display mb-5 mt-4 text-[2.25rem] leading-[1.06] tracking-[-0.04em] text-ink-950 min-[721px]:text-[3.125rem]">
+          <H1Text text={p.h1} accent={p.h1Accent} />
         </h1>
 
-        <p className="mb-[22px] text-xl font-medium leading-[1.55]">{p.body}</p>
+        <p className="mb-7 text-xl leading-[1.55] text-ink-700">{p.body}</p>
 
-        <figure className="mb-[30px] overflow-hidden rounded-[14px] border border-[#DCE3EA] bg-white">
+        <figure className="mb-9 overflow-hidden rounded-2xl border border-line bg-white">
           <Image
             src={p.image.src}
             width={p.image.width}
@@ -85,15 +99,15 @@ export function GuideSection({ problem: p }: { problem: GuideProblem }) {
           />
         </figure>
 
-        <p className="mb-[30px] text-xl leading-[1.7] first-letter:float-left first-letter:pr-2.5 first-letter:pt-1.5 first-letter:text-[58px] first-letter:font-bold first-letter:leading-[0.9] first-letter:text-[#1F3A5F]">
+        <p className="mb-9 text-xl leading-[1.7] text-ink-800 first-letter:float-left first-letter:pr-2.5 first-letter:pt-1.5 first-letter:text-[58px] first-letter:font-semibold first-letter:leading-[0.9] first-letter:text-ink-950">
           {p.open}
         </p>
 
-        <div className="mb-1.5 mt-1 flex flex-wrap items-center gap-x-[18px] gap-y-1.5 rounded-md border-l-4 border-[#2E7D9A] bg-[#EEF3F8] px-[18px] py-3.5">
-          <b className="whitespace-nowrap text-[38px] font-bold leading-tight text-[#1F3A5F]">{p.num}</b>
-          <span className="min-w-[14rem] flex-1 font-semibold leading-[1.4]">
+        <div className="zx-card !rounded-[20px] flex flex-wrap items-center gap-x-6 gap-y-2 px-6 py-5">
+          <b className="zx-display whitespace-nowrap text-[2.5rem] text-ink-950">{p.num}</b>
+          <span className="min-w-[14rem] flex-1 font-semibold leading-[1.4] text-ink-950">
             {p.numText}
-            <small className="mt-[3px] block text-xs font-normal text-[#4A5868]">
+            <small className="mt-1 block text-xs font-normal leading-normal text-ink-500">
               {withPart(p.source, p.sourceTitle, (s) => (
                 <i>{s}</i>
               ))}
@@ -101,71 +115,77 @@ export function GuideSection({ problem: p }: { problem: GuideProblem }) {
           </span>
         </div>
 
-        <h2 className="mb-2.5 mt-[30px] text-[22px] font-bold text-[#1F3A5F]">Sound familiar?</h2>
-        <ul className="flex flex-col gap-2.5">
+        <h2 className="mb-4 mt-10 text-[1.375rem] font-semibold tracking-[-0.02em] text-ink-950 sm:text-2xl">Sound familiar?</h2>
+        <ul className="flex flex-col gap-3">
           {p.signs.map((s) => (
-            <li key={s} className="relative pl-7 text-[17px] leading-[1.5]">
-              <span
-                aria-hidden
-                className="absolute left-0 top-[3px] h-[18px] w-[18px] rounded-full bg-[#FDECEA] text-center text-xs font-bold leading-[18px] text-[#C8402F]"
-              >
-                !
-              </span>
+            <li key={s} className="relative pl-8 text-[17px] leading-[1.5] text-ink-800">
+              <CircleAlert aria-hidden className="absolute left-0 top-[3px] h-[18px] w-[18px] text-flag" strokeWidth={2} />
               {s}
             </li>
           ))}
         </ul>
 
-        <div className="mt-[34px] grid grid-cols-1 gap-[22px] rounded-2xl bg-[#1F3A5F] p-[22px] text-white sm:p-[26px] min-[721px]:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
-          <div className="min-w-0">
-            <p className={`${eyebrow} text-[#A9D3E3]`}>In the free guide, for this problem</p>
-            <ul className="mt-3 flex flex-col gap-3">
-              {p.inside.map((s) => (
-                <li key={s} className="relative pl-[30px] text-[17px] leading-[1.45]">
-                  <span aria-hidden className="absolute left-0 top-[3px] h-[18px] w-[18px] rounded bg-[#F2A541]">
-                    <span className="absolute left-1.5 top-[3px] h-[9px] w-[5px] rotate-45 border-b-2 border-r-2 border-[#17212B]" />
-                  </span>
-                  {s}
-                </li>
-              ))}
-            </ul>
-            <p className="mt-2.5 text-sm text-[#C9D7E3]">Plus the other 9 problems. 25 pages, free, by email.</p>
-          </div>
-          <div className="min-w-0">
-            <GuideInlineForm problemId={p.id} page={p.page} />
-          </div>
+        {/* The rest is only in the PDF: a fading hint, then the locked card. */}
+        <p className="mt-10 text-[1.125rem] leading-relaxed text-ink-400 [-webkit-mask-image:linear-gradient(to_bottom,#000_15%,transparent)] [mask-image:linear-gradient(to_bottom,#000_15%,transparent)] sm:text-[1.1875rem]">
+          Next in this section: why it happens, the short-term and long-term fix, the recurring effort, and how the build works…
+        </p>
+
+        <div className="mt-6">
+          <GuideGate getHref={getHref} page={p.page}>
+            <div className="rounded-2xl border border-line bg-white p-6 shadow-[0_24px_60px_-40px_rgba(31,42,97,0.35)] sm:p-8">
+              <h2 className="text-xl font-semibold tracking-[-0.015em] text-ink-950 sm:text-[1.375rem]">
+                Keep reading: get the full guide by email
+              </h2>
+              <p className="mt-2 text-[1.0625rem] leading-relaxed text-ink-600">
+                The rest of this section, and all 10 sections, arrive as one PDF in your inbox.
+              </p>
+
+              <p className="zx-eyebrow mt-6">In the free guide, for this problem</p>
+              <ul className="mt-4 flex flex-col gap-3">
+                {p.inside.map((s) => (
+                  <li key={s} className="relative pl-8 text-[1.0625rem] leading-[1.45] text-ink-800">
+                    <Check aria-hidden className="absolute left-0 top-[3px] h-[18px] w-[18px] text-navy-600" strokeWidth={2.5} />
+                    {s}
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-4 text-sm text-ink-500">Plus the other 9 problems. 25 pages, free, by email.</p>
+
+              <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-5">
+                <CtaButton cta={{ label: "Continue reading", href: getHref }} />
+                <span className="text-sm text-ink-500">Free · takes 30 seconds</span>
+              </div>
+            </div>
+          </GuideGate>
         </div>
 
-        <div className="mt-5 flex flex-wrap items-center justify-between gap-3.5 rounded-xl bg-[#EEF3F8] px-[22px] py-[18px]">
-          <span className="min-w-[16rem] flex-1">
-            <b>Want to know where your Salesforce stands?</b> A health check scores all 10 areas.
+        <div className="zx-card !rounded-[20px] mt-5 flex flex-wrap items-center justify-between gap-4 px-6 py-5">
+          <span className="min-w-[16rem] flex-1 leading-relaxed text-ink-700">
+            <b className="font-semibold text-ink-950">Want to know where your Salesforce stands?</b> A health check scores all 10 areas.
           </span>
-          <Link
-            href="/partners/salesforce#sf-offer"
-            className="inline-flex min-h-11 items-center rounded-lg bg-[#1F3A5F] px-[22px] py-[13px] font-semibold text-white transition-colors hover:bg-[#163050]"
-          >
-            See the health check
-          </Link>
+          <CtaButton cta={{ label: "See the health check", href: "/partners/salesforce#sf-offer" }} />
         </div>
 
-        <nav aria-label="More problems" className="my-7 flex justify-between gap-4 text-[15px]">
+        <nav aria-label="More problems" className="mt-10 flex justify-between gap-4 border-t border-line pt-7">
           {prev ? (
             <Link href={guideSectionRoute(prev.id)} className={navLink}>
-              &larr; Previous problem
+              <ArrowLeft className="h-4 w-4 transition-transform duration-300 group-hover:-translate-x-1" aria-hidden />
+              Previous problem
             </Link>
           ) : (
             <span />
           )}
           {next ? (
             <Link href={guideSectionRoute(next.id)} className={navLink}>
-              Next problem &rarr;
+              Next problem
+              <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" aria-hidden />
             </Link>
           ) : (
             <span />
           )}
         </nav>
 
-        <p className="text-sm leading-relaxed text-[#4A5868]">
+        <p className="mt-8 text-sm leading-relaxed text-ink-500">
           Salesforce is a trademark of Salesforce, Inc. The guide is independent and is not endorsed by Salesforce.
         </p>
       </div>

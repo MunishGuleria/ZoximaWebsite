@@ -1,5 +1,6 @@
 import Image from "next/image"
 import Link from "next/link"
+import { ArrowRight } from "lucide-react"
 import { Reveal } from "@/components/site/reveal"
 import { SectionTitle } from "@/components/site/sections"
 import { SF_GUIDE_INTRO, SF_GUIDE_PDF, SF_GUIDE_PROBLEMS, SF_GUIDE_ROUTE } from "@/lib/site/content/salesforce-guide"
@@ -46,9 +47,9 @@ export function GuideHub() {
             <Reveal as="li" key={p.id} index={(p.n - 1) % 3} className="min-w-0">
               <Link
                 href={`${SF_GUIDE_ROUTE}/${p.id}`}
-                className="group flex h-full flex-col overflow-hidden rounded-xl border border-[#DCE3EA] bg-white transition-[border-color,box-shadow] duration-300 hover:border-[#2E7D9A] hover:shadow-[0_6px_18px_rgba(31,58,95,0.08)]"
+                className="group flex h-full flex-col overflow-hidden rounded-[24px] border border-line bg-white shadow-[0_24px_48px_-32px_rgba(31,42,97,0.22),0_2px_6px_-2px_rgba(31,42,97,0.05)] transition-[border-color,translate] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1 hover:border-ink-950"
               >
-                <span className="relative block aspect-[2.3/1] shrink-0 overflow-hidden border-b border-[#DCE3EA] bg-white">
+                <span className="relative block aspect-[2.3/1] shrink-0 overflow-hidden border-b border-line bg-white">
                   <Image
                     src={p.image.src}
                     alt=""
@@ -57,11 +58,14 @@ export function GuideHub() {
                     className="object-contain p-2"
                   />
                 </span>
-                <span className="flex flex-1 flex-col gap-1.5 px-[22px] pb-[22px] pt-[18px]">
-                  <span className="text-xs font-bold uppercase tracking-[0.08em] text-[#2E7D9A]">Problem {p.n}</span>
-                  <span className="text-[19px] font-semibold leading-snug text-[#1F3A5F]">{p.cardTitle}</span>
-                  <span className="text-sm leading-[1.45] text-[#4A5868]">{p.short}</span>
-                  <span className="mt-2 text-sm font-semibold text-[#1F5E7A] group-hover:text-[#123F54]">Read more &rarr;</span>
+                <span className="flex flex-1 flex-col gap-2 px-6 pb-6 pt-5">
+                  <span className="zx-eyebrow">Problem {p.n}</span>
+                  <span className="text-[1.1875rem] font-semibold leading-snug tracking-[-0.015em] text-ink-950">{p.cardTitle}</span>
+                  <span className="text-sm leading-[1.5] text-ink-600">{p.short}</span>
+                  <span className="mt-auto inline-flex items-center gap-1.5 pt-2 text-sm font-semibold text-navy-600 transition-colors group-hover:text-ink-950">
+                    Read more
+                    <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" aria-hidden />
+                  </span>
                 </span>
               </Link>
             </Reveal>
