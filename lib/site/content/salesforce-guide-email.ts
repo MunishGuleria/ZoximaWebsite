@@ -6,7 +6,7 @@
    -------------------------------------------------------------------------- */
 
 /** The guide's full title, as used in the visitor email. */
-export const SF_GUIDE_TITLE = "10 Salesforce Problems That Quietly Cost Mid-Size Companies"
+export const SF_GUIDE_TITLE = "10 Salesforce Problems That Cost Mid-Size Companies"
 
 /** The guide PDF: the file at public/guides/zoxima-salesforce-guide.pdf. */
 export const SF_GUIDE_PDF_URL = "https://www.zoxima.com/guides/zoxima-salesforce-guide.pdf"

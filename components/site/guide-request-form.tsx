@@ -20,7 +20,8 @@ import { SF_GUIDE_EMAIL_KEY, WORK_EMAIL_MESSAGE } from "@/lib/site/content/sales
    -------------------------------------------------------------------------- */
 
 type Status = "idle" | "sending" | "error"
-type Values = {
+type Values = GuideValues
+export type GuideValues = {
   firstName: string
   lastName: string
   email: string
@@ -31,7 +32,7 @@ type Values = {
 }
 
 const EMPTY: Values = { firstName: "", lastName: "", email: "", company: "", jobTitle: "", problem: "", consent: false }
-const EMAIL_SHAPE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+export const EMAIL_SHAPE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 const fieldCls =
   "mt-2 block w-full min-w-0 rounded-xl border border-line bg-white px-4 py-3 text-[0.9375rem] text-ink-950 placeholder:text-ink-400 transition-[border-color,box-shadow] duration-200 focus:border-navy-600 focus:outline-none focus:ring-4 focus:ring-navy-600/10 aria-[invalid=true]:border-flag"
@@ -42,7 +43,9 @@ function fromParam() {
   return SF_GUIDE_PROBLEMS.some((p) => p.id === from) ? from : null
 }
 
-function validate(v: Values) {
+/** Client checks, the same rules as /api/guide (also used by the inline form
+ *  on each problem page, guide-inline-form.tsx). */
+export function validate(v: Values) {
   const e: Record<string, string> = {}
   if (!v.firstName.trim()) e.firstName = "Please enter your first name."
   const email = v.email.trim()

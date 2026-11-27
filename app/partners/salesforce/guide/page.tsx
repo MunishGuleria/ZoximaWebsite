@@ -4,11 +4,11 @@ import { SF_GUIDE_ROUTE } from "@/lib/site/content/salesforce-guide"
 import { pageFor } from "@/lib/site/pages"
 
 /* The Salesforce guide hub (prototype screen 3). The hero line adds how the
-   guide works: the start of each section is free, the full guide is emailed. */
+   guide works: a one-page brief on each problem, the full guide by email. */
 const page = pageFor(SF_GUIDE_ROUTE)
 const hero = {
   ...page,
-  sub: `${page.sub} Read the start of any section free. Get the full guide by email.`,
+  sub: `${page.sub} Read a one-page brief on any problem. Get the full guide by email.`,
 }
 
 export const metadata = pageMetadata(page)

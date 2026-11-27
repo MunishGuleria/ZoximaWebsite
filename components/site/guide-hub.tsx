@@ -1,5 +1,5 @@
+import Image from "next/image"
 import Link from "next/link"
-import { ArrowRight } from "lucide-react"
 import { Reveal } from "@/components/site/reveal"
 import { SectionTitle } from "@/components/site/sections"
 import { SF_GUIDE_INTRO, SF_GUIDE_PDF, SF_GUIDE_PROBLEMS, SF_GUIDE_ROUTE } from "@/lib/site/content/salesforce-guide"
@@ -8,10 +8,9 @@ import { SF_GUIDE_INTRO, SF_GUIDE_PDF, SF_GUIDE_PROBLEMS, SF_GUIDE_ROUTE } from 
    The Salesforce guide hub (/partners/salesforce/guide), open to all. The
    hero carries the two offers (get the PDF by email, browse the problems);
    GuideCard sits beside it and says what the guide is. Below, the ten
-   problems as cards (number, title, one-line teaser), each opening its
-   section page (/partners/salesforce/guide/<id>). The fixes are in the
+   problems as cards (picture, number, title, one-line teaser), each opening
+   its problem page (/partners/salesforce/guide/<id>). The fixes are in the
    emailed PDF only.
-   White, ink and navy only.
    -------------------------------------------------------------------------- */
 
 /** Hero aside: what the guide is and who it is for. */
@@ -39,21 +38,31 @@ export function GuideHub() {
           ))}
         </Reveal>
 
-        {/* Compact cards, the whole card is the link: five across on wide
-            screens (two even rows of five), two on tablets, one on phones. */}
-        <ol className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+        {/* Cards as in the prototype: the whole problem picture on top (fitted,
+            never cropped), then number, title, teaser and "Read more".
+            The whole card is the link; as many 280px+ columns as fit. */}
+        <ol className="mt-8 grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-4">
           {SF_GUIDE_PROBLEMS.map((p) => (
-            <Reveal as="li" key={p.id} index={(p.n - 1) % 5} className="min-w-0">
+            <Reveal as="li" key={p.id} index={(p.n - 1) % 3} className="min-w-0">
               <Link
                 href={`${SF_GUIDE_ROUTE}/${p.id}`}
-                className="group flex h-full flex-col rounded-2xl border border-line bg-white p-5 transition-[border-color,translate,box-shadow] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-ink-950 hover:shadow-[0_20px_40px_-32px_rgba(31,42,97,0.45)]"
+                className="group flex h-full flex-col overflow-hidden rounded-xl border border-[#DCE3EA] bg-white transition-[border-color,box-shadow] duration-300 hover:border-[#2E7D9A] hover:shadow-[0_6px_18px_rgba(31,58,95,0.08)]"
               >
-                <span className="flex items-center justify-between gap-2">
-                  <span className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-navy-600">Problem {p.n}</span>
-                  <ArrowRight className="h-4 w-4 shrink-0 text-ink-300 transition-[color,translate] duration-300 group-hover:translate-x-0.5 group-hover:text-ink-950" aria-hidden />
+                <span className="relative block aspect-[2.3/1] shrink-0 overflow-hidden border-b border-[#DCE3EA] bg-white">
+                  <Image
+                    src={p.image.src}
+                    alt=""
+                    fill
+                    sizes="(min-width: 1024px) 360px, (min-width: 640px) 50vw, 100vw"
+                    className="object-contain p-2"
+                  />
                 </span>
-                <span className="mt-2.5 text-[1rem] font-semibold leading-snug tracking-[-0.01em] text-ink-950">{p.title}</span>
-                <span className="mt-1.5 text-sm leading-relaxed text-ink-600">{p.short}</span>
+                <span className="flex flex-1 flex-col gap-1.5 px-[22px] pb-[22px] pt-[18px]">
+                  <span className="text-xs font-bold uppercase tracking-[0.08em] text-[#2E7D9A]">Problem {p.n}</span>
+                  <span className="text-[19px] font-semibold leading-snug text-[#1F3A5F]">{p.cardTitle}</span>
+                  <span className="text-sm leading-[1.45] text-[#4A5868]">{p.short}</span>
+                  <span className="mt-2 text-sm font-semibold text-[#1F5E7A] group-hover:text-[#123F54]">Read more &rarr;</span>
+                </span>
               </Link>
             </Reveal>
           ))}

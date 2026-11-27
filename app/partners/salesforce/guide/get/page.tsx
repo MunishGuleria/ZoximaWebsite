@@ -14,7 +14,7 @@ import { SF_GUIDE_ROUTE } from "@/lib/site/content/salesforce-guide"
 
 const TITLE = "Get the full Salesforce guide by email | Zoxima"
 const DESCRIPTION =
-  "Get 10 Salesforce Problems That Quietly Cost Mid-Size Companies in your inbox: all 10 problems, why they happen, how to fix them, and how the build works."
+  "Get 10 Salesforce Problems That Cost Mid-Size Companies in your inbox: all 10 problems, why they happen, how to fix them, and how the build works."
 
 export const metadata: Metadata = {
   title: { absolute: TITLE },

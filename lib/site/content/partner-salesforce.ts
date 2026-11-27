@@ -1,143 +1,138 @@
-import type { PartnerPractice } from "@/components/site/partner-detail"
-import { SF_GUIDE_BAND, SF_GUIDE_PROBLEMS, SF_GUIDE_ROUTE } from "@/lib/site/content/salesforce-guide"
+import { SF_GUIDE_PROBLEMS, SF_GUIDE_ROUTE } from "@/lib/site/content/salesforce-guide"
+import type { Cta, PageContent } from "@/lib/site/types"
 
+/* --------------------------------------------------------------------------
+   Salesforce practice page (/partners/salesforce): the health check offer.
 
-/* Salesforce practice page (/partners/salesforce). Copy supplied by Zoxima (Nov 2026),
-   transcribed verbatim. Rendered by components/site/partner-detail.tsx. */
-export const SALESFORCE_PRACTICE: PartnerPractice = {
+   Copy and order follow Zoxima's clickable prototype (screen 2, "Salesforce
+   page = the carousel ad, in more detail"): hook, ten areas, how it works,
+   quick wins and roadmap, the offer, customer reviews, the guide band.
+   Rendered by components/site/salesforce-page.tsx.
+   -------------------------------------------------------------------------- */
+
+/** Scorecard dot on an area: red, amber or green (an example scorecard). */
+export type AreaStatus = "r" | "a" | "g"
+
+export type SalesforcePageContent = {
+  /** Route and SEO (title, description). h1/sub feed structured data. */
+  page: PageContent
+  hero: { eyebrow: string; h1: string; accent: string; sub: string; cta: Cta }
+  rating: { value: string; label: [string, string] }
+  areas: {
+    eyebrow: string
+    title: string
+    accent: string
+    items: { name: string; sub: string; status: AreaStatus; href: string }[]
+    note: string
+    noteSmall: string
+  }
+  steps: { eyebrow: string; title: string; accent: string; items: { title: string; body: string; icon: "target" | "search" | "doc" }[]; footer: string }
+  next: {
+    eyebrow: string
+    title: string
+    accent: string
+    cards: { label: string; items: string[]; footer: string }[]
+  }
+  offer: {
+    eyebrow: string
+    title: string
+    accent: string
+    prices: { label: string; from?: string; price: string; body: string }[]
+    notes: { accent: string; rest: string; body: string }[]
+    cta: Cta
+  }
+  reviews: { eyebrow: string; title: string; accent: string }
+  guide: { eyebrow: string; title: string; cta: Cta }
+}
+
+/** The health check booking link (hero CTA scrolls to the offer, which ends here). */
+const BOOK: Cta = { label: "Book your health check", href: "/contact?topic=Salesforce&msg=health-check" }
+
+/** Problem n's page in the guide. */
+const problemHref = (n: number) => {
+  const p = SF_GUIDE_PROBLEMS.find((x) => x.n === n)
+  return p ? `${SF_GUIDE_ROUTE}/${p.id}` : SF_GUIDE_ROUTE
+}
+
+const H1 = "Is your Salesforce helping you sell, or just keeping records?"
+
+export const SALESFORCE_PAGE: SalesforcePageContent = {
   page: {
     route: "/partners/salesforce",
-    crumbs: [{ label: "Partners", href: "/partners" }],
     seoTitle: "Salesforce consulting partner | Zoxima",
     seoDescription:
       "We design, build and fix Salesforce for mid-size and large companies, so reports can be trusted, data stays clean and reps spend their time selling.",
-    h1: "Salesforce that your sales team actually uses.",
-    h1Accent: "actually uses.",
+    h1: H1,
+    h1Accent: "helping you sell,",
+    // Not shown on the page: the Service description in structured data and /llms-full.txt.
     sub: "We design, build and fix Salesforce for mid-size and large companies, so reports can be trusted, data stays clean and reps spend their time selling.",
-    heroCtas: [
-      { label: "Talk to us", href: "/contact" },
-      { label: "Read the free guide", href: SF_GUIDE_ROUTE },
-    ],
     sections: [],
-    closing: {
-      h2: "Let’s see what your Salesforce could be doing.",
-      body: "Tell us what’s not working.",
-      ctas: [
-        { label: "Talk to us", href: "/contact" },
-        { label: "Read the free guide", href: SF_GUIDE_ROUTE },
-      ],
-    },
   },
-  eyebrow: "Salesforce Partner",
-  proof: [
-    { text: "4.97 rating from 41 reviews", stars: true },
-    { text: "75+ Salesforce projects" },
-    { text: "26 Salesforce certifications" },
-  ],
-  who: {
-    title: "Who we work with",
-    body: [
-      "Most of our Salesforce customers already have Salesforce in place. It works, but not as well as it should. Reports don’t match reality, automations have piled up over the years, and the field team still keeps notes outside the system.",
-      "We work with companies of 200 to 1,000+ employees in manufacturing, building materials, distribution, education and services. Some need a full build. Most need the setup they already have to work properly.",
+  hero: {
+    eyebrow: "Salesforce health check with fixes",
+    h1: H1,
+    accent: "helping you sell,",
+    sub: "The fix is simpler than you think.",
+    cta: { label: BOOK.label, href: "#sf-offer" },
+  },
+  rating: { value: "4.97", label: ["Salesforce partner rating", "on AppExchange"] },
+  areas: {
+    eyebrow: "What we check",
+    title: "Ten areas, one clear scorecard",
+    accent: "one clear scorecard",
+    items: [
+      { name: "Reports", sub: "Numbers leaders can trust", status: "r", href: problemHref(1) },
+      { name: "Data", sub: "One true view of every customer", status: "r", href: problemHref(2) },
+      { name: "Process and adoption", sub: "A system reps want to use", status: "a", href: problemHref(3) },
+      { name: "AI readiness", sub: "AI built on solid data and clear goals", status: "a", href: problemHref(4) },
+      { name: "Automations", sub: "Processes on supported tools", status: "r", href: problemHref(5) },
+      { name: "Connected systems", sub: "ERP, email and chat in one place", status: "a", href: problemHref(6) },
+      { name: "Customer view", sub: "The whole story before every call", status: "a", href: problemHref(7) },
+      { name: "Leads", sub: "Faster follow-up, fewer lost deals", status: "g", href: problemHref(8) },
+      { name: "Mobile", sub: "Reps prep and update on the go", status: "a", href: problemHref(9) },
+      { name: "Daily actions", sub: "Every call and email captured", status: "g", href: problemHref(10) },
+    ],
+    note: "See where your biggest wins are, and where to start.",
+    noteSmall: "(Dots show an example scorecard.)",
+  },
+  steps: {
+    eyebrow: "How it works",
+    title: "Simple for you, start to finish",
+    accent: "start to finish",
+    items: [
+      { title: "Understand your priorities", body: "A conversation about your goals and what hurts most", icon: "target" },
+      { title: "Detailed review of your setup", body: "Read-only access, nothing in your system changes", icon: "search" },
+      { title: "Clear findings report", body: "Plus a free re-scan after the fixes", icon: "doc" },
+    ],
+    footer: "Done by experts, with AI-assisted checks.",
+  },
+  next: {
+    eyebrow: "What happens next",
+    title: "Quick wins now, a clear roadmap for what's next",
+    accent: "a clear roadmap",
+    cards: [
+      { label: "Choose your quick wins", items: ["Trusted reports", "Clean data", "Working automations"], footer: "Fixed scope, fixed price, done in weeks." },
+      { label: "Defined roadmap", items: ["ERP integration", "A full customer view", "AI"], footer: "Planned in the right order." },
     ],
   },
   offer: {
-    title: "What we do",
-    items: [
-      {
-        name: "Implementation",
-        body: "New Sales Cloud and Service Cloud rollouts, set up around how your team really sells. That covers your stages, approvals, territories and handoffs.",
-      },
-      {
-        name: "Fix and optimize",
-        body: "For orgs that have grown messy. We clean up data, rebuild reports people can trust, simplify screens and move retired Workflow Rules and Process Builder automations to Flow.",
-      },
-      {
-        name: "Integration",
-        body: "Connect Salesforce to your ERP, email, Teams or Google Chat, document stores and e-signature tools, so reps see the full customer picture in one place.",
-      },
-      {
-        name: "Custom apps and mobile",
-        body: "Lightning Web Components, field sales apps, distributor and dealer portals, and mobile setups built for reps who work on the road.",
-      },
-      {
-        name: "AI on Salesforce",
-        body: "Get your data and processes ready first, then add AI where it pays off, such as summaries, next-best actions and nudges. No AI for its own sake.",
-      },
-      {
-        name: "Managed support",
-        body: "Ongoing admin, reporting and enhancement support on a monthly retainer.",
-      },
+    eyebrow: "The offer",
+    title: "Start with a health check",
+    accent: "health check",
+    prices: [
+      { label: "Health check", price: "$1,995", body: "Scorecard, findings report and a free re-scan" },
+      { label: "Each fix", from: "from", price: "$2,500", body: "Fixed scope, fixed price, done in weeks" },
     ],
-  },
-  work: {
-    title: "Selected work",
-    items: [
-      {
-        title: "A large education technology company",
-        body: "This company runs a large sales and service operation on Salesforce. We implemented and support its Salesforce CRM, and extended it with custom applications on React and Node.js. Its sales and service teams work from one system instead of spreadsheets and separate tools, and new needs are built on the same platform rather than bolted on outside it.",
-        caseStudy: "education-crm-learning-app",
-      },
-      {
-        title: "A building materials manufacturer",
-        body: "This manufacturer sells through field reps and a wide distributor network. We connected Salesforce to a field sales app and a distributor management system, built on Flutter and Node.js. Field reps log visits and orders from their phones, distributors work on the same data, and management sees field activity and the distributor pipeline in one place.",
-        caseStudy: "building-materials-dealer-apps",
-      },
+    notes: [
+      { accent: "Free", rest: " with two or more fixes", body: "The health check costs nothing" },
+      { accent: "Credited back", rest: " within 30 days", body: "If you buy fixes after the check" },
     ],
-    footer: {
-      label: "Read what our customers say on our AppExchange listing",
-      href: "https://appexchange.salesforce.com/appxConsultingListingDetail?listingId=a0N3A00000FnDXAUA3",
-      external: true,
-    },
+    cta: BOOK,
   },
-  /* "What we fix": the ten guide sections as cards (Zoxima's guide-flow
-     prototype, screen 2). Each card opens that section's page. */
-  problems: {
-    title: "What we fix",
-    intro: "The 10 problems we see most in companies of 200–1,000 people.",
-    items: SF_GUIDE_PROBLEMS.map((p) => ({
-      label: `Problem ${p.n}`,
-      title: p.title,
-      body: p.short,
-      href: `${SF_GUIDE_ROUTE}/${p.id}`,
-    })),
-    guide: {
-      eyebrow: "Free guide for Salesforce users",
-      title: SF_GUIDE_BAND.title,
-      body: "How to spot each one, what it costs, and how to fix it. Read the start of any section free. Get the full guide by email.",
-      cta: { label: "Get the full guide by email", href: `${SF_GUIDE_ROUTE}/get` },
-    },
-  },
-  /* "Start here" offer card under the problems (prototype screen 2, verbatim). */
-  healthCheck: {
-    eyebrow: "Start here",
-    title: "Salesforce Health Check: $1,995",
-    body: "Experts plus AI review your org across all 10 areas in about two weeks. You get a scorecard, findings in your own numbers, and a ranked fix plan. Free when you buy two or more fixes; otherwise credited in full against fixes bought within 30 days.",
-    cta: { label: "Book a call", href: "/contact?topic=Salesforce&msg=health-check" },
-  },
-  steps: {
-    title: "How we work",
-    items: [
-      { title: "Understand", body: "We start with your sales process and priorities, not the software." },
-      { title: "Review", body: "We look at your org, data and automations, and agree a fixed scope." },
-      { title: "Build", body: "We work in short cycles, with a demo at the end of each." },
-      { title: "Hand over", body: "We train your users and admins and document what was built." },
-      { title: "Support", body: "We stay on hand, or step back. Your choice." },
-    ],
-  },
-  why: {
-    title: "Why Zoxima",
-    items: [
-      {
-        title: "Sales process first",
-        body: "We’ve spent 15 years on sales productivity and CRM with hundreds of enterprises.",
-      },
-      {
-        title: "Both major platforms",
-        body: "We deliver on both Salesforce and Microsoft, so our advice isn’t tied to one vendor.",
-      },
-      { title: "Fixed scope, clear price", body: "You know what you’re getting before work starts." },
-      { title: "Rated by customers", body: "4.97 from 41 reviews, across 75+ Salesforce projects." },
-    ],
+  reviews: { eyebrow: "Customer reviews", title: "What customers say on AppExchange", accent: "on AppExchange" },
+  guide: {
+    eyebrow: "Free guide",
+    title: "10 common Salesforce problems and how to fix them",
+    cta: { label: "Read the guide", href: SF_GUIDE_ROUTE },
   },
 }

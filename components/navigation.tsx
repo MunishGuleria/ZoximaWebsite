@@ -14,6 +14,8 @@ type NavChild = { href: string; label: string; sub?: boolean }
 type NavItem = {
   href: string
   label: string
+  /** Path prefix that marks this item active, when it differs from href. */
+  match?: string
   children?: NavChild[]
 }
 
@@ -44,16 +46,22 @@ const NAV: NavItem[] = [
     ],
   },
   { href: "/products", label: "Products" },
+  {
+    href: "/partners/salesforce",
+    label: "Partners",
+    match: "/partners",
+    children: [
+      { href: "/partners/salesforce", label: "Salesforce" },
+      { href: "/partners/microsoft", label: "Microsoft" },
+    ],
+  },
+  { href: "/partners/salesforce/guide", label: "Guides" },
   { href: "/case-studies", label: "Case Studies" },
   {
     href: "/about",
     label: "Company",
     children: [
       { href: "/about", label: "About" },
-      { href: "/partners", label: "Partners" },
-      { href: "/partners/salesforce", label: "Salesforce", sub: true },
-      { href: "/partners/salesforce/guide", label: "Salesforce guide", sub: true },
-      { href: "/partners/microsoft", label: "Microsoft", sub: true },
       { href: "/security", label: "Security and trust" },
       { href: "/careers", label: "Careers" },
       { href: "/contact", label: "Contact" },
@@ -123,8 +131,13 @@ export function Navigation() {
     closeTimer.current = setTimeout(() => setOpenMenu(null), 140)
   }, [])
 
-  const isActive = (href: string) =>
-    href === "/" ? pathname === "/" : pathname.startsWith(href)
+  // The longest matching top-level link wins, so /partners/salesforce/guide
+  // marks "Guides", not "Partners".
+  const matches = (href: string) => (href === "/" ? pathname === "/" : pathname.startsWith(href))
+  const active = NAV.filter((i) => matches(i.match ?? i.href)).sort(
+    (a, b) => (b.match ?? b.href).length - (a.match ?? a.href).length
+  )[0]
+  const isActive = (href: string) => href === active?.href
 
   return (
     <header ref={navRef} className="fixed inset-x-0 top-0 z-50">
@@ -176,7 +189,7 @@ export function Navigation() {
                     onClick={() => setOpenMenu(null)}
                     onFocus={() => openNow(item.label)}
                     className={cn(
-                      "zx-glass-row flex items-center gap-1 rounded-full px-3 py-2 text-[0.9375rem] transition-colors",
+                      "zx-glass-row flex items-center gap-1 whitespace-nowrap rounded-full px-2 py-2 text-[0.875rem] transition-colors xl:px-3 xl:text-[0.9375rem]",
                       isActive(item.href)
                         ? "text-ink-950"
                         : "text-ink-600 hover:text-ink-950"
@@ -228,7 +241,7 @@ export function Navigation() {
                   href={item.href}
                   aria-current={isActive(item.href) ? "page" : undefined}
                   className={cn(
-                    "zx-glass-row rounded-full px-3 py-2 text-[0.9375rem] transition-colors",
+                    "zx-glass-row whitespace-nowrap rounded-full px-2 py-2 text-[0.875rem] transition-colors xl:px-3 xl:text-[0.9375rem]",
                     isActive(item.href)
                       ? "text-ink-950"
                       : "text-ink-600 hover:text-ink-950"
@@ -241,7 +254,7 @@ export function Navigation() {
             {/* Menu button from the doc: "Contact us" */}
             <Link
               href="/contact"
-              className="zx-sheen ml-3 inline-flex h-10 items-center justify-center rounded-xl bg-ink-950 px-5 text-[0.875rem] font-medium text-white transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:scale-[1.04] active:scale-[0.98]"
+              className="zx-sheen ml-2 inline-flex h-10 shrink-0 items-center justify-center whitespace-nowrap rounded-xl bg-ink-950 px-4 text-[0.875rem] xl:ml-3 xl:px-5 font-medium text-white transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:scale-[1.04] active:scale-[0.98]"
             >
               Contact us
             </Link>

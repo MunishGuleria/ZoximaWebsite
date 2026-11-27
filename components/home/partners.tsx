@@ -2,9 +2,10 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { ArrowRight, ArrowUpRight, Check, ChevronDown, Star } from "lucide-react"
+import { ArrowRight, ArrowUpRight, Check, ChevronDown } from "lucide-react"
 import { Reveal, RevealGroup, RevealItem } from "@/components/motion/reveal"
 import { GuideBand } from "@/components/site/guide-band"
+import { SF_LISTING_URL, SalesforceReviewCards } from "@/components/site/salesforce-reviews"
 
 /* --------------------------------------------------------------------------
    Partner work: two homepage sections, Microsoft and Salesforce.
@@ -23,7 +24,6 @@ import { GuideBand } from "@/components/site/guide-band"
 const MS_PARTNER_URL =
   "https://appsource.microsoft.com/en-us/marketplace/partner-dir/923bb7ae-3d80-46c7-b4b1-dd832ab44683/overview"
 const APPSOURCE = "https://appsource.microsoft.com/en-us/product"
-const SF_LISTING_URL = "https://appexchange.salesforce.com/appxConsultingListingDetail?listingId=a0N3A00000FnDXAUA3"
 
 /* Salesforce band (Zoxima's guide-flow prototype, screen 1). */
 const SF_STATS = [
@@ -32,14 +32,7 @@ const SF_STATS = [
   { value: "90+", label: "Enterprise projects across CRM, automation and AI" },
 ]
 
-/* Real AppExchange reviews ONLY, copied word for word from the listing (with
-   permission where needed). Nothing renders until at least one is added. */
-const SF_REVIEWS: { quote: string; by: string }[] = [
-  // AppExchange, Project Review, 5 stars, 02/13/2026.
-  { quote: "Excellent service provided.", by: "Verified Customer · Feb 13, 2026" },
-  // AppExchange, Project Review, 5 stars, 07/13/2021.
-  { quote: "working with zoxima is really a great experience", by: "Verified Customer · Jul 13, 2021" },
-]
+/* Reviews: components/site/salesforce-reviews.tsx (shared with /partners/salesforce). */
 
 const MS_APPS = [
   {
@@ -346,23 +339,7 @@ export function SalesforceWork() {
             ))}
           </dl>
 
-          {SF_REVIEWS.length > 0 && (
-            <div className={`mt-6 grid gap-3 sm:mt-8 sm:gap-4 ${SF_REVIEWS.length > 2 ? "md:grid-cols-3" : "md:grid-cols-2"}`}>
-              {SF_REVIEWS.map((r, i) => (
-                <figure key={i} className="flex h-full flex-col justify-between rounded-2xl border border-[#DCE3EA] bg-[#F6F8FA] p-4 sm:p-6">
-                  <div>
-                    <div className="flex gap-0.5" aria-label="5 out of 5 stars">
-                      {Array.from({ length: 5 }).map((_, i) => (
-                        <Star key={i} className="h-3.5 w-3.5 fill-ink-950 text-ink-950" aria-hidden />
-                      ))}
-                    </div>
-                    <blockquote className="mt-3 text-[0.9875rem] leading-relaxed text-ink-800">“{r.quote}”</blockquote>
-                  </div>
-                  <figcaption className="mt-4 text-sm text-ink-500">{r.by} · on AppExchange</figcaption>
-                </figure>
-              ))}
-            </div>
-          )}
+          <SalesforceReviewCards className="mt-6 sm:mt-8" />
         </Reveal>
 
         {/* Free guide band, straight under the card (prototype screen 1). */}

@@ -1,14 +1,14 @@
 import type { CSSProperties } from "react"
 import Link from "next/link"
 import { ArrowRight, ArrowUpRight, Check, Star } from "lucide-react"
-import { GuideBand, type GuideBandContent } from "@/components/site/guide-band"
 import { AccentTitle, CtaButton, accentFor } from "@/components/site/page-hero"
 import { Reveal } from "@/components/site/reveal"
 import type { Cta, PageContent } from "@/lib/site/types"
 import { cn } from "@/lib/utils"
 
 /* --------------------------------------------------------------------------
-   Partner practice page (/partners/microsoft, /partners/salesforce).
+   Partner practice page (/partners/microsoft). /partners/salesforce has its
+   own layout: components/site/salesforce-page.tsx.
 
    One layout, filled from a PartnerPractice data object
    (lib/site/content/partner-*.ts). Sections render only when the data has
@@ -16,12 +16,9 @@ import { cn } from "@/lib/utils"
 
      hero        eyebrow chip, headline (serif accent), subline, buttons,
                  optional badge row, then the proof strip on ink
-     problems    what we fix: heading + intro, a card grid (each card can
-                 link, e.g. to a guide section), then an optional ink guide band
      who         split: heading left, paragraphs right
      offer       bento: the first card on ink, the rest white
      work        selected work cards, results as check rows
-     healthCheck "Start here" offer card under the problems (prototype colours)
      apps        ready-made apps, rows that invert to ink on hover
      steps       how we work, a numbered rail
      why         why Zoxima, label left and line right
@@ -47,15 +44,6 @@ export type PartnerPractice = {
     /** e.g. "Read what our customers say on our AppExchange listing". */
     footer?: Cta
   }
-  problems?: {
-    title: string
-    intro?: string
-    /** Cards: small label (e.g. "Problem 1"), title, teaser; `href` makes the card a link. */
-    items: { label?: string; title: string; body?: string; href?: string }[]
-    /** Optional dark guide band under the cards. */
-    guide?: GuideBandContent
-  }
-  healthCheck?: { eyebrow?: string; title: string; body: string; cta?: Cta }
   apps?: { title: string; intro?: string; items: { name: string; body: string; href: string }[]; cta?: Cta }
   steps?: { title: string; items: { title: string; body: string }[] }
   why?: { title: string; items: { title: string; body: string }[] }
@@ -324,89 +312,6 @@ function Work({ work }: { work: NonNullable<PartnerPractice["work"]> }) {
   )
 }
 
-function Problems({ problems }: { problems: NonNullable<PartnerPractice["problems"]> }) {
-  const cardCls =
-    "group flex h-full flex-col rounded-[24px] border border-line bg-white p-6 transition-[translate,box-shadow,border-color] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] sm:p-7"
-  const linkCls = "hover:-translate-y-1 hover:border-ink-950 hover:shadow-[0_28px_56px_-30px_rgba(19,23,32,0.45)]"
-  return (
-    <Section id="problems">
-      <Reveal>
-        <Heading title={problems.title} />
-      </Reveal>
-      {problems.intro && (
-        <Reveal as="p" index={1} className="mt-4 max-w-2xl text-[1.0625rem] leading-relaxed text-ink-600 sm:text-lg">
-          {problems.intro}
-        </Reveal>
-      )}
-      <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:mt-12 lg:grid-cols-3">
-        {problems.items.map((p, i) => {
-          const body = (
-            <>
-              {p.label && (
-                <span className="flex items-center justify-between gap-3 text-xs font-semibold uppercase tracking-[0.14em] text-navy-600">
-                  {p.label}
-                  {p.href && (
-                    <ArrowRight
-                      className="h-4 w-4 shrink-0 text-ink-300 transition-[color,translate] duration-300 group-hover:translate-x-0.5 group-hover:text-ink-950"
-                      aria-hidden
-                    />
-                  )}
-                </span>
-              )}
-              <h3 className="mt-3 text-[1.125rem] font-semibold leading-snug tracking-[-0.015em] text-ink-950">{p.title}</h3>
-              {p.body && <p className="mt-2 text-[0.9375rem] leading-relaxed text-ink-600">{p.body}</p>}
-            </>
-          )
-          return (
-            <Reveal as="li" key={p.title} variant="scale" index={i % 3}>
-              {p.href ? (
-                <Link href={p.href} className={cn(cardCls, linkCls)}>
-                  {body}
-                </Link>
-              ) : (
-                <div className={cardCls}>{body}</div>
-              )}
-            </Reveal>
-          )
-        })}
-      </ul>
-      {problems.guide && (
-        <Reveal className="mt-8 lg:mt-10">
-          <GuideBand band={problems.guide} />
-        </Reveal>
-      )}
-    </Section>
-  )
-}
-
-function HealthCheck({ hc }: { hc: NonNullable<PartnerPractice["healthCheck"]> }) {
-  // As in Zoxima's guide-flow prototype (screen 2): a white "Start here" card,
-  // navy title, orange button. Prototype colours, at the client's request.
-  return (
-    <Section id="health-check" className="!pt-0">
-      <Reveal className="flex flex-col gap-6 rounded-2xl border border-[#DCE3EA] bg-white p-6 sm:p-8 lg:flex-row lg:items-center lg:justify-between lg:gap-10">
-        <div className="max-w-[44rem]">
-          {hc.eyebrow && (
-            <p className="text-[0.8125rem] font-semibold uppercase tracking-[0.08em] text-[#2E7D9A]">{hc.eyebrow}</p>
-          )}
-          <h2 className="mt-2 text-[1.625rem] font-semibold leading-tight tracking-[-0.02em] text-[#1F3A5F] sm:text-[1.875rem]">
-            {hc.title}
-          </h2>
-          <p className="mt-3 text-[1.0625rem] leading-relaxed text-[#4A5868]">{hc.body}</p>
-        </div>
-        {hc.cta && (
-          <SmartLink
-            cta={hc.cta}
-            className="inline-flex min-h-12 shrink-0 items-center justify-center self-start rounded-lg bg-[#F2A541] px-6 text-[1rem] font-semibold text-[#17212B] transition-colors hover:bg-[#E8962A] lg:self-center"
-          >
-            {hc.cta.label}
-          </SmartLink>
-        )}
-      </Reveal>
-    </Section>
-  )
-}
-
 function Apps({ apps }: { apps: NonNullable<PartnerPractice["apps"]> }) {
   return (
     <Section id="apps">
@@ -513,8 +418,6 @@ export function PartnerDetail({ data }: { data: PartnerPractice }) {
   return (
     <>
       <Hero data={data} />
-      {data.problems && <Problems problems={data.problems} />}
-      {data.healthCheck && <HealthCheck hc={data.healthCheck} />}
       {data.who && <Who who={data.who} />}
       {data.offer && <Offer offer={data.offer} />}
       {data.work && <Work work={data.work} />}

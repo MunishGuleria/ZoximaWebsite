@@ -10,7 +10,6 @@ const APPSOURCE = "https://appsource.microsoft.com/en-us/product"
 export const MICROSOFT_PRACTICE: PartnerPractice = {
   page: {
     route: "/partners/microsoft",
-    crumbs: [{ label: "Partners", href: "/partners" }],
     seoTitle: "Microsoft Dynamics 365 and Power Platform partner | Zoxima",
     seoDescription:
       "Dynamics 365, Power Platform, Azure AI and Copilot Studio solutions for large enterprises, from a Microsoft Solutions Partner with three designations.",

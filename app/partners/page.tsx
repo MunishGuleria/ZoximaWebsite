@@ -1,23 +1,7 @@
-import { SitePage, pageMetadata } from "@/components/site/site-page"
-import { MicrosoftWork, SalesforceWork } from "@/components/home/partners"
-import { pageFor } from "@/lib/site/pages"
+import { permanentRedirect } from "next/navigation"
 
-const page = pageFor("/partners")
-
-export const metadata = pageMetadata(page)
-
-/* The partner sections from the home page (#salesforce, #microsoft), with
-   links on to the full practice pages (/partners/salesforce, /partners/microsoft). */
+/* There is no partners overview page: the Partners menu lists the two
+   practice pages directly, and old links to /partners land on Salesforce. */
 export default function Page() {
-  return (
-    <SitePage
-      page={page}
-      sections={
-        <>
-          <SalesforceWork />
-          <MicrosoftWork />
-        </>
-      }
-    />
-  )
+  permanentRedirect("/partners/salesforce")
 }

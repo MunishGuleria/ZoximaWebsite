@@ -186,7 +186,7 @@ export async function POST(request: NextRequest) {
         '',
         `Thanks for your interest. Here is your copy of ${SF_GUIDE_TITLE}.`,
         '',
-        `Download the full guide (PDF): ${pdf}`,
+        `Download full guide: ${pdf}`,
         '',
         ...(problem ? [`You told us "${problem.title}" matters most right now. Start with ${startHere}.`, ''] : []),
         'Want to know where your Salesforce stands?',
@@ -218,7 +218,7 @@ export async function POST(request: NextRequest) {
             <p style="margin:0 0 22px">Thanks for your interest. Here is your copy of <strong>${SF_GUIDE_TITLE}</strong>.</p>
             <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 0 22px"><tr>
               <td style="background:#F2A541;border-radius:8px">
-                <a href="${escapeHtml(pdf)}" style="display:inline-block;padding:13px 24px;color:#17212B;text-decoration:none;font-weight:700;font-size:15px;font-family:${EMAIL_FONT}">Download the full guide (PDF)</a>
+                <a href="${escapeHtml(pdf)}" style="display:inline-block;padding:13px 24px;color:#17212B;text-decoration:none;font-weight:700;font-size:15px;font-family:${EMAIL_FONT}">Download full guide</a>
               </td>
             </tr></table>
             ${problem ? `<p style="margin:0 0 22px">You told us <strong>${escapeHtml(problem.title)}</strong> matters most right now. Start with ${startHere}.</p>` : ''}
