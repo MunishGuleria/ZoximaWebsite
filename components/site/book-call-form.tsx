@@ -40,7 +40,7 @@ export function BookCallForm() {
   const [status, setStatus] = useState<Status>("idle")
   const [message, setMessage] = useState("")
   const [errors, setErrors] = useState<Record<string, string>>({})
-  const [sent, setSent] = useState<{ email: string; when: string } | null>(null)
+  const [sent, setSent] = useState<{ email: string; when: string; confirmed: boolean } | null>(null)
   // Filled in after mount, so server and client render the same HTML.
   const [timeZone, setTimeZone] = useState("")
   const [range, setRange] = useState<{ min: string; max: string } | null>(null)
@@ -87,7 +87,7 @@ export function BookCallForm() {
         setStatus("error")
         return
       }
-      setSent({ email: data.email, when: `${formatBookDate(data.date)} at ${data.slot}` })
+      setSent({ email: data.email, when: `${formatBookDate(data.date)} at ${data.slot}`, confirmed: json.confirmationSent !== false })
       form.reset()
       setStatus("sent")
     } catch {
@@ -106,8 +106,18 @@ export function BookCallForm() {
         </span>
         <h3 className="mt-5 text-xl font-semibold tracking-[-0.015em] text-ink-950 sm:text-[1.375rem]">Your call request is in</h3>
         <p className="mt-2 text-[1.0625rem] leading-relaxed text-ink-600">
-          You asked for <b className="font-semibold text-ink-950">{sent.when}</b>. We sent a confirmation to{" "}
-          <b className="font-semibold text-ink-950">{sent.email}</b> and will send a calendar invite within one business day.
+          You asked for <b className="font-semibold text-ink-950">{sent.when}</b>.{" "}
+          {sent.confirmed ? (
+            <>
+              We sent a confirmation to <b className="font-semibold text-ink-950">{sent.email}</b> and will send a calendar invite within
+              one business day.
+            </>
+          ) : (
+            <>
+              We could not email a confirmation to <b className="font-semibold text-ink-950">{sent.email}</b>, but your request reached
+              us and we will send a calendar invite within one business day.
+            </>
+          )}
         </p>
       </div>
     )

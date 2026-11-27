@@ -226,11 +226,14 @@ export async function POST(request: NextRequest) {
   }
 
   const [confirmResult] = await Promise.allSettled([sendEmail(client, confirmation)])
+  const confirmationSent = confirmResult.status === 'fulfilled'
   if (confirmResult.status === 'fulfilled') {
     console.log(`[book] Confirmation sent to ${email}, ACS id ${confirmResult.value}`)
   } else {
     console.error(`[book] Confirmation to ${email} failed (booking reached the team, ACS id ${alertId}):`, confirmResult.reason)
   }
 
-  return NextResponse.json({ success: true }, { status: 200 })
+  // The booking reached the team either way; the form says whether the
+  // confirmation email went out too.
+  return NextResponse.json({ success: true, confirmationSent }, { status: 200 })
 }
