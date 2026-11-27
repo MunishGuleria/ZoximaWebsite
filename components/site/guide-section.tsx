@@ -1,6 +1,6 @@
 import Image from "next/image"
 import Link from "next/link"
-import { ArrowLeft, ArrowRight, Check, CircleAlert } from "lucide-react"
+import { ArrowLeft, ArrowRight, CircleAlert, Lock } from "lucide-react"
 import { AccentTitle, CtaButton } from "@/components/site/page-hero"
 import { GuideGate } from "@/components/site/guide-gate"
 import { SF_GUIDE_PAGE, SF_GUIDE_PROBLEMS, SF_GUIDE_ROUTE, type GuideProblem } from "@/lib/site/content/salesforce-guide"
@@ -133,9 +133,14 @@ export function GuideSection({ problem: p }: { problem: GuideProblem }) {
         <div className="mt-6">
           <GuideGate getHref={getHref} page={p.page}>
             <div className="rounded-2xl border border-line bg-white p-6 shadow-[0_24px_60px_-40px_rgba(31,42,97,0.35)] sm:p-8">
-              <h2 className="text-xl font-semibold tracking-[-0.015em] text-ink-950 sm:text-[1.375rem]">
-                Keep reading: get the full guide by email
-              </h2>
+              <div className="flex items-center gap-3">
+                <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-ink-950 text-white">
+                  <Lock aria-hidden className="h-[18px] w-[18px]" strokeWidth={2.25} />
+                </span>
+                <h2 className="text-xl font-semibold tracking-[-0.015em] text-ink-950 sm:text-[1.375rem]">
+                  Keep reading: get the full guide by email
+                </h2>
+              </div>
               <p className="mt-2 text-[1.0625rem] leading-relaxed text-ink-600">
                 The rest of this section, and all 10 sections, arrive as one PDF in your inbox.
               </p>
@@ -144,7 +149,7 @@ export function GuideSection({ problem: p }: { problem: GuideProblem }) {
               <ul className="mt-4 flex flex-col gap-3">
                 {p.inside.map((s) => (
                   <li key={s} className="relative pl-8 text-[1.0625rem] leading-[1.45] text-ink-800">
-                    <Check aria-hidden className="absolute left-0 top-[3px] h-[18px] w-[18px] text-navy-600" strokeWidth={2.5} />
+                    <Lock aria-hidden className="absolute left-0 top-[4px] h-[17px] w-[17px] text-navy-600" strokeWidth={2.25} />
                     {s}
                   </li>
                 ))}
