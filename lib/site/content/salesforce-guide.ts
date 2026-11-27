@@ -389,7 +389,6 @@ export const SF_GUIDE_PAGE: PageContent = {
   sub: "How to spot each one, what it costs, and how to fix it.",
   heroCtas: [
     { label: "Download full guide", href: `${SF_GUIDE_ROUTE}/get` },
-    { label: "Browse the 10 problems", href: "#problems" },
   ],
   sections: [],
   closing: {

@@ -136,8 +136,13 @@ export function SalesforcePage({ data }: { data: SalesforcePageContent }) {
             ))}
           </ul>
         </Reveal>
-        <Reveal as="p" className="mt-5 text-[1.0625rem] leading-relaxed text-ink-700">
-          {areas.note} <span className="text-sm text-ink-500">{areas.noteSmall}</span>
+        <Reveal className="mt-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-[1.0625rem] leading-relaxed text-ink-700">
+            {areas.note} <span className="text-sm text-ink-500">{areas.noteSmall}</span>
+          </p>
+          <div className="shrink-0 max-sm:[&>a]:w-full">
+            <CtaButton cta={areas.cta} variant="secondary" />
+          </div>
         </Reveal>
       </Section>
 
