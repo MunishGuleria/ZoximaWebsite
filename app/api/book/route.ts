@@ -10,6 +10,7 @@ import {
   teamInbox,
 } from '@/lib/email/acs'
 import { brandedEmail, LOGO_ATTACHMENT, SENDER_NAME } from '@/lib/email/branded'
+import { formatIn, googleCalendarUrl, outlookCalendarUrl, slotToUtc } from '@/lib/email/calendar'
 import {
   BOOK_MAX_DAYS,
   BOOK_SLOTS,
@@ -37,6 +38,7 @@ const NOT_CONFIGURED = `Booking is not available right now. ${FALLBACK}`
 const SEND_FAILED = `We could not send your booking. ${FALLBACK}`
 
 const DATE = /^\d{4}-\d{2}-\d{2}$/
+const CALL_MINUTES = 20
 
 const BookSchema = z.object({
   name: z
@@ -148,13 +150,35 @@ export async function POST(request: NextRequest) {
   const when = `${day} at ${slot}${zone}`
 
   /* 1. The booking, to the team --------------------------------------------- */
+  // The call as an exact instant, so the team sees it in their own time and
+  // can add it to a calendar with the visitor as the guest.
+  const start = slotToUtc(date, slot, timeZone)
+  const end = new Date(start.getTime() + CALL_MINUTES * 60_000)
+  const event = {
+    title: `Salesforce Health Check call: ${name}`,
+    start,
+    end,
+    guest: email,
+    details: [
+      '20-minute call about the Salesforce Health Check, booked on zoxima.com.',
+      `Name: ${name}`,
+      `Email: ${email}`,
+      `Requested: ${when}`,
+    ].join('\n'),
+  }
+  const gcal = googleCalendarUrl(event)
+  const outlook = outlookCalendarUrl(event)
   const rows: [string, string][] = [
     ['Name', name],
     ['Email', email],
     ['Requested time', when],
-    ['Time zone', timeZone || 'Not known'],
+    ['In California', formatIn(start, 'America/Los_Angeles')],
+    ['In India', formatIn(start, 'Asia/Kolkata')],
+    ['Time zone', timeZone || 'Not known (taken as UTC)'],
     ['Booked at', new Date(now).toISOString()],
   ]
+  const button = (href: string, label: string) =>
+    `<a href="${escapeHtml(href)}" style="display:inline-block;margin:0 8px 8px 0;padding:11px 18px;border-radius:8px;background:#111111;color:#ffffff;font-size:14px;font-weight:600;text-decoration:none">${label}</a>`
   const alert: EmailMessage = {
     senderAddress: from,
     recipients: { to: inbox.map((address) => ({ address })) },
@@ -166,12 +190,17 @@ export async function POST(request: NextRequest) {
         '',
         ...rows.map(([label, value]) => `${label}: ${value}`),
         '',
-        `Reply to this email to confirm the time with ${firstName}. They have been told to expect a calendar invite within one business day.`,
+        `Add to Google Calendar (${email} is added as a guest): ${gcal}`,
+        `Add to Outlook (${email} is added as a guest): ${outlook}`,
+        '',
+        `Saving the event sends ${firstName} the calendar invite. They have been told to expect it within one business day.`,
       ].join('\n'),
       html: emailShell(`
         <h2 style="margin:0 0 20px;font-size:18px;font-weight:600">New health check call request</h2>
         ${rowsTable(rows)}
-        <p style="margin:20px 0 0;font-size:13px;color:#555555">Reply to this email to confirm the time with ${escapeHtml(firstName)}. They have been told to expect a calendar invite within one business day.</p>
+        <p style="margin:24px 0 10px;font-size:14px;font-weight:600">Add to your calendar (${escapeHtml(email)} is added as a guest):</p>
+        <div>${button(gcal, 'Add to Google Calendar')}${button(outlook, 'Add to Outlook')}</div>
+        <p style="margin:14px 0 0;font-size:13px;color:#555555">Saving the event sends ${escapeHtml(firstName)} the calendar invite. They have been told to expect it within one business day. Or reply to this email to agree another time.</p>
       `),
     },
   }
