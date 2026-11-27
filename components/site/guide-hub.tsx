@@ -1,6 +1,5 @@
 import Image from "next/image"
 import Link from "next/link"
-import { ArrowRight } from "lucide-react"
 import { Reveal } from "@/components/site/reveal"
 import { SectionTitle } from "@/components/site/sections"
 import { SF_GUIDE_INTRO, SF_GUIDE_PDF, SF_GUIDE_PROBLEMS, SF_GUIDE_ROUTE } from "@/lib/site/content/salesforce-guide"
@@ -40,8 +39,8 @@ export function GuideHub() {
         </Reveal>
 
         {/* Cards as in the prototype: the whole problem picture on top (fitted,
-            never cropped), then number, title, teaser and "Read more".
-            The whole card is the link; as many 280px+ columns as fit. */}
+            never cropped), then number, title and teaser.
+            The whole card is the link (no separate button); as many 280px+ columns as fit. */}
         <ol className="mt-8 grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-4">
           {SF_GUIDE_PROBLEMS.map((p) => (
             <Reveal as="li" key={p.id} index={(p.n - 1) % 3} className="min-w-0">
@@ -62,10 +61,6 @@ export function GuideHub() {
                   <span className="zx-eyebrow">Problem {p.n}</span>
                   <span className="text-[1.1875rem] font-semibold leading-snug tracking-[-0.015em] text-ink-950">{p.cardTitle}</span>
                   <span className="text-sm leading-[1.5] text-ink-600">{p.short}</span>
-                  <span className="mt-auto inline-flex items-center gap-1.5 pt-2 text-sm font-semibold text-navy-600 transition-colors group-hover:text-ink-950">
-                    Read more
-                    <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" aria-hidden />
-                  </span>
                 </span>
               </Link>
             </Reveal>

@@ -90,7 +90,7 @@ function salesforce(d: SalesforcePageContent): string {
     `### ${d.offer.title}`,
     d.offer.prices.map((p) => `- ${p.label}: ${p.from ? `${p.from} ` : ""}${p.price}. ${p.body}.`).join("\n"),
     d.offer.notes.map((n) => `- ${n.accent}${n.rest}: ${n.body}.`).join("\n"),
-    `Book: ${link(d.offer.cta.href)}`,
+    `${d.offer.book.title}: ${link(`${d.page.route}#book`)}`,
   ].join("\n")
 }
 

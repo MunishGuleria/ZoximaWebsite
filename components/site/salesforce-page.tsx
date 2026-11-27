@@ -3,6 +3,8 @@ import { ArrowRight, ArrowUpRight, Check, FileText, Search, Star, Target } from 
 import { AccentTitle, CtaButton } from "@/components/site/page-hero"
 import { Hero as PartnerHero } from "@/components/site/partner-detail"
 import { Reveal } from "@/components/site/reveal"
+import { BookCallForm } from "@/components/site/book-call-form"
+import { BOOK_ANCHOR } from "@/lib/site/content/health-check-booking"
 import { SF_LISTING_URL, SalesforceReviewCards } from "@/components/site/salesforce-reviews"
 import type { AreaStatus, SalesforcePageContent } from "@/lib/site/content/partner-salesforce"
 import { cn } from "@/lib/utils"
@@ -17,7 +19,8 @@ import { cn } from "@/lib/utils"
                with an example scorecard dot, linking to its guide page
      steps     "How it works": three cards
      next      "What happens next": an ink card and a white card
-     offer     #sf-offer: two price cards, two notes, rating + booking button
+     offer     #sf-offer: two price cards, two notes, then the booking card
+               (#book: name, email, day and time; see book-call-form.tsx)
      reviews   the AppExchange reviews (shared with the home page)
      guide     white band pointing to the free guide
 
@@ -232,11 +235,21 @@ export function SalesforcePage({ data }: { data: SalesforcePageContent }) {
             </Reveal>
           ))}
         </div>
-        <Reveal className="mt-8 flex flex-wrap items-center justify-between gap-4 border-t border-line pt-6">
-          <Rating rating={rating} />
-          <div className="max-sm:w-full max-sm:[&>a]:w-full">
-            <CtaButton cta={offer.cta} />
+        {/* Booking card: the only booking button on the page leads here. */}
+        <Reveal
+          id={BOOK_ANCHOR}
+          className="relative mt-8 scroll-mt-28 grid gap-8 rounded-[28px] border border-line bg-white p-7 sm:p-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-12"
+        >
+          <div>
+            <h3 className="zx-display text-[1.625rem] leading-[1.15] tracking-[-0.03em] text-ink-950 sm:text-[2rem]">
+              {offer.book.title}
+            </h3>
+            <p className="mt-3 text-[1.0625rem] leading-relaxed text-ink-600">{offer.book.body}</p>
+            <div className="mt-6">
+              <Rating rating={rating} />
+            </div>
           </div>
+          <BookCallForm />
         </Reveal>
       </Section>
 

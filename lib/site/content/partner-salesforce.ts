@@ -1,3 +1,4 @@
+import { BOOK_ANCHOR } from "@/lib/site/content/health-check-booking"
 import { SF_GUIDE_PROBLEMS, SF_GUIDE_ROUTE } from "@/lib/site/content/salesforce-guide"
 import type { Cta, PageContent } from "@/lib/site/types"
 
@@ -43,14 +44,15 @@ export type SalesforcePageContent = {
     accent: string
     prices: { label: string; from?: string; price: string; body: string }[]
     notes: { accent: string; rest: string; body: string }[]
-    cta: Cta
+    /** The booking card (#book) that ends the offer. */
+    book: { title: string; body: string }
   }
   reviews: { eyebrow: string; title: string; accent: string }
   guide: { eyebrow: string; title: string; cta: Cta }
 }
 
-/** The health check booking link (the offer section ends with it). */
-const BOOK: Cta = { label: "Book your health check", href: "/contact?topic=Salesforce&msg=health-check" }
+/** Every "Book your health check" on the page scrolls to the booking card. */
+const BOOK: Cta = { label: "Book your health check", href: `#${BOOK_ANCHOR}` }
 
 /** Problem n's page in the guide. */
 const problemHref = (n: number) => {
@@ -67,11 +69,8 @@ export const SALESFORCE_PAGE: SalesforcePageContent = {
     h1: "Salesforce that your sales team actually uses.",
     h1Accent: "actually uses.",
     sub: "We design, build and fix Salesforce for mid-size and large companies, so reports can be trusted, data stays clean and reps spend their time selling.",
-    heroCtas: [
-      { label: "Talk to us", href: "/contact" },
-      // Scrolls to the offer below.
-      { label: BOOK.label, href: "#sf-offer" },
-    ],
+    // One button: it scrolls to the booking card in the offer.
+    heroCtas: [BOOK],
     sections: [],
   },
   hero: {
@@ -135,7 +134,10 @@ export const SALESFORCE_PAGE: SalesforcePageContent = {
       { accent: "Free", rest: " with two or more fixes", body: "The health check costs nothing" },
       { accent: "Credited back", rest: " within 30 days", body: "If you buy fixes after the check" },
     ],
-    cta: BOOK,
+    book: {
+      title: "Book your health check call",
+      body: "Pick a day and a time for a 20-minute call. We'll confirm it by email and send a calendar invite.",
+    },
   },
   reviews: { eyebrow: "Customer reviews", title: "What customers say on AppExchange", accent: "on AppExchange" },
   guide: {
