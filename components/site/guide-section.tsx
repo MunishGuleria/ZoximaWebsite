@@ -3,7 +3,7 @@ import Link from "next/link"
 import { ArrowLeft, ArrowRight, CircleAlert, Lock } from "lucide-react"
 import { AccentTitle, CtaButton } from "@/components/site/page-hero"
 import { GuideGate } from "@/components/site/guide-gate"
-import { SF_GUIDE_HUB, SF_GUIDE_PAGE, SF_GUIDE_PROBLEMS, SF_GUIDE_ROUTE, type GuideProblem } from "@/lib/site/content/salesforce-guide"
+import { SF_GUIDE_PAGE, SF_GUIDE_PROBLEMS, SF_GUIDE_ROUTE, type GuideProblem } from "@/lib/site/content/salesforce-guide"
 import type { PageContent } from "@/lib/site/types"
 
 /* --------------------------------------------------------------------------
@@ -24,7 +24,7 @@ export const guideGetHref = (id: string) => `${SF_GUIDE_ROUTE}/get?from=${id}`
 export function guideSectionPage(p: GuideProblem): PageContent {
   return {
     route: guideSectionRoute(p.id),
-    crumbs: [...(SF_GUIDE_PAGE.crumbs ?? []), { label: "Guide", href: SF_GUIDE_HUB }],
+    crumbs: [...(SF_GUIDE_PAGE.crumbs ?? []), { label: "Guide", href: SF_GUIDE_ROUTE }],
     seoTitle: `${p.title} | Salesforce guide | Zoxima`,
     seoDescription: p.cost,
     eyebrow: `Problem ${p.n} of ${SF_GUIDE_PROBLEMS.length}`,
@@ -67,7 +67,7 @@ export function GuideSection({ problem: p }: { problem: GuideProblem }) {
     <article className="zx-container pb-5 pt-24 text-ink-800 sm:pt-28 lg:pt-32">
       <div className="mx-auto max-w-[812px]">
         <Link
-          href={SF_GUIDE_HUB}
+          href={SF_GUIDE_ROUTE}
           className="mb-4 mt-6 inline-flex items-center gap-2 text-[0.9375rem] font-semibold text-ink-700 transition-colors hover:text-ink-950"
         >
           <ArrowLeft className="h-4 w-4" aria-hidden />

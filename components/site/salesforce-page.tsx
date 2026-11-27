@@ -4,7 +4,6 @@ import { AccentTitle, CtaButton } from "@/components/site/page-hero"
 import { Hero as PartnerHero } from "@/components/site/partner-detail"
 import { Reveal } from "@/components/site/reveal"
 import { BookCallDialog } from "@/components/site/book-call-dialog"
-import { GuideCard, GuideSection } from "@/components/site/guide-hub"
 import { BOOK_ANCHOR } from "@/lib/site/content/health-check-booking"
 import { SF_LISTING_URL, SalesforceReviewCards } from "@/components/site/salesforce-reviews"
 import type { AreaStatus, SalesforcePageContent } from "@/lib/site/content/partner-salesforce"
@@ -17,13 +16,14 @@ import { cn } from "@/lib/utils"
                headline with the serif accent, subline, buttons, proof strip
                on ink), from components/site/partner-detail.tsx
      areas     "What we check": ten areas in a bordered two-column list, each
-               with an example scorecard dot, jumping to its problem card
-     guide     #guide: the free guide and its 10 problem cards (guide-hub.tsx)
+               with an example scorecard dot, opening the guide page on its
+               problem card (highlighted there); "See Salesforce guide" top right
      steps     "How it works": three cards
      next      "What happens next": an ink card and a white card
      offer     #sf-offer: two price cards, two notes, rating + booking button;
                every link to #book opens the booking card (book-call-dialog.tsx)
      reviews   the AppExchange reviews (shared with the home page)
+     guide     white band pointing to the free guide
 
    Section order and copy follow Zoxima's clickable prototype (screen 2); the
    styling is the site's own (white, ink and one navy accent, the serif
@@ -104,14 +104,26 @@ const card = (dark: boolean) =>
 const cardEyebrow = (dark: boolean) => cn("zx-eyebrow", dark && "!text-white/60")
 
 export function SalesforcePage({ data }: { data: SalesforcePageContent }) {
-  const { page, hero, rating, areas, steps, next, offer, reviews } = data
+  const { page, hero, rating, areas, steps, next, offer, reviews, guide } = data
   return (
     <>
-      <PartnerHero data={{ page, eyebrow: hero.eyebrow, proof: hero.proof }} aside={<GuideCard />} />
+      <PartnerHero data={{ page, eyebrow: hero.eyebrow, proof: hero.proof }} />
 
       {/* What we check */}
       <Section id="what-we-check">
-        <Head eyebrow={areas.eyebrow} title={areas.title} accent={areas.accent} />
+        {/* Heading on the left, "See Salesforce guide" at the top right of the list. */}
+        <div className="flex flex-wrap items-end justify-between gap-x-8">
+          <Head eyebrow={areas.eyebrow} title={areas.title} accent={areas.accent} />
+          <Reveal className="mb-8 lg:mb-12">
+            <Link
+              href={areas.cta.href}
+              className="group inline-flex min-h-11 items-center gap-2 text-[0.9875rem] font-semibold text-ink-950 transition-colors hover:text-navy-600"
+            >
+              {areas.cta.label}
+              <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" aria-hidden />
+            </Link>
+          </Reveal>
+        </div>
         <Reveal variant="scale">
           <ul className="grid rounded-[28px] border border-line bg-white px-5 py-2 sm:px-8 sm:py-3 md:grid-cols-2 md:gap-x-12">
             {areas.items.map((a) => (
@@ -141,10 +153,6 @@ export function SalesforcePage({ data }: { data: SalesforcePageContent }) {
           {areas.note} <span className="text-sm text-ink-500">{areas.noteSmall}</span>
         </Reveal>
       </Section>
-
-      {/* The free guide: title, Download full guide, the 10 problem cards (#guide).
-          Each area above jumps to its card here and highlights it. */}
-      <GuideSection />
 
       {/* How it works */}
       <Section id="how-it-works">
@@ -211,6 +219,25 @@ export function SalesforcePage({ data }: { data: SalesforcePageContent }) {
         </div>
       </Section>
 
+      {/* Customer reviews (AppExchange, shared with the home page): proof before the price */}
+      <Section id="reviews">
+        <Head eyebrow={reviews.eyebrow} title={reviews.title} accent={reviews.accent} />
+        <Reveal variant="scale">
+          <SalesforceReviewCards tone="site" />
+        </Reveal>
+        <Reveal className="mt-8">
+          <a
+            href={SF_LISTING_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group inline-flex min-h-11 items-center gap-2 text-[0.9875rem] font-semibold text-ink-950 transition-colors hover:text-navy-600"
+          >
+            Read all reviews on AppExchange
+            <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden />
+          </a>
+        </Reveal>
+      </Section>
+
       {/* The offer */}
       <Section id="sf-offer">
         <Head eyebrow={offer.eyebrow} title={offer.title} accent={offer.accent} />
@@ -250,25 +277,18 @@ export function SalesforcePage({ data }: { data: SalesforcePageContent }) {
         <BookCallDialog title={offer.book.title} body={offer.book.body} />
       </Section>
 
-      {/* Customer reviews (AppExchange, shared with the home page) */}
-      <Section id="reviews">
-        <Head eyebrow={reviews.eyebrow} title={reviews.title} accent={reviews.accent} />
-        <Reveal variant="scale">
-          <SalesforceReviewCards tone="site" />
-        </Reveal>
-        <Reveal className="mt-8">
-          <a
-            href={SF_LISTING_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group inline-flex min-h-11 items-center gap-2 text-[0.9875rem] font-semibold text-ink-950 transition-colors hover:text-navy-600"
-          >
-            Read all reviews on AppExchange
-            <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden />
-          </a>
+      {/* Guide band */}
+      <Section id="free-guide" className="!pt-0">
+        <Reveal className="zx-card flex flex-col gap-6 p-7 sm:p-10 md:flex-row md:items-center md:justify-between">
+          <div className="min-w-0">
+            <p className="zx-eyebrow">{guide.eyebrow}</p>
+            <h3 className="zx-display-sm mt-3 text-[1.5rem] text-ink-950 sm:text-[1.875rem]">{guide.title}</h3>
+          </div>
+          <div className="shrink-0 max-sm:[&>a]:w-full">
+            <CtaButton cta={guide.cta} />
+          </div>
         </Reveal>
       </Section>
-
     </>
   )
 }

@@ -5,7 +5,7 @@ import { AccentTitle, CtaButton, PageHero, accentFor } from "@/components/site/p
 import { PageSections } from "@/components/site/sections"
 import { visualFor } from "@/lib/site/media"
 import { ORGANIZATION_SCHEMA, SALEZX_SCHEMA } from "@/lib/site/schema"
-import { SF_GUIDE_HUB, SF_GUIDE_PAGE, SF_GUIDE_PROBLEMS, SF_GUIDE_ROUTE } from "@/lib/site/content/salesforce-guide"
+import { SF_GUIDE_PAGE, SF_GUIDE_PROBLEMS, SF_GUIDE_ROUTE } from "@/lib/site/content/salesforce-guide"
 import type { Closing, PageContent } from "@/lib/site/types"
 
 /* --------------------------------------------------------------------------
@@ -162,7 +162,7 @@ function PageJsonLd({ page, label }: { page: PageContent; label: string }) {
       description: page.seoDescription,
       articleSection: "Guide",
       ...(isGuideSection
-        ? { isPartOf: { "@type": "CreativeWork", name: SF_GUIDE_PAGE.h1, url: `${SITE_URL}${SF_GUIDE_HUB}` } }
+        ? { isPartOf: { "@type": "CreativeWork", name: SF_GUIDE_PAGE.h1, url: `${SITE_URL}${SF_GUIDE_ROUTE}` } }
         : {}),
       url,
       image: `${SITE_URL}/og-image.png`,

@@ -55,8 +55,7 @@ const NAV: NavItem[] = [
       { href: "/partners/microsoft", label: "Microsoft" },
     ],
   },
-  // The guide is a section of the Salesforce page; its problem pages mark this link active.
-  { href: "/partners/salesforce#guide", label: "Guides", match: "/partners/salesforce/guide" },
+  { href: "/partners/salesforce/guide", label: "Guides" },
   { href: "/case-studies", label: "Case Studies" },
   {
     href: "/about",

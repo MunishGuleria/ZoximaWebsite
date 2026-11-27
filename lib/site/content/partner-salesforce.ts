@@ -1,5 +1,5 @@
 import { BOOK_ANCHOR } from "@/lib/site/content/health-check-booking"
-import { SF_GUIDE_PROBLEMS } from "@/lib/site/content/salesforce-guide"
+import { SF_GUIDE_PROBLEMS, SF_GUIDE_ROUTE } from "@/lib/site/content/salesforce-guide"
 import type { Cta, PageContent } from "@/lib/site/types"
 
 /* --------------------------------------------------------------------------
@@ -9,8 +9,7 @@ import type { Cta, PageContent } from "@/lib/site/types"
    eyebrow chip, headline, subline, buttons, proof strip on ink), with the
    Salesforce partner copy supplied by Zoxima (Nov 2026). Below it, in the
    order of Zoxima's clickable prototype (screen 2): ten areas, how it works,
-   quick wins and roadmap, the offer, customer reviews. The guide (with its
-   10 problem cards) follows the ten areas.
+   quick wins and roadmap, the offer, customer reviews, the guide band.
    Rendered by components/site/salesforce-page.tsx.
    -------------------------------------------------------------------------- */
 
@@ -31,6 +30,8 @@ export type SalesforcePageContent = {
     items: { name: string; sub: string; status: AreaStatus; href: string }[]
     note: string
     noteSmall: string
+    /** Link at the top right of the list: the guide page. */
+    cta: Cta
   }
   steps: { eyebrow: string; title: string; accent: string; items: { title: string; body: string; icon: "target" | "search" | "doc" }[]; footer: string }
   next: {
@@ -49,16 +50,17 @@ export type SalesforcePageContent = {
     book: { button: string; title: string; body: string }
   }
   reviews: { eyebrow: string; title: string; accent: string }
+  guide: { eyebrow: string; title: string; cta: Cta }
 }
 
 /** Every "Book your health check" on the page opens the booking card (#book). */
 const BOOK: Cta = { label: "Book your health check", href: `#${BOOK_ANCHOR}` }
 
 
-/** Area n jumps to problem n's card in the guide section below (and highlights it). */
+/** Area n opens the guide page on problem n's card, which is highlighted there. */
 const cardHref = (n: number) => {
   const p = SF_GUIDE_PROBLEMS.find((x) => x.n === n)
-  return p ? `#problem-${p.id}` : "#guide"
+  return p ? `${SF_GUIDE_ROUTE}#problem-${p.id}` : SF_GUIDE_ROUTE
 }
 
 export const SALESFORCE_PAGE: SalesforcePageContent = {
@@ -101,6 +103,7 @@ export const SALESFORCE_PAGE: SalesforcePageContent = {
     ],
     note: "See where your biggest wins are, and where to start.",
     noteSmall: "(Dots show an example scorecard.)",
+    cta: { label: "See Salesforce guide", href: SF_GUIDE_ROUTE },
   },
   steps: {
     eyebrow: "How it works",
@@ -141,4 +144,9 @@ export const SALESFORCE_PAGE: SalesforcePageContent = {
     },
   },
   reviews: { eyebrow: "Customer reviews", title: "What customers say on AppExchange", accent: "on AppExchange" },
+  guide: {
+    eyebrow: "Free guide",
+    title: "10 common Salesforce problems and how to fix them",
+    cta: { label: "Read the guide", href: SF_GUIDE_ROUTE },
+  },
 }

@@ -34,7 +34,7 @@ const COMPANY = [
   { href: "/case-studies", label: "Case studies" },
   { href: "/partners/salesforce", label: "Salesforce" },
   { href: "/partners/microsoft", label: "Microsoft" },
-  { href: "/partners/salesforce#guide", label: "Salesforce guide" },
+  { href: "/partners/salesforce/guide", label: "Salesforce guide" },
   { href: "/security", label: "Security and trust" },
   { href: "/careers", label: "Careers" },
   { href: "/contact", label: "Contact" },
