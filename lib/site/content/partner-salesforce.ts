@@ -69,8 +69,7 @@ export const SALESFORCE_PAGE: SalesforcePageContent = {
     h1: "Salesforce that your sales team actually uses.",
     h1Accent: "actually uses.",
     sub: "We design, build and fix Salesforce for mid-size and large companies, so reports can be trusted, data stays clean and reps spend their time selling.",
-    // One button: it opens the booking card.
-    heroCtas: [BOOK],
+    // No hero button: booking is in the offer section (it opens the booking card).
     sections: [],
   },
   hero: {
