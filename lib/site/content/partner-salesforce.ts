@@ -113,7 +113,7 @@ export const SALESFORCE_PRACTICE: PartnerPractice = {
     eyebrow: "Start here",
     title: "Salesforce Health Check: $1,995",
     body: "Experts plus AI review your org across all 10 areas in about two weeks. You get a scorecard, findings in your own numbers, and a ranked fix plan. Free when you buy two or more fixes; otherwise credited in full against fixes bought within 30 days.",
-    cta: { label: "Book a call", href: "/contact?topic=Salesforce" },
+    cta: { label: "Book a call", href: "/contact?topic=Salesforce&msg=health-check" },
   },
   steps: {
     title: "How we work",

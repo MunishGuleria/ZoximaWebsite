@@ -38,7 +38,7 @@ export const maxDuration = 30
 const NOT_CONFIGURED = 'The guide form is not configured. Please email info@zoxima.com and we will send you the guide.'
 const SEND_FAILED = 'We could not email the guide. Please email info@zoxima.com and we will send it to you.'
 const UNSUBSCRIBE_MAILTO = 'mailto:info@zoxima.com?subject=Unsubscribe'
-const BOOK_CALL_URL = 'https://www.zoxima.com/contact?topic=Salesforce'
+const BOOK_CALL_URL = 'https://www.zoxima.com/contact?topic=Salesforce&msg=health-check'
 const SITE_URL = 'https://www.zoxima.com'
 const PROBLEM_IDS = SF_GUIDE_PROBLEMS.map((p) => p.id) as [string, ...string[]]
 

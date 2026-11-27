@@ -45,7 +45,7 @@ export default function Page() {
                 Tell us what you’re seeing in your Salesforce. We’ll tell you what we’d fix first.
               </p>
               <div className="mt-7 flex flex-col items-center gap-3 sm:flex-row sm:justify-center sm:gap-6">
-                <CtaButton cta={{ label: "Talk to us", href: "/contact?topic=Salesforce" }} />
+                <CtaButton cta={{ label: "Talk to us", href: "/contact?topic=Salesforce&msg=guide" }} />
                 <Link
                   href={SF_GUIDE_ROUTE}
                   className="group inline-flex min-h-11 items-center justify-center gap-1.5 text-[0.9375rem] font-medium text-ink-800 hover:text-navy-600"

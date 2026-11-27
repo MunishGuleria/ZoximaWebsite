@@ -33,7 +33,7 @@ export function guideSectionPage(p: GuideProblem): PageContent {
     closing: {
       h2: "Seeing a few of these in your Salesforce?",
       body: SF_GUIDE_PAGE.closing?.body,
-      ctas: [{ label: "Talk to us", href: "/contact?topic=Salesforce" }],
+      ctas: [{ label: "Talk to us", href: "/contact?topic=Salesforce&msg=guide" }],
     },
   }
 }

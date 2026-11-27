@@ -54,17 +54,35 @@ function Field({
   )
 }
 
+/* Ready-made messages for links into this form (?msg=<key>). */
+const PRESET_MESSAGES: Record<string, string> = {
+  "health-check":
+    "Hi, I'd like to book a call about the Salesforce Health Check. Please let me know a few times that suit you.",
+  guide:
+    "Hi, I've been reading your Salesforce guide and I'd like to talk about the problems we're seeing in our Salesforce.",
+}
+
+/* Used when a link sets only the topic. */
+const TOPIC_MESSAGES: Record<string, string> = {
+  Salesforce: "Hi, I'd like to talk about our Salesforce setup and what you would fix first.",
+}
+
 export function ContactForm() {
   const reduce = useReducedMotionSafe()
   const [status, setStatus] = useState<Status>("idle")
   const [message, setMessage] = useState("")
   const [errors, setErrors] = useState<Record<string, string>>({})
   const topicRef = useRef<HTMLSelectElement>(null)
+  const messageRef = useRef<HTMLTextAreaElement>(null)
 
-  // Links like /contact?topic=Salesforce%20health%20check preselect the topic.
+  // Links like /contact?topic=Salesforce preselect the topic, and fill in a
+  // ready-made message (?msg=<key>, else the topic's default). The visitor can edit it.
   useEffect(() => {
-    const topic = new URLSearchParams(window.location.search).get("topic")
+    const params = new URLSearchParams(window.location.search)
+    const topic = params.get("topic")
     if (topic && topicRef.current && (CONTACT_TOPICS as readonly string[]).includes(topic)) topicRef.current.value = topic
+    const preset = PRESET_MESSAGES[params.get("msg") ?? ""] ?? TOPIC_MESSAGES[topic ?? ""]
+    if (preset && messageRef.current && !messageRef.current.value) messageRef.current.value = preset
   }, [])
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -192,7 +210,7 @@ export function ContactForm() {
             </div>
             <div className="sm:col-span-2">
               <Field label="Message" name="message" error={errors.message}>
-                <textarea id="message" name="message" rows={5} maxLength={4000} placeholder="Where does work slip today? Orders, collections, renewals, quotes…" className={`${fieldCls} resize-y`} {...invalid("message")} />
+                <textarea ref={messageRef} id="message" name="message" rows={5} maxLength={4000} placeholder="Where does work slip today? Orders, collections, renewals, quotes…" className={`${fieldCls} resize-y`} {...invalid("message")} />
               </Field>
             </div>
 
