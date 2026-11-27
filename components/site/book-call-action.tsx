@@ -23,11 +23,15 @@ function readBooking(): Booking | null {
   }
 }
 
-/* Same look as the site's primary CtaButton. */
-const buttonCls =
-  "zx-sheen group inline-flex min-h-12 items-center justify-center gap-2 whitespace-nowrap rounded-xl bg-ink-950 px-6 text-[0.9375rem] font-semibold text-white transition-[scale] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:scale-[1.04] active:scale-[0.98] max-sm:w-full"
+/* The site's primary button; on a dark card it turns white. */
+const buttonCls = (dark: boolean) =>
+  `zx-sheen group inline-flex min-h-12 items-center justify-center gap-2 whitespace-nowrap rounded-xl px-6 text-[0.9375rem] font-semibold transition-[scale] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:scale-[1.04] active:scale-[0.98] max-sm:w-full ${
+    dark ? "bg-white text-ink-950" : "bg-ink-950 text-white"
+  }`
 
-export function BookCallAction({ label }: { label: string }) {
+/** `tone="dark"`: placed on an ink card (the health check price card). */
+export function BookCallAction({ label, tone = "light" }: { label: string; tone?: "light" | "dark" }) {
+  const dark = tone === "dark"
   const [booking, setBooking] = useState<Booking | null>(null)
 
   useEffect(() => {
@@ -43,15 +47,23 @@ export function BookCallAction({ label }: { label: string }) {
 
   if (booking) {
     return (
-      <div role="status" className="flex items-center gap-3.5 rounded-2xl border border-line bg-white px-5 py-3.5 max-sm:w-full">
-        <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-ink-950 text-white">
+      <div
+        role="status"
+        className={`flex items-center gap-3.5 rounded-2xl border px-5 py-3.5 max-sm:w-full ${
+          dark ? "border-white/15 bg-white/[0.06]" : "border-line bg-white"
+        }`}
+      >
+        <span className={`grid h-10 w-10 shrink-0 place-items-center rounded-full ${dark ? "bg-white text-ink-950" : "bg-ink-950 text-white"}`}>
           <CalendarCheck className="h-5 w-5" aria-hidden />
         </span>
         <span className="min-w-0">
-          <span className="block text-[0.9375rem] font-semibold text-ink-950">Call requested: {booking.when}</span>
-          <span className="block text-sm text-ink-600">
+          <span className={`block text-[0.9375rem] font-semibold ${dark ? "text-white" : "text-ink-950"}`}>Call requested: {booking.when}</span>
+          <span className={`block text-sm ${dark ? "text-white/70" : "text-ink-600"}`}>
             Invite on its way to {booking.email} ·{" "}
-            <a href={`#${BOOK_ANCHOR}`} className="font-semibold text-navy-600 underline-offset-4 hover:underline">
+            <a
+              href={`#${BOOK_ANCHOR}`}
+              className={`font-semibold underline-offset-4 hover:underline ${dark ? "text-white" : "text-navy-600"}`}
+            >
               Change time
             </a>
           </span>
@@ -61,7 +73,7 @@ export function BookCallAction({ label }: { label: string }) {
   }
 
   return (
-    <a href={`#${BOOK_ANCHOR}`} className={buttonCls}>
+    <a href={`#${BOOK_ANCHOR}`} className={buttonCls(dark)}>
       {label}
       <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" aria-hidden />
     </a>

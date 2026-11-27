@@ -20,7 +20,8 @@ import { cn } from "@/lib/utils"
                problem card (highlighted there); "See Salesforce guide" top right
      steps     "How it works": three cards
      next      "What happens next": an ink card and a white card
-     offer     #sf-offer: two price cards, two notes, rating + booking button;
+     offer     #sf-offer: rating top right; price cards (the booking button sits
+               in the health check card), then the two notes;
                every link to #book opens the booking card (book-call-dialog.tsx)
      reviews   the AppExchange reviews (shared with the home page)
      guide     white band pointing to the free guide
@@ -240,18 +241,31 @@ export function SalesforcePage({ data }: { data: SalesforcePageContent }) {
 
       {/* The offer */}
       <Section id="sf-offer">
-        <Head eyebrow={offer.eyebrow} title={offer.title} accent={offer.accent} />
+        {/* Heading on the left, the AppExchange rating at the top right. */}
+        <div className="flex flex-wrap items-end justify-between gap-x-8">
+          <Head eyebrow={offer.eyebrow} title={offer.title} accent={offer.accent} />
+          <Reveal className="mb-8 lg:mb-12">
+            <Rating rating={rating} />
+          </Reveal>
+        </div>
         <div className="grid gap-4 md:grid-cols-2">
           {offer.prices.map((p, i) => {
             const dark = i === 0
             return (
-              <Reveal key={p.label} variant="scale" index={i} className={card(dark)}>
+              <Reveal key={p.label} variant="scale" index={i} className={cn(card(dark), "flex flex-col")}>
                 <p className={cardEyebrow(dark)}>{p.label}</p>
                 <p className="zx-display mb-3 mt-5 text-[3rem] leading-none tracking-[-0.04em] sm:text-[3.75rem]">
                   {p.from && <span className="mr-2 align-baseline text-lg font-medium tracking-normal">{p.from}</span>}
                   {p.price}
                 </p>
                 <p className={cn("text-[0.9875rem] leading-relaxed", dark ? "text-white/75" : "text-ink-600")}>{p.body}</p>
+                {/* The booking sits on the health check it books. It opens the
+                    booking card (#book); after a booking it shows "Call requested". */}
+                {dark && (
+                  <div className="mt-auto pt-8">
+                    <BookCallAction label={offer.book.button} tone="dark" />
+                  </div>
+                )}
               </Reveal>
             )
           })}
@@ -267,14 +281,6 @@ export function SalesforcePage({ data }: { data: SalesforcePageContent }) {
             </Reveal>
           ))}
         </div>
-        <Reveal className="mt-8 flex flex-wrap items-center justify-between gap-4 border-t border-line pt-6">
-          <Rating rating={rating} />
-          <div className="max-sm:w-full max-sm:[&>a]:w-full">
-            {/* Opens the booking card (BookCallDialog listens for #book); after a
-                booking in this browser it shows "Call requested" instead. */}
-            <BookCallAction label={offer.book.button} />
-          </div>
-        </Reveal>
         <BookCallDialog title={offer.book.title} body={offer.book.body} />
       </Section>
 
