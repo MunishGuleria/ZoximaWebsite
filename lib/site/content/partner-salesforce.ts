@@ -45,13 +45,13 @@ export type SalesforcePageContent = {
     prices: { label: string; from?: string; price: string; body: string }[]
     notes: { accent: string; rest: string; body: string }[]
     /** The booking card (#book) that ends the offer. */
-    book: { title: string; body: string }
+    book: { button: string; title: string; body: string }
   }
   reviews: { eyebrow: string; title: string; accent: string }
   guide: { eyebrow: string; title: string; cta: Cta }
 }
 
-/** Every "Book your health check" on the page scrolls to the booking card. */
+/** Every "Book your health check" on the page opens the booking card (#book). */
 const BOOK: Cta = { label: "Book your health check", href: `#${BOOK_ANCHOR}` }
 
 /** Problem n's page in the guide. */
@@ -69,7 +69,7 @@ export const SALESFORCE_PAGE: SalesforcePageContent = {
     h1: "Salesforce that your sales team actually uses.",
     h1Accent: "actually uses.",
     sub: "We design, build and fix Salesforce for mid-size and large companies, so reports can be trusted, data stays clean and reps spend their time selling.",
-    // One button: it scrolls to the booking card in the offer.
+    // One button: it opens the booking card.
     heroCtas: [BOOK],
     sections: [],
   },
@@ -135,6 +135,7 @@ export const SALESFORCE_PAGE: SalesforcePageContent = {
       { accent: "Credited back", rest: " within 30 days", body: "If you buy fixes after the check" },
     ],
     book: {
+      button: BOOK.label,
       title: "Book your health check call",
       body: "Pick a day and a time for a 20-minute call. We'll confirm it by email and send a calendar invite.",
     },
