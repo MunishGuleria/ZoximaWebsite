@@ -2,8 +2,8 @@ import { EMAIL_FONT } from '@/lib/email/acs'
 import { ZOXIMA_LOGO_PNG_BASE64 } from '@/lib/email/zoxima-logo'
 
 /* --------------------------------------------------------------------------
-   The branded visitor email (guide email, booking confirmation): header with
-   the logo and "Zoxima Solutions", the body, "Best regards" and a signature
+   The branded visitor email (guide email, booking confirmation): white header
+   with the logo and "Zoxima Solutions", the body, "Best regards" and a signature
    with the logo, then a small footer. Tables and inline styles, so it holds
    up in Outlook. Server-only. The logo is an inline attachment (cid), so no
    image is loaded from the web.
@@ -28,10 +28,10 @@ export function brandedEmail(inner: string, footer: string) {
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F6F8FA">
       <tr><td align="center" style="padding:32px 16px">
         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;background:#ffffff;border:1px solid #DCE3EA;border-radius:10px;overflow:hidden">
-          <tr><td style="background:#1F3A5F;padding:18px 28px">
+          <tr><td style="background:#ffffff;border-bottom:1px solid #DCE3EA;padding:18px 28px">
             <table role="presentation" cellpadding="0" cellspacing="0"><tr>
-              <td style="background:#ffffff;border-radius:10px;padding:4px"><img src="cid:zoxima-logo" width="56" height="56" alt="Zoxima" style="display:block;width:56px;height:56px;border:0" /></td>
-              <td style="padding-left:14px;color:#ffffff;font-size:20px;font-weight:700;font-family:${EMAIL_FONT}">${SENDER_NAME}</td>
+              <td><img src="cid:zoxima-logo" width="56" height="56" alt="Zoxima" style="display:block;width:56px;height:56px;border:0" /></td>
+              <td style="padding-left:14px;color:#1F3A5F;font-size:20px;font-weight:700;font-family:${EMAIL_FONT}">${SENDER_NAME}</td>
             </tr></table>
           </td></tr>
           <tr><td style="padding:28px">
