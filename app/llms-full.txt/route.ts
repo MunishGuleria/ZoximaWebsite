@@ -1,7 +1,7 @@
 import { CASE_STUDIES } from "@/lib/site/content/case-studies"
 import { MICROSOFT_PRACTICE } from "@/lib/site/content/partner-microsoft"
 import { SALESFORCE_PAGE, type SalesforcePageContent } from "@/lib/site/content/partner-salesforce"
-import { SF_GUIDE_PAGE, SF_GUIDE_PDF, SF_GUIDE_PROBLEMS, SF_GUIDE_ROUTE } from "@/lib/site/content/salesforce-guide"
+import { SF_GUIDE_HUB, SF_GUIDE_PAGE, SF_GUIDE_PDF, SF_GUIDE_PROBLEMS, SF_GUIDE_ROUTE } from "@/lib/site/content/salesforce-guide"
 import { ALL_ROUTES, pageFor } from "@/lib/site/pages"
 import { SITE_URL } from "@/lib/site/schema"
 import type { PartnerPractice } from "@/components/site/partner-detail"
@@ -78,7 +78,7 @@ function salesforce(d: SalesforcePageContent): string {
     `- ${d.rating.value} ${d.rating.label.join(" ")}`,
     "",
     `### ${d.areas.title}`,
-    d.areas.items.map((a) => `- ${a.name}: ${a.sub} (${link(a.href)})`).join("\n"),
+    d.areas.items.map((a) => `- ${a.name}: ${a.sub}`).join("\n"),
     "",
     `### ${d.steps.title}`,
     d.steps.items.map((s) => `- ${s.title}: ${s.body}`).join("\n"),
@@ -99,7 +99,7 @@ function salesforce(d: SalesforcePageContent): string {
 function guide(): string {
   const out = [
     `## ${SF_GUIDE_PAGE.h1}`,
-    `URL: ${SITE_URL}${SF_GUIDE_ROUTE}`,
+    `URL: ${SITE_URL}${SF_GUIDE_HUB}`,
     "",
     `${SF_GUIDE_PAGE.sub} A one-page brief on each problem is on the site; the full guide (${SF_GUIDE_PDF.facts}) is sent by email: ${SITE_URL}${SF_GUIDE_ROUTE}/get`,
     "",

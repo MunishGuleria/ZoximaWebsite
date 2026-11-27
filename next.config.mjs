@@ -56,12 +56,12 @@ const nextConfig = {
     return [
       // Images and fonts in /public: browsers keep them a day and refresh in
       // the background for a week (/_next/static is already cached forever).
-      // The Salesforce guide PDF (link in the guide email): clicking it
-      // downloads the file instead of opening it in the browser.
+      // The Salesforce guide PDF (link in the guide email): opens in the
+      // browser's PDF viewer; saving it uses this file name.
       {
         source: '/guides/:file*.pdf',
         headers: [
-          { key: 'Content-Disposition', value: 'attachment; filename="Zoxima-Salesforce-Guide.pdf"' },
+          { key: 'Content-Disposition', value: 'inline; filename="Zoxima-Salesforce-Guide.pdf"' },
           { key: 'Content-Type', value: 'application/pdf' },
           { key: 'Cache-Control', value: 'public, max-age=3600' },
         ],

@@ -1,5 +1,5 @@
 import { BOOK_ANCHOR } from "@/lib/site/content/health-check-booking"
-import { SF_GUIDE_ROUTE } from "@/lib/site/content/salesforce-guide"
+import { SF_GUIDE_PROBLEMS } from "@/lib/site/content/salesforce-guide"
 import type { Cta, PageContent } from "@/lib/site/types"
 
 /* --------------------------------------------------------------------------
@@ -9,7 +9,8 @@ import type { Cta, PageContent } from "@/lib/site/types"
    eyebrow chip, headline, subline, buttons, proof strip on ink), with the
    Salesforce partner copy supplied by Zoxima (Nov 2026). Below it, in the
    order of Zoxima's clickable prototype (screen 2): ten areas, how it works,
-   quick wins and roadmap, the offer, customer reviews, the guide band.
+   quick wins and roadmap, the offer, customer reviews. The guide (with its
+   10 problem cards) follows the ten areas.
    Rendered by components/site/salesforce-page.tsx.
    -------------------------------------------------------------------------- */
 
@@ -30,8 +31,6 @@ export type SalesforcePageContent = {
     items: { name: string; sub: string; status: AreaStatus; href: string }[]
     note: string
     noteSmall: string
-    /** Button under the list: the guide page with all 10 problems. */
-    cta: Cta
   }
   steps: { eyebrow: string; title: string; accent: string; items: { title: string; body: string; icon: "target" | "search" | "doc" }[]; footer: string }
   next: {
@@ -50,12 +49,17 @@ export type SalesforcePageContent = {
     book: { button: string; title: string; body: string }
   }
   reviews: { eyebrow: string; title: string; accent: string }
-  guide: { eyebrow: string; title: string; cta: Cta }
 }
 
 /** Every "Book your health check" on the page opens the booking card (#book). */
 const BOOK: Cta = { label: "Book your health check", href: `#${BOOK_ANCHOR}` }
 
+
+/** Area n jumps to problem n's card in the guide section below (and highlights it). */
+const cardHref = (n: number) => {
+  const p = SF_GUIDE_PROBLEMS.find((x) => x.n === n)
+  return p ? `#problem-${p.id}` : "#guide"
+}
 
 export const SALESFORCE_PAGE: SalesforcePageContent = {
   page: {
@@ -84,20 +88,19 @@ export const SALESFORCE_PAGE: SalesforcePageContent = {
     title: "Ten areas, one clear scorecard",
     accent: "one clear scorecard",
     items: [
-      { name: "Reports", sub: "Numbers leaders can trust", status: "r", href: SF_GUIDE_ROUTE },
-      { name: "Data", sub: "One true view of every customer", status: "r", href: SF_GUIDE_ROUTE },
-      { name: "Process and adoption", sub: "A system reps want to use", status: "a", href: SF_GUIDE_ROUTE },
-      { name: "AI readiness", sub: "AI built on solid data and clear goals", status: "a", href: SF_GUIDE_ROUTE },
-      { name: "Automations", sub: "Processes on supported tools", status: "r", href: SF_GUIDE_ROUTE },
-      { name: "Connected systems", sub: "ERP, email and chat in one place", status: "a", href: SF_GUIDE_ROUTE },
-      { name: "Customer view", sub: "The whole story before every call", status: "a", href: SF_GUIDE_ROUTE },
-      { name: "Leads", sub: "Faster follow-up, fewer lost deals", status: "g", href: SF_GUIDE_ROUTE },
-      { name: "Mobile", sub: "Reps prep and update on the go", status: "a", href: SF_GUIDE_ROUTE },
-      { name: "Daily actions", sub: "Every call and email captured", status: "g", href: SF_GUIDE_ROUTE },
+      { name: "Reports", sub: "Numbers leaders can trust", status: "r", href: cardHref(1) },
+      { name: "Data", sub: "One true view of every customer", status: "r", href: cardHref(2) },
+      { name: "Process and adoption", sub: "A system reps want to use", status: "a", href: cardHref(3) },
+      { name: "AI readiness", sub: "AI built on solid data and clear goals", status: "a", href: cardHref(4) },
+      { name: "Automations", sub: "Processes on supported tools", status: "r", href: cardHref(5) },
+      { name: "Connected systems", sub: "ERP, email and chat in one place", status: "a", href: cardHref(6) },
+      { name: "Customer view", sub: "The whole story before every call", status: "a", href: cardHref(7) },
+      { name: "Leads", sub: "Faster follow-up, fewer lost deals", status: "g", href: cardHref(8) },
+      { name: "Mobile", sub: "Reps prep and update on the go", status: "a", href: cardHref(9) },
+      { name: "Daily actions", sub: "Every call and email captured", status: "g", href: cardHref(10) },
     ],
     note: "See where your biggest wins are, and where to start.",
     noteSmall: "(Dots show an example scorecard.)",
-    cta: { label: "Browse the 10 problems", href: SF_GUIDE_ROUTE },
   },
   steps: {
     eyebrow: "How it works",
@@ -138,9 +141,4 @@ export const SALESFORCE_PAGE: SalesforcePageContent = {
     },
   },
   reviews: { eyebrow: "Customer reviews", title: "What customers say on AppExchange", accent: "on AppExchange" },
-  guide: {
-    eyebrow: "Free guide",
-    title: "10 common Salesforce problems and how to fix them",
-    cta: { label: "Read the guide", href: SF_GUIDE_ROUTE },
-  },
 }

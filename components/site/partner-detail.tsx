@@ -88,11 +88,14 @@ function Section({ id, children, className }: { id: string; children: React.Reac
 
 /* -------------------------------------------------------------------- hero */
 
-export function Hero({ data }: { data: PartnerPractice }) {
+/** `aside`: optional card on the right of the headline (Salesforce: the free guide). */
+export function Hero({ data, aside }: { data: PartnerPractice; aside?: React.ReactNode }) {
   const { page } = data
   return (
     <section className="relative isolate overflow-hidden">
       <div className="zx-container pb-10 pt-[7.5rem] sm:pt-32 lg:pb-14 lg:pt-[10.5rem]">
+        <div className={aside ? "grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-center lg:gap-14" : undefined}>
+          <div>
         <p
           className="zx-rise inline-flex items-center gap-2 rounded-full border border-line bg-white px-3.5 py-1.5 text-[13px] font-semibold text-ink-700"
           style={rise(0)}
@@ -141,6 +144,13 @@ export function Hero({ data }: { data: PartnerPractice }) {
             })}
           </ul>
         )}
+          </div>
+          {aside && (
+            <div className="zx-rise" style={rise(0.2)}>
+              {aside}
+            </div>
+          )}
+        </div>
 
         {/* Proof strip on ink. */}
         <div className="zx-settle mt-10 lg:mt-14" style={{ "--zx-rise-delay": "0.3s" } as CSSProperties}>

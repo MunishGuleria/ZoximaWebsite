@@ -5,7 +5,7 @@ import { SiteFooter } from "@/components/site-footer"
 import { AccentTitle } from "@/components/site/accent"
 import { CtaButton } from "@/components/site/page-hero"
 import { GuideSentTo } from "@/components/site/guide-request-form"
-import { SF_GUIDE_ROUTE } from "@/lib/site/content/salesforce-guide"
+import { SF_GUIDE_HUB } from "@/lib/site/content/salesforce-guide"
 
 /* --------------------------------------------------------------------------
    After a guide request (prototype screen 6): "Check your inbox", the address
@@ -47,7 +47,7 @@ export default function Page() {
               <div className="mt-7 flex flex-col items-center gap-3 sm:flex-row sm:justify-center sm:gap-6">
                 <CtaButton cta={{ label: "Talk to us", href: "/contact?topic=Salesforce&msg=guide" }} />
                 <Link
-                  href={SF_GUIDE_ROUTE}
+                  href={SF_GUIDE_HUB}
                   className="group inline-flex min-h-11 items-center justify-center gap-1.5 text-[0.9375rem] font-medium text-ink-800 hover:text-navy-600"
                 >
                   <ArrowLeft className="h-4 w-4 transition-transform duration-300 group-hover:-translate-x-0.5" aria-hidden />

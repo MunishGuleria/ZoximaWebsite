@@ -12,6 +12,8 @@ import type { PageContent } from "@/lib/site/types"
    -------------------------------------------------------------------------- */
 
 export const SF_GUIDE_ROUTE = "/partners/salesforce/guide"
+/** The guide lives on the Salesforce page (section #guide); /partners/salesforce/guide forwards there. */
+export const SF_GUIDE_HUB = "/partners/salesforce#guide"
 
 export type GuideProblem = {
   /** URL slug of the problem page: /partners/salesforce/guide/<id>. */
@@ -359,7 +361,7 @@ export const SF_GUIDE_BAND = {
   eyebrow: "Free guide",
   title: "10 Salesforce problems that cost mid-size companies",
   body: "How to spot each one, what it costs, and how to fix it.",
-  cta: { label: "Read the guide", href: SF_GUIDE_ROUTE },
+  cta: { label: "Read the guide", href: SF_GUIDE_HUB },
 }
 
 /** Hub copy (prototype screen 3). */

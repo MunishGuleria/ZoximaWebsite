@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { ArrowLeft, ArrowRight, ChevronDown, Loader2 } from "lucide-react"
-import { SF_GUIDE_PROBLEMS, SF_GUIDE_ROUTE } from "@/lib/site/content/salesforce-guide"
+import { SF_GUIDE_HUB, SF_GUIDE_PROBLEMS, SF_GUIDE_ROUTE } from "@/lib/site/content/salesforce-guide"
 import { SF_GUIDE_EMAIL_KEY, WORK_EMAIL_MESSAGE } from "@/lib/site/content/salesforce-guide-email"
 
 /* --------------------------------------------------------------------------
@@ -90,7 +90,7 @@ function Field({
 
 /** "← Back": to the section the visitor came from (?from=), else the hub. */
 export function GuideBackLink() {
-  const [href, setHref] = useState(SF_GUIDE_ROUTE)
+  const [href, setHref] = useState<string>(SF_GUIDE_HUB)
   useEffect(() => {
     const from = fromParam()
     if (from) setHref(`${SF_GUIDE_ROUTE}/${from}`)

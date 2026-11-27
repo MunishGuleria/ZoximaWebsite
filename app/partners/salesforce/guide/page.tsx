@@ -1,26 +1,9 @@
-import { SitePage, pageMetadata } from "@/components/site/site-page"
-import { GuideCard, GuideHub } from "@/components/site/guide-hub"
-import { SF_GUIDE_ROUTE } from "@/lib/site/content/salesforce-guide"
-import { pageFor } from "@/lib/site/pages"
+import { permanentRedirect } from "next/navigation"
+import { SF_GUIDE_HUB } from "@/lib/site/content/salesforce-guide"
 
-/* The Salesforce guide hub (prototype screen 3). The hero line adds how the
-   guide works: a one-page brief on each problem, the full guide by email. */
-const page = pageFor(SF_GUIDE_ROUTE)
-const hero = {
-  ...page,
-  sub: `${page.sub} Read a one-page brief on any problem. Get the full guide by email.`,
-}
-
-export const metadata = pageMetadata(page)
-
+/* The guide hub is now a section of the Salesforce page (#guide). Old links
+   and search results land there. The problem pages (/partners/salesforce/
+   guide/<id>), the form (/get) and the thank-you page stay where they are. */
 export default function Page() {
-  return (
-    <SitePage
-      page={hero}
-      label="Salesforce guide"
-      heroEyebrow="Free guide for Salesforce users"
-      heroAside={<GuideCard />}
-      sections={<GuideHub />}
-    />
-  )
+  permanentRedirect(SF_GUIDE_HUB)
 }

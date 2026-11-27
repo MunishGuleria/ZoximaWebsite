@@ -4,6 +4,7 @@ import { AccentTitle, CtaButton } from "@/components/site/page-hero"
 import { Hero as PartnerHero } from "@/components/site/partner-detail"
 import { Reveal } from "@/components/site/reveal"
 import { BookCallDialog } from "@/components/site/book-call-dialog"
+import { GuideCard, GuideSection } from "@/components/site/guide-hub"
 import { BOOK_ANCHOR } from "@/lib/site/content/health-check-booking"
 import { SF_LISTING_URL, SalesforceReviewCards } from "@/components/site/salesforce-reviews"
 import type { AreaStatus, SalesforcePageContent } from "@/lib/site/content/partner-salesforce"
@@ -16,13 +17,13 @@ import { cn } from "@/lib/utils"
                headline with the serif accent, subline, buttons, proof strip
                on ink), from components/site/partner-detail.tsx
      areas     "What we check": ten areas in a bordered two-column list, each
-               with an example scorecard dot, linking to its guide page
+               with an example scorecard dot, jumping to its problem card
+     guide     #guide: the free guide and its 10 problem cards (guide-hub.tsx)
      steps     "How it works": three cards
      next      "What happens next": an ink card and a white card
      offer     #sf-offer: two price cards, two notes, rating + booking button;
                every link to #book opens the booking card (book-call-dialog.tsx)
      reviews   the AppExchange reviews (shared with the home page)
-     guide     white band pointing to the free guide
 
    Section order and copy follow Zoxima's clickable prototype (screen 2); the
    styling is the site's own (white, ink and one navy accent, the serif
@@ -103,10 +104,10 @@ const card = (dark: boolean) =>
 const cardEyebrow = (dark: boolean) => cn("zx-eyebrow", dark && "!text-white/60")
 
 export function SalesforcePage({ data }: { data: SalesforcePageContent }) {
-  const { page, hero, rating, areas, steps, next, offer, reviews, guide } = data
+  const { page, hero, rating, areas, steps, next, offer, reviews } = data
   return (
     <>
-      <PartnerHero data={{ page, eyebrow: hero.eyebrow, proof: hero.proof }} />
+      <PartnerHero data={{ page, eyebrow: hero.eyebrow, proof: hero.proof }} aside={<GuideCard />} />
 
       {/* What we check */}
       <Section id="what-we-check">
@@ -136,15 +137,14 @@ export function SalesforcePage({ data }: { data: SalesforcePageContent }) {
             ))}
           </ul>
         </Reveal>
-        <Reveal className="mt-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-[1.0625rem] leading-relaxed text-ink-700">
-            {areas.note} <span className="text-sm text-ink-500">{areas.noteSmall}</span>
-          </p>
-          <div className="shrink-0 max-sm:[&>a]:w-full">
-            <CtaButton cta={areas.cta} variant="secondary" />
-          </div>
+        <Reveal as="p" className="mt-5 text-[1.0625rem] leading-relaxed text-ink-700">
+          {areas.note} <span className="text-sm text-ink-500">{areas.noteSmall}</span>
         </Reveal>
       </Section>
+
+      {/* The free guide: title, Download full guide, the 10 problem cards (#guide).
+          Each area above jumps to its card here and highlights it. */}
+      <GuideSection />
 
       {/* How it works */}
       <Section id="how-it-works">
@@ -269,18 +269,6 @@ export function SalesforcePage({ data }: { data: SalesforcePageContent }) {
         </Reveal>
       </Section>
 
-      {/* Guide band */}
-      <Section id="free-guide" className="!pt-0">
-        <Reveal className="zx-card flex flex-col gap-6 p-7 sm:p-10 md:flex-row md:items-center md:justify-between">
-          <div className="min-w-0">
-            <p className="zx-eyebrow">{guide.eyebrow}</p>
-            <h3 className="zx-display-sm mt-3 text-[1.5rem] text-ink-950 sm:text-[1.875rem]">{guide.title}</h3>
-          </div>
-          <div className="shrink-0 max-sm:[&>a]:w-full">
-            <CtaButton cta={guide.cta} />
-          </div>
-        </Reveal>
-      </Section>
     </>
   )
 }

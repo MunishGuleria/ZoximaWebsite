@@ -26,9 +26,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/",
     "/case-studies",
     // /partners has no page of its own (it redirects to the Salesforce page).
-    ...ALL_ROUTES.filter((r) => !r.startsWith("/solutions/") && r !== "/partners"),
+    ...ALL_ROUTES.filter((r) => !r.startsWith("/solutions/") && r !== "/partners" && r !== SF_GUIDE_ROUTE),
     ...CASE_STUDIES.map((c) => `/case-studies/${c.slug}`),
-    // The Salesforce guide's section pages (the hub is in ALL_ROUTES).
+    // The Salesforce guide's problem pages (the hub is a section of /partners/salesforce).
     ...SF_GUIDE_PROBLEMS.map((p) => `${SF_GUIDE_ROUTE}/${p.id}`),
   ]
 
