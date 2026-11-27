@@ -39,6 +39,7 @@ const NOT_CONFIGURED = 'The guide form is not configured. Please email info@zoxi
 const SEND_FAILED = 'We could not email the guide. Please email info@zoxima.com and we will send it to you.'
 const UNSUBSCRIBE_MAILTO = 'mailto:info@zoxima.com?subject=Unsubscribe'
 const SENDER_NAME = 'Zoxima Solutions'
+const BOOK_CALL_URL = 'https://www.zoxima.com/contact?topic=Salesforce&msg=health-check'
 const SITE_URL = 'https://www.zoxima.com'
 const PROBLEM_IDS = SF_GUIDE_PROBLEMS.map((p) => p.id) as [string, ...string[]]
 
@@ -171,9 +172,9 @@ export async function POST(request: NextRequest) {
     : ''
 
   /* 1. The guide, to the visitor -------------------------------------------- */
-  // Written as a short personal note, not a marketing template (no banner, no
-  // big button, no sales pitch, no bulk-mail header), so Gmail is more likely
-  // to put it in Primary rather than Promotions.
+  // Designed HTML email (as in the guide-flow prototype): navy header with the
+  // logo and "Zoxima Solutions", orange download button, Health Check box, and
+  // a signature with the logo. Tables and inline styles, so it holds up in Outlook.
   const guideEmail: EmailMessage = {
     senderAddress: from,
     recipients: { to: [{ address: email, displayName: name }] },
@@ -183,15 +184,18 @@ export async function POST(request: NextRequest) {
       plainText: [
         `Hi ${firstName},`,
         '',
-        `Here's the Salesforce guide you asked for: ${SF_GUIDE_TITLE}.`,
+        `Thanks for your interest. Here is your copy of ${SF_GUIDE_TITLE}.`,
         '',
-        `Download the guide (PDF): ${pdf}`,
+        `Download the full guide (PDF): ${pdf}`,
         '',
-        ...(problem ? [`You said "${problem.title}" matters most right now, so start with ${startHere}.`, ''] : []),
-        "If anything in it sounds familiar, just reply to this email and we'll take a look.",
+        ...(problem ? [`You told us "${problem.title}" matters most right now. Start with ${startHere}.`, ''] : []),
+        'Want to know where your Salesforce stands?',
+        'Our Salesforce Health Check reviews your org against all 10 areas and gives you a scorecard and a ranked fix plan.',
+        `Book a 20-minute call: ${BOOK_CALL_URL}`,
         '',
         'Best regards,',
         SENDER_NAME,
+        'www.zoxima.com',
         '',
         '--',
         `Zoxima Solutions LLC, Fremont, California · Unsubscribe: ${UNSUBSCRIBE_MAILTO}`,
@@ -199,20 +203,49 @@ export async function POST(request: NextRequest) {
       ].join('\n'),
       html: `<!doctype html>
 <html>
-  <body style="margin:0;padding:0;background:#ffffff;color:#17212B;font-family:${EMAIL_FONT};font-size:15px;line-height:1.6">
-    <div style="max-width:560px;margin:0 auto;padding:28px 20px">
-      <img src="cid:zoxima-logo" width="76" height="76" alt="Zoxima Solutions" style="display:block;width:76px;height:76px;margin:0 0 16px -10px;border:0" />
-      <p style="margin:0 0 14px">Hi ${escapeHtml(firstName)},</p>
-      <p style="margin:0 0 14px">Here's the Salesforce guide you asked for: <strong>${SF_GUIDE_TITLE}</strong>.</p>
-      <p style="margin:0 0 14px"><a href="${escapeHtml(pdf)}" style="color:#1F3A5F;font-weight:600">Download the guide (PDF)</a></p>
-      ${problem ? `<p style="margin:0 0 14px">You said <strong>${escapeHtml(problem.title)}</strong> matters most right now, so start with ${startHere}.</p>` : ''}
-      <p style="margin:0 0 14px">If anything in it sounds familiar, just reply to this email and we'll take a look.</p>
-      <p style="margin:0 0 28px">Best regards,<br />${SENDER_NAME}</p>
-      <p style="margin:0;padding-top:14px;border-top:1px solid #e5e5e5;font-size:12px;line-height:1.5;color:#666666">
-        Zoxima Solutions LLC, Fremont, California · <a href="${UNSUBSCRIBE_MAILTO}" style="color:#666666">Unsubscribe</a><br />
-        Salesforce is a trademark of Salesforce, Inc. This guide is independent and is not endorsed by Salesforce.
-      </p>
-    </div>
+  <body style="margin:0;padding:0;background:#F6F8FA;color:#17212B;font-family:${EMAIL_FONT};font-size:15px;line-height:1.6">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F6F8FA">
+      <tr><td align="center" style="padding:32px 16px">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;background:#ffffff;border:1px solid #DCE3EA;border-radius:10px;overflow:hidden">
+          <tr><td style="background:#1F3A5F;padding:18px 28px">
+            <table role="presentation" cellpadding="0" cellspacing="0"><tr>
+              <td style="background:#ffffff;border-radius:10px;padding:4px"><img src="cid:zoxima-logo" width="56" height="56" alt="Zoxima" style="display:block;width:56px;height:56px;border:0" /></td>
+              <td style="padding-left:14px;color:#ffffff;font-size:20px;font-weight:700;font-family:${EMAIL_FONT}">${SENDER_NAME}</td>
+            </tr></table>
+          </td></tr>
+          <tr><td style="padding:28px">
+            <p style="margin:0 0 14px">Hi ${escapeHtml(firstName)},</p>
+            <p style="margin:0 0 22px">Thanks for your interest. Here is your copy of <strong>${SF_GUIDE_TITLE}</strong>.</p>
+            <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 0 22px"><tr>
+              <td style="background:#F2A541;border-radius:8px">
+                <a href="${escapeHtml(pdf)}" style="display:inline-block;padding:13px 24px;color:#17212B;text-decoration:none;font-weight:700;font-size:15px;font-family:${EMAIL_FONT}">Download the full guide (PDF)</a>
+              </td>
+            </tr></table>
+            ${problem ? `<p style="margin:0 0 22px">You told us <strong>${escapeHtml(problem.title)}</strong> matters most right now. Start with ${startHere}.</p>` : ''}
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 24px"><tr>
+              <td style="background:#F6F8FA;border-radius:8px;padding:16px 18px">
+                <strong style="color:#1F3A5F">Want to know where your Salesforce stands?</strong>
+                <div style="color:#4A5868;font-size:14px;margin:4px 0 8px">Our Salesforce Health Check reviews your org against all 10 areas and gives you a scorecard and a ranked fix plan.</div>
+                <a href="${BOOK_CALL_URL}" style="color:#1F3A5F;font-weight:700;text-decoration:none">Book a 20-minute call &rarr;</a>
+              </td>
+            </tr></table>
+            <p style="margin:0 0 16px">Best regards,</p>
+            <table role="presentation" cellpadding="0" cellspacing="0"><tr>
+              <td style="vertical-align:middle;padding-right:12px;border-right:2px solid #F2A541"><img src="cid:zoxima-logo" width="60" height="60" alt="Zoxima" style="display:block;width:60px;height:60px;border:0" /></td>
+              <td style="vertical-align:middle;padding-left:12px;font-family:${EMAIL_FONT}">
+                <div style="color:#1F3A5F;font-size:16px;font-weight:700">${SENDER_NAME}</div>
+                <div style="color:#4A5868;font-size:13px">Salesforce Partner · Fremont, California</div>
+                <a href="${SITE_URL}" style="color:#2E7D9A;font-size:13px;text-decoration:none">www.zoxima.com</a>
+              </td>
+            </tr></table>
+          </td></tr>
+          <tr><td style="border-top:1px solid #DCE3EA;padding:16px 28px;font-size:12px;line-height:1.5;color:#4A5868">
+            Zoxima Solutions LLC, Fremont, California · <a href="${UNSUBSCRIBE_MAILTO}" style="color:#4A5868">Unsubscribe</a><br />
+            Salesforce is a trademark of Salesforce, Inc. This guide is independent and is not endorsed by Salesforce.
+          </td></tr>
+        </table>
+      </td></tr>
+    </table>
   </body>
 </html>`,
     },
