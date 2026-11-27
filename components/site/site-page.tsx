@@ -215,6 +215,7 @@ export function SitePage({
   children,
   heroExtra,
   heroAside,
+  heroAsideFirst,
   heroEyebrow,
   sections,
   layout,
@@ -228,6 +229,8 @@ export function SitePage({
   heroExtra?: React.ReactNode
   /** Right-hand column of the hero (e.g. the contact form). */
   heroAside?: React.ReactNode
+  /** Phones: the aside comes right after the title and sub (contact form). */
+  heroAsideFirst?: boolean
   /** Small line above the hero's H1 (e.g. the guide hub). */
   heroEyebrow?: string
   /** Page-specific section layouts, rendered instead of the generic kit. */
@@ -244,7 +247,7 @@ export function SitePage({
       <main id="main" className="zx overflow-x-clip">
         {layout ?? (
           <>
-            <PageHero page={page} label={name} visual={visualFor(page)} aside={heroAside} eyebrow={heroEyebrow}>
+            <PageHero page={page} label={name} visual={visualFor(page)} aside={heroAside} asideFirstOnMobile={heroAsideFirst} eyebrow={heroEyebrow}>
               {heroExtra}
             </PageHero>
             {children}

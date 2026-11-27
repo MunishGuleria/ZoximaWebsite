@@ -127,6 +127,7 @@ export function PageHero({
   visual,
   children,
   aside: asideProp,
+  asideFirstOnMobile,
   eyebrow,
 }: {
   page: PageContent
@@ -136,16 +137,30 @@ export function PageHero({
   children?: ReactNode
   /** Right-hand column, overriding the page's visual (e.g. the contact form). */
   aside?: ReactNode
+  /** Phones: show the aside straight after the title and sub, before the
+   *  extra content (the contact page's form before its details). */
+  asideFirstOnMobile?: boolean
   /** Optional small line above the H1 (only where a page asks for one). */
   eyebrow?: string
 }) {
   const aside = asideProp ?? asideFor(visual, page)
   const back = page.crumbs?.[page.crumbs.length - 1]
+  const split = Boolean(asideFirstOnMobile && aside)
   return (
     <section className="zx-backdrop-ribbon relative isolate overflow-hidden">
       <div className="zx-container relative pb-14 pt-[7.5rem] sm:pb-16 sm:pt-32 lg:pb-20 lg:pt-[10.5rem]">
-        <div className={aside ? "grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:gap-16" : ""}>
-          <div>
+        <div
+          className={
+            split
+              ? "flex flex-col lg:grid lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:gap-16"
+              : aside
+                ? "grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:gap-16"
+                : ""
+          }
+        >
+          {/* With `split`, this column dissolves on phones (contents) so its
+              parts and the aside can be reordered. */}
+          <div className={split ? "contents lg:block" : undefined}>
             {/* Phones only: Back to the previous page (parent section, else
                 home, when you arrived from outside the site). */}
             <div className="zx-rise mb-6 lg:hidden" style={rise(0)}>
@@ -178,13 +193,13 @@ export function PageHero({
               </div>
             )}
             {children && (
-              <div className="zx-rise mt-8" style={rise(0.3)}>
+              <div className={`zx-rise mt-8 ${split ? "max-lg:order-last" : ""}`} style={rise(0.3)}>
                 {children}
               </div>
             )}
           </div>
           {aside && (
-            <div className="zx-settle" style={{ "--zx-rise-delay": "0.28s" } as CSSProperties}>
+            <div className={`zx-settle ${split ? "mt-8 lg:mt-0" : ""}`} style={{ "--zx-rise-delay": "0.28s" } as CSSProperties}>
               {aside}
             </div>
           )}

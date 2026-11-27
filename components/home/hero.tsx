@@ -40,9 +40,11 @@ export function Hero() {
       </div>
 
       <div className="zx-container w-full">
-        <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,1.08fr)_minmax(0,1fr)] lg:gap-12 xl:gap-16">
+        {/* Phones: H1, sub, then the showcase, then the buttons and customers.
+            The copy column dissolves (contents) below lg so the parts can be ordered. */}
+        <div className="flex flex-col lg:grid lg:grid-cols-[minmax(0,1.08fr)_minmax(0,1fr)] lg:items-center lg:gap-12 xl:gap-16">
           {/* Copy */}
-          <div>
+          <div className="contents lg:block">
             <h1
               style={rise(0.06)}
               className="zx-rise zx-display text-[2.375rem] text-ink-950 sm:text-[3.25rem] lg:text-[clamp(2.5rem,min(4.2vw,7.6svh),3.5rem)]"
@@ -60,7 +62,7 @@ export function Hero() {
 
             <div
               style={rise(0.22)}
-              className="zx-rise mt-7 flex flex-col gap-3 sm:flex-row lg:mt-[clamp(1.25rem,3.4svh,2.25rem)]"
+              className="zx-rise order-4 mt-7 flex flex-col gap-3 sm:flex-row lg:order-none lg:mt-[clamp(1.25rem,3.4svh,2.25rem)]"
             >
               <Link
                 href="/contact"
@@ -78,7 +80,7 @@ export function Hero() {
             </div>
 
             {/* Who the customers are, by size rather than name. */}
-            <div style={rise(0.3)} className="zx-rise mt-8 border-t border-line pt-5 lg:mt-[clamp(1.25rem,3.6svh,2.25rem)]">
+            <div style={rise(0.3)} className="zx-rise order-5 mt-8 border-t border-line pt-5 lg:order-none lg:mt-[clamp(1.25rem,3.6svh,2.25rem)]">
               <p className="zx-eyebrow">Customers include</p>
               <dl className="mt-3 flex flex-wrap gap-x-8 gap-y-4 sm:grid sm:grid-cols-3 sm:gap-6">
                 {CUSTOMERS.map((c) => (
@@ -95,7 +97,7 @@ export function Hero() {
               plus its caption always fit under the nav. */}
           <div
             style={rise(0.18, 24, 0.9)}
-            className="zx-rise mx-auto w-full max-w-[34rem] lg:max-w-[min(100%,calc((100svh-112px-6rem)/0.83))]"
+            className="zx-rise order-3 mx-auto mt-8 w-full max-w-[34rem] lg:order-none lg:mt-0 lg:max-w-[min(100%,calc((100svh-112px-6rem)/0.83))]"
           >
             <HeroShowcase />
           </div>

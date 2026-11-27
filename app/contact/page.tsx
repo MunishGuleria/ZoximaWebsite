@@ -45,5 +45,5 @@ export default function ContactPage() {
       </Way>
     </ul>
   )
-  return <SitePage page={page} label="Contact us" heroExtra={ways} heroAside={<ContactForm />} />
+  return <SitePage page={page} label="Contact us" heroExtra={ways} heroAside={<ContactForm />} heroAsideFirst />
 }
