@@ -396,7 +396,6 @@ export const SF_GUIDE_PAGE: PageContent = {
     body: "Tell us which ones. We’ll tell you what we’d fix first, and what it would take.",
     ctas: [
       { label: "Talk to us", href: "/contact?topic=Salesforce&msg=guide" },
-      { label: "Our Salesforce practice", href: "/partners/salesforce" },
     ],
   },
 }
