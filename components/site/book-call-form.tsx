@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { ArrowRight, CalendarCheck, Loader2 } from "lucide-react"
-import { BOOK_MAX_DAYS, BOOK_SLOTS, formatBookDate } from "@/lib/site/content/health-check-booking"
+import { BOOK_EVENT, BOOK_MAX_DAYS, BOOK_SLOTS, BOOK_STORAGE_KEY, formatBookDate } from "@/lib/site/content/health-check-booking"
 
 /* --------------------------------------------------------------------------
    "Book your health check call": name, work email, a weekday and a time slot
@@ -87,7 +87,14 @@ export function BookCallForm() {
         setStatus("error")
         return
       }
-      setSent({ email: data.email, when: `${formatBookDate(data.date)} at ${data.slot}`, confirmed: json.confirmationSent !== false })
+      const booking = { email: data.email, when: `${formatBookDate(data.date)} at ${data.slot}` }
+      setSent({ ...booking, confirmed: json.confirmationSent !== false })
+      try {
+        localStorage.setItem(BOOK_STORAGE_KEY, JSON.stringify(booking))
+      } catch {
+        /* private mode: the page just won't remember it */
+      }
+      window.dispatchEvent(new Event(BOOK_EVENT))
       form.reset()
       setStatus("sent")
     } catch {
@@ -119,6 +126,13 @@ export function BookCallForm() {
             </>
           )}
         </p>
+        <button
+          type="button"
+          onClick={() => setStatus("idle")}
+          className="mt-6 text-sm font-semibold text-ink-900 underline-offset-4 hover:text-navy-600 hover:underline"
+        >
+          Pick another time
+        </button>
       </div>
     )
   }

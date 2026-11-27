@@ -6,6 +6,11 @@
 
 export const BOOK_ANCHOR = "book"
 
+/** Remembers, in this browser, the call the visitor asked for ({ when, email }). */
+export const BOOK_STORAGE_KEY = "zx-health-check-booking"
+/** Window event fired after a booking, so the page can show it as done. */
+export const BOOK_EVENT = "zx-booked"
+
 /** The time slots offered (start of a 20-minute call). */
 export const BOOK_SLOTS = [
   "9:00 am",

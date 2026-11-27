@@ -3,8 +3,8 @@ import { ArrowRight, ArrowUpRight, Check, FileText, Search, Star, Target } from 
 import { AccentTitle, CtaButton } from "@/components/site/page-hero"
 import { Hero as PartnerHero } from "@/components/site/partner-detail"
 import { Reveal } from "@/components/site/reveal"
+import { BookCallAction } from "@/components/site/book-call-action"
 import { BookCallDialog } from "@/components/site/book-call-dialog"
-import { BOOK_ANCHOR } from "@/lib/site/content/health-check-booking"
 import { SF_LISTING_URL, SalesforceReviewCards } from "@/components/site/salesforce-reviews"
 import type { AreaStatus, SalesforcePageContent } from "@/lib/site/content/partner-salesforce"
 import { cn } from "@/lib/utils"
@@ -270,8 +270,9 @@ export function SalesforcePage({ data }: { data: SalesforcePageContent }) {
         <Reveal className="mt-8 flex flex-wrap items-center justify-between gap-4 border-t border-line pt-6">
           <Rating rating={rating} />
           <div className="max-sm:w-full max-sm:[&>a]:w-full">
-            {/* Opens the booking card (BookCallDialog listens for #book). */}
-            <CtaButton cta={{ label: offer.book.button, href: `#${BOOK_ANCHOR}` }} />
+            {/* Opens the booking card (BookCallDialog listens for #book); after a
+                booking in this browser it shows "Call requested" instead. */}
+            <BookCallAction label={offer.book.button} />
           </div>
         </Reveal>
         <BookCallDialog title={offer.book.title} body={offer.book.body} />
