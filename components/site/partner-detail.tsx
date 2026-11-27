@@ -21,7 +21,7 @@ import { cn } from "@/lib/utils"
      who         split: heading left, paragraphs right
      offer       bento: the first card on ink, the rest white
      work        selected work cards, results as check rows
-     healthCheck an ink offer panel with the price and a button
+     healthCheck "Start here" offer card under the problems (prototype colours)
      apps        ready-made apps, rows that invert to ink on hover
      steps       how we work, a numbered rail
      why         why Zoxima, label left and line right
@@ -55,7 +55,7 @@ export type PartnerPractice = {
     /** Optional dark guide band under the cards. */
     guide?: GuideBandContent
   }
-  healthCheck?: { title: string; body: string; points: string[]; price: string; cta?: Cta }
+  healthCheck?: { eyebrow?: string; title: string; body: string; cta?: Cta }
   apps?: { title: string; intro?: string; items: { name: string; body: string; href: string }[]; cta?: Cta }
   steps?: { title: string; items: { title: string; body: string }[] }
   why?: { title: string; items: { title: string; body: string }[] }
@@ -380,37 +380,28 @@ function Problems({ problems }: { problems: NonNullable<PartnerPractice["problem
 }
 
 function HealthCheck({ hc }: { hc: NonNullable<PartnerPractice["healthCheck"]> }) {
+  // As in Zoxima's guide-flow prototype (screen 2): a white "Start here" card,
+  // navy title, orange button. Prototype colours, at the client's request.
   return (
-    <Section id="health-check">
-      <Reveal variant="scale" className="overflow-hidden rounded-[2rem] bg-ink-950 text-white lg:rounded-[2.5rem]">
-        <div className="grid lg:grid-cols-[1.3fr_0.7fr]">
-          <div className="p-7 sm:p-10 lg:p-14">
-            <Heading title={hc.title} dark />
-            <p className="mt-5 max-w-2xl text-[1.0625rem] leading-relaxed text-white/75 sm:text-lg">{hc.body}</p>
-            <ul className="mt-7 space-y-3">
-              {hc.points.map((pt) => (
-                <li key={pt} className="flex gap-3 text-[1rem] leading-relaxed text-white/85">
-                  <span className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-white text-ink-950">
-                    <Check className="h-3 w-3" strokeWidth={3} aria-hidden />
-                  </span>
-                  {pt}
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className="flex flex-col justify-center gap-6 border-t border-white/10 p-7 sm:p-10 lg:border-l lg:border-t-0 lg:p-12">
-            <p className="text-[1.0625rem] font-medium leading-relaxed text-white">{hc.price}</p>
-            {hc.cta && (
-            <SmartLink
-              cta={hc.cta}
-              className="group inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-white px-6 text-[0.9375rem] font-semibold text-ink-950 transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:scale-[1.03] active:scale-[0.98]"
-            >
-              {hc.cta.label}
-              <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" aria-hidden />
-            </SmartLink>
-            )}
-          </div>
+    <Section id="health-check" className="!pt-0">
+      <Reveal className="flex flex-col gap-6 rounded-2xl border border-[#DCE3EA] bg-white p-6 sm:p-8 lg:flex-row lg:items-center lg:justify-between lg:gap-10">
+        <div className="max-w-[44rem]">
+          {hc.eyebrow && (
+            <p className="text-[0.8125rem] font-semibold uppercase tracking-[0.08em] text-[#2E7D9A]">{hc.eyebrow}</p>
+          )}
+          <h2 className="mt-2 text-[1.625rem] font-semibold leading-tight tracking-[-0.02em] text-[#1F3A5F] sm:text-[1.875rem]">
+            {hc.title}
+          </h2>
+          <p className="mt-3 text-[1.0625rem] leading-relaxed text-[#4A5868]">{hc.body}</p>
         </div>
+        {hc.cta && (
+          <SmartLink
+            cta={hc.cta}
+            className="inline-flex min-h-12 shrink-0 items-center justify-center self-start rounded-lg bg-[#F2A541] px-6 text-[1rem] font-semibold text-[#17212B] transition-colors hover:bg-[#E8962A] lg:self-center"
+          >
+            {hc.cta.label}
+          </SmartLink>
+        )}
       </Reveal>
     </Section>
   )
@@ -523,10 +514,10 @@ export function PartnerDetail({ data }: { data: PartnerPractice }) {
     <>
       <Hero data={data} />
       {data.problems && <Problems problems={data.problems} />}
+      {data.healthCheck && <HealthCheck hc={data.healthCheck} />}
       {data.who && <Who who={data.who} />}
       {data.offer && <Offer offer={data.offer} />}
       {data.work && <Work work={data.work} />}
-      {data.healthCheck && <HealthCheck hc={data.healthCheck} />}
       {data.apps && <Apps apps={data.apps} />}
       {data.steps && <Steps steps={data.steps} />}
       {data.why && <Why why={data.why} />}

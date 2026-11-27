@@ -38,7 +38,7 @@ export const maxDuration = 30
 const NOT_CONFIGURED = 'The guide form is not configured. Please email info@zoxima.com and we will send you the guide.'
 const SEND_FAILED = 'We could not email the guide. Please email info@zoxima.com and we will send it to you.'
 const UNSUBSCRIBE_MAILTO = 'mailto:info@zoxima.com?subject=Unsubscribe'
-const CONTACT_URL = 'https://www.zoxima.com/contact'
+const BOOK_CALL_URL = 'https://www.zoxima.com/contact?topic=Salesforce'
 const SITE_URL = 'https://www.zoxima.com'
 const PROBLEM_IDS = SF_GUIDE_PROBLEMS.map((p) => p.id) as [string, ...string[]]
 
@@ -198,7 +198,9 @@ export async function POST(request: NextRequest) {
         `Download the full guide (PDF): ${pdf}`,
         '',
         ...(problem ? [`You told us ${problem.title} matters most right now. ${sectionLine}`, ''] : []),
-        `Want to talk about where your Salesforce stands? Reply to this email or contact us at ${CONTACT_URL}`,
+        'Want to know where your Salesforce stands?',
+        'Our Salesforce Health Check reviews your org against all 10 areas and gives you a scorecard and a ranked fix plan.',
+        `Book a 20-minute call: ${BOOK_CALL_URL}`,
         '',
         'Best regards,',
         'The Zoxima Salesforce Team',
@@ -207,21 +209,45 @@ export async function POST(request: NextRequest) {
         `Zoxima Solutions LLC, Fremont, California · Unsubscribe: ${UNSUBSCRIBE_MAILTO}`,
         'Salesforce is a trademark of Salesforce, Inc. This guide is independent and is not endorsed by Salesforce.',
       ].join('\n'),
-      html: emailShell(`
-        <img src="cid:zoxima-logo" width="72" height="72" alt="Zoxima" style="display:block;width:72px;height:72px;margin:0 0 20px -8px;border:0" />
-        <p style="margin:0 0 16px">Hi ${escapeHtml(firstName)},</p>
-        <p style="margin:0 0 24px">Thanks for your interest. Here is your copy of <strong>${SF_GUIDE_TITLE}</strong>.</p>
-        <p style="margin:0 0 28px">
-          <a href="${escapeHtml(pdf)}" style="display:inline-block;background:#111111;color:#ffffff;text-decoration:none;font-weight:600;padding:13px 22px;border-radius:8px;font-family:${EMAIL_FONT}">Download the full guide (PDF)</a>
-        </p>
-        ${problem ? `<p style="margin:0 0 16px">You told us <strong>${escapeHtml(problem.title)}</strong> matters most right now. ${sectionLine}</p>` : ''}
-        <p style="margin:0 0 24px">Want to talk about where your Salesforce stands? Reply to this email or contact us at <a href="${CONTACT_URL}" style="color:#111111">${CONTACT_URL}</a></p>
-        <p style="margin:0 0 32px">Best regards,<br />The Zoxima Salesforce Team</p>
-        <div style="border-top:1px solid #e5e5e5;padding-top:16px;font-size:12px;line-height:1.5;color:#555555">
-          <p style="margin:0 0 6px">Zoxima Solutions LLC, Fremont, California · <a href="${UNSUBSCRIBE_MAILTO}" style="color:#555555">Unsubscribe</a></p>
-          <p style="margin:0">Salesforce is a trademark of Salesforce, Inc. This guide is independent and is not endorsed by Salesforce.</p>
-        </div>
-      `),
+      // Laid out as in the prototype: navy header with the logo, orange download
+      // button, Health Check box. Tables and inline styles, so it holds up in Outlook.
+      html: `<!doctype html>
+<html>
+  <body style="margin:0;padding:0;background:#F6F8FA;color:#17212B;font-family:${EMAIL_FONT};font-size:15px;line-height:1.6">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F6F8FA">
+      <tr><td align="center" style="padding:32px 16px">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;background:#ffffff;border:1px solid #DCE3EA;border-radius:10px;overflow:hidden">
+          <tr><td style="background:#1F3A5F;padding:18px 28px">
+            <table role="presentation" cellpadding="0" cellspacing="0"><tr>
+              <td style="background:#ffffff;border-radius:10px;padding:4px"><img src="cid:zoxima-logo" width="56" height="56" alt="Zoxima" style="display:block;width:56px;height:56px;border:0" /></td>
+              <td style="padding-left:14px;color:#ffffff;font-size:15px;font-weight:600;font-family:${EMAIL_FONT}">Zoxima Salesforce Team</td>
+            </tr></table>
+          </td></tr>
+          <tr><td style="padding:28px">
+            <p style="margin:0 0 14px">Hi ${escapeHtml(firstName)},</p>
+            <p style="margin:0 0 22px">Thanks for your interest. Here is your copy of <strong>${SF_GUIDE_TITLE}</strong>.</p>
+            <p style="margin:0 0 22px">
+              <a href="${escapeHtml(pdf)}" style="display:inline-block;background:#F2A541;color:#17212B;text-decoration:none;font-weight:600;padding:13px 22px;border-radius:8px;font-family:${EMAIL_FONT}">Download the full guide (PDF)</a>
+            </p>
+            ${problem ? `<p style="margin:0 0 22px">You told us <strong>${escapeHtml(problem.title)}</strong> matters most right now. ${sectionLine}</p>` : ''}
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 22px"><tr>
+              <td style="background:#F6F8FA;border-radius:8px;padding:16px 18px">
+                <strong style="color:#1F3A5F">Want to know where your Salesforce stands?</strong>
+                <div style="color:#4A5868;font-size:14px;margin:4px 0 8px">Our Salesforce Health Check reviews your org against all 10 areas and gives you a scorecard and a ranked fix plan.</div>
+                <a href="${BOOK_CALL_URL}" style="color:#1F3A5F;font-weight:600;text-decoration:none">Book a 20-minute call &rarr;</a>
+              </td>
+            </tr></table>
+            <p style="margin:0">Best regards,<br />The Zoxima Salesforce Team</p>
+          </td></tr>
+          <tr><td style="border-top:1px solid #DCE3EA;padding:16px 28px;font-size:12px;line-height:1.5;color:#4A5868">
+            Zoxima Solutions LLC, Fremont, California · <a href="${UNSUBSCRIBE_MAILTO}" style="color:#4A5868">Unsubscribe</a><br />
+            Salesforce is a trademark of Salesforce, Inc. This guide is independent and is not endorsed by Salesforce.
+          </td></tr>
+        </table>
+      </td></tr>
+    </table>
+  </body>
+</html>`,
     },
     // The logo, shown by <img src="cid:zoxima-logo"> without loading anything from the web.
     attachments: [
