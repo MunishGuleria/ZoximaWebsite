@@ -220,7 +220,7 @@ export async function POST(request: NextRequest) {
           <tr><td style="background:#1F3A5F;padding:18px 28px">
             <table role="presentation" cellpadding="0" cellspacing="0"><tr>
               <td style="background:#ffffff;border-radius:10px;padding:4px"><img src="cid:zoxima-logo" width="56" height="56" alt="Zoxima" style="display:block;width:56px;height:56px;border:0" /></td>
-              <td style="padding-left:14px;color:#ffffff;font-size:15px;font-weight:600;font-family:${EMAIL_FONT}">Zoxima Salesforce Team</td>
+              <td style="padding-left:14px;color:#ffffff;font-size:15px;font-weight:600;font-family:${EMAIL_FONT}">Zoxima Solutions</td>
             </tr></table>
           </td></tr>
           <tr><td style="padding:28px">
